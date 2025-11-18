@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}GameHunt — Contacts{% endblock %}
+
+{% block content %}
+<section style="max-width: 800px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 16px;">Контакты</h2>
+
+    <p style="margin-bottom: 12px;">
+        Проект <strong>GameHunt</strong> разработан в учебных целях как дипломная работа по
+        веб-разработке на Django.
+    </p>
+
+    <h3 style="margin-top: 20px; margin-bottom: 8px;">Автор</h3>
+    <p style="margin-bottom: 12px;">
+        Меня зовут Денис и я начинающий разработчик, изучающий Python и Django в свободное от работы время.
+        GameHunt — попытка объединить интерес к играм и программированию.
+    </p>
+
+    <h3 style="margin-top: 20px; margin-bottom: 8px;">Связаться</h3>
+    <ul style="margin-bottom: 16px; list-style-type: none; padding: 20px 0;">
+        <li>
+            <div style="display: flex; align-items:center;">
+            <img style="margin-right: 15px;" src="{% static 'images/github.png' %}" alt="Github-image">
+            <a href="https://github.com/DenisSychev95" target="_blank">
+                github.com/DenisSychev95
+            </a>
+            </div>
+        </li>
+                <li>
+            <div style="display: flex; align-items:center;">
+            <img style="margin-right: 15px;" src="{% static 'images/telegram.png' %}" alt="Github-image">
+            <a href="https://t.me/DenyBeny95" target="_blank">
+                @DenyBeny95
+            </a>
+            </div>
+        </li>
+        <li>
+            <div style="display: flex; align-items:center;">
+            <img style="margin-right: 15px;" src="{% static 'images/vk.png' %}" alt="Github-image">
+            <a href="https://vk.com/sychev_denis" target="_blank">
+                sychev_denis
+            </a>
+            </div>
+        </li>
+
+    </ul>
+
+    <p style="font-size: 14px; color: #9ca3af;">
+        Контакты указаны для связи по вопросам, связанным с дипломным проектом GameHunt.
+    </p>
+</section>
+{% endblock %}

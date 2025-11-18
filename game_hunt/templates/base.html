@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}GameHunt{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Подключим базовые стили позже, пока просто фон -->
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #111827;
+            color: #f3f4f6;
+        }
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-content {
+            flex: 1;
+        }
+
+        main {
+            min-height: 70vh;
+            padding: 40px 20px;
+        }
+        a {
+            color: #f97316;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+<div class="page-wrapper">
+
+    <!-- Шапка -->
+    {% include 'navbar.html' %}
+
+    <!-- Контент -->
+
+    <main class="page-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Футер -->
+    {% include 'footer.html' %}
+</div>
+</body>
+</html>
