@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}GameHunt — Управление email{% endblock %}
+
+{% block content %}
+<section style="max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 16px;">Управление email</h2>
+
+    <p style="color: #d1d5db; margin-bottom: 20px;">
+        Здесь вы можете добавить, удалить или подтвердить адрес электронной почты.
+    </p>
+
+    {% if user.emailaddress_set.all %}
+        <ul style="margin-bottom: 20px; padding-left: 20px;">
+            {% for email in user.emailaddress_set.all %}
+                <li style="margin-bottom: 10px;">
+                    <strong>{{ email.email }}</strong>
+                    {% if email.verified %}
+                        <span style="color: #10b981;">(подтверждён)</span>
+                    {% else %}
+                        <span style="color: #f87171;">(не подтверждён)</span>
+                        <a href="{% url 'account_email' %}" style="color: #f97316;">
+                            выслать письмо подтверждения повторно
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h3 style="color: #f97316; margin-bottom: 8px;">Добавить новый email</h3>
+
+    <form method="post" action="{% url 'account_email' %}">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div style="margin-bottom: 12px;">
+            {{ form.email.label_tag }}<br>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div style="color: #f87171; font-size: 13px;">
+                    {{ form.email.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" name="action_add"
+                style="padding: 8px 14px; background-color: #f97316; color: #fff;
+                       border-radius: 4px; border: none; cursor: pointer;">
+            Добавить email
+        </button>
+    </form>
+
+    <p style="margin-top: 20px;">
+        <a href="{% url 'profile' %}" style="color: #9ca3af;">Вернуться в профиль</a>
+    </p>
+</section>
+{% endblock %}

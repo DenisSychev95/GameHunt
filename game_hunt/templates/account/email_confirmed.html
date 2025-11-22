@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}GameHunt — email подтверждён{% endblock %}
+
+{% block content %}
+<section style="max-width: 500px; margin: 0 auto; text-align: center;">
+    <h2 style="color: #10b981;">Ваш email успешно подтверждён!</h2>
+
+    <p style="color: #d1d5db; margin: 16px 0;">
+        Спасибо! Ваш адрес электронной почты был подтверждён.
+    </p>
+
+    <a href="{% url 'profile' %}" style="color: #f97316;">Перейти в профиль</a>
+</section>
+{% endblock %}

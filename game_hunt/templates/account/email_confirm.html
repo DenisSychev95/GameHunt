@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}GameHunt — Подтверждение email{% endblock %}
+
+{% block content %}
+<section style="max-width: 500px; margin: 0 auto;">
+    <h2 style="color: #f97316;">Подтверждение email</h2>
+
+    <p style="color: #d1d5db; margin-bottom: 16px;">
+         Продолжить подтверждение для email:
+      {{request.user.email}} ?
+    </p>
+
+    <p style="font-size: 18px; color: #fff; margin-bottom: 20px;">
+        <strong>{{ email_address.email }}</strong>
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit"
+                style="padding: 10px 18px; background-color: #f97316;
+                       color: #fff; border: none; border-radius: 4px;">
+            Подтвердить
+        </button>
+    </form>
+</section>
+{% endblock %}

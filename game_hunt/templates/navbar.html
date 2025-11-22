@@ -25,8 +25,13 @@
         <a href="{% url 'about' %}" style="color: #f97316;">О проекте</a>
     </nav>
 
-    <div class="auth" style="display: flex; gap: 15px;">
-        <a href="#" style="color: #f97316;">Вход</a>
-        <a href="#" style="color: #f97316;">Регистрация</a>
-    </div>
+<div class="auth">
+    {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" style="margin: 0 10px;">Профиль</a>
+        <a href="{% url 'account_logout' %}" style="margin: 0 10px;">Выйти</a>
+    {% else %}
+        <a href="{% url 'account_login' %}" style="margin: 0 10px;">Вход</a>
+        <a href="{% url 'account_signup' %}" style="margin: 0 10px;">Регистрация</a>
+    {% endif %}
+</div>
 </header>

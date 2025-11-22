@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}GameHunt — Вход{% endblock %}
+
+{% block content %}
+<section style="max-width: 400px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 16px;">Вход</h2>
+
+    {% if form.non_field_errors %}
+        <div style="color: #f87171; margin-bottom: 10px;">
+            {{ form.non_field_errors|striptags }}
+        </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'account_login' %}">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 10px;">
+            {{ form.login.label_tag }}<br>
+            {{ form.login }}
+            {% if form.login.errors %}
+                <div style="color: #f87171; font-size: 13px;">
+                    {{ form.login.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            {{ form.password.label_tag }}<br>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div style="color: #f87171; font-size: 13px;">
+                    {{ form.password.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if form.remember %}
+            <div style="margin-bottom: 10px;">
+                <label>
+                    {{ form.remember }} Запомнить меня
+                </label>
+            </div>
+        {% endif %}
+
+        <button type="submit"
+                style="margin-top: 12px; padding: 8px 16px; border: none;
+                       background-color: #f97316; color: #fff; border-radius: 4px; cursor: pointer;">
+            Войти
+        </button>
+    </form>
+
+    <p style="margin-top: 12px;">
+        Нет аккаунта?
+        <a href="{% url 'account_signup' %}" style="color: #f97316;">Зарегистрироваться</a>
+    </p>
+
+    <p style="margin-top: 6px;">
+        <a href="{% url 'account_reset_password' %}" style="color: #9ca3af;">
+            Забыли пароль?
+        </a>
+    </p>
+</section>
+{% endblock %}

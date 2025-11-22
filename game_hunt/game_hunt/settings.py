@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,8 +41,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    # Подключаем allauth
+    'allauth',
+    'allauth.account',
+    # Добавить вход через соцсети?
+    'allauth.socialaccount',
+    # Подключаем свои приложения
     'core.apps.CoreConfig',
+    'users.apps.UsersConfig',
+
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -46,8 +61,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.LastSeenMiddleware',
 ]
 
 ROOT_URLCONF = 'game_hunt.urls'
@@ -55,6 +72,7 @@ ROOT_URLCONF = 'game_hunt.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # Добавили все шаблоны в корень проекта
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -99,13 +117,31 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # стандартный
+    'allauth.account.auth_backends.AuthenticationBackend',  # allauth
+]
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # вход по логину или email
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # можно 'mandatory' если хочешь строго
+ACCOUNT_USERNAME_REQUIRED = True
+
+# Редирект по умолчанию после входа
+LOGIN_REDIRECT_URL = 'homepage'
+
+# Редирект по умолчанию после выхода
+LOGOUT_REDIRECT_URL = 'homepage'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# Смена языка сайта
+LANGUAGE_CODE = 'ru-Ru'
+
+# Смена часового пояса
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -118,7 +154,34 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
+# Путь для медиа-файлов
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Настройки email для отправки писем
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'   # для тестирования в консоли
+EMAIL_HOST = os.getenv('EMAIL_HOST')  # smtp сервер
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+SITE_URL = 'http://127.0.0.1:8000'
+
+# Используем свою форму регистрации пользователя в forms
+ACCOUNT_FORMS = {
+    'signup': 'users.forms.GameHuntSignupForm',
+}
+# По умолчанию делаем долговечную сессию(закрыли браузер, вход сохранен)
+ACCOUNT_SESSION_REMEMBER = True
+
+# При успешном подтверждении email редирект на account_email_confirmed
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'account_email_confirmed'
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'account_email_confirmed'

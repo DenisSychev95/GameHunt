@@ -44,7 +44,69 @@
 
     <!-- Шапка -->
     {% include 'navbar.html' %}
+    {% if messages %}
+    <div style="max-width: 900px; margin: 10px auto 0; padding: 0 16px;">
+        {% for message in messages %}
+            {# уникальный id для каждого сообщения #}
+            <div
+                id="gh-message-{{ forloop.counter }}"
+                style="
+                    position: relative;
+                    margin-bottom: 8px;
+                    padding: 10px 14px;
+                    border-radius: 6px;
+                    background: #111827;
+                    border: 1px solid
+                        {% if message.tags == 'success' %}
+                            #10b981
+                        {% elif message.tags == 'error' %}
+                            #ef4444
+                        {% elif message.tags == 'warning' %}
+                            #f97316
+                        {% else %}
+                            #4b5563
+                        {% endif %};
+                    color: #e5e7eb;
+                    box-shadow: 0 0 10px rgba(0,0,0,0.6);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 14px;
+                "
+            >
+                <span style="font-size: 16px;">
+                    {% if message.tags == 'success' %}
+                        ✅
+                    {% elif message.tags == 'error' %}
+                        ❌
+                    {% elif message.tags == 'warning' %}
+                        ⚠️
+                    {% else %}
+                        💬
+                    {% endif %}
+                </span>
 
+                <span style="flex: 1;">{{ message }}</span>
+
+                {# Крестик, который удаляет div по ID #}
+                <button
+                    type="button"
+                    style="
+                        background: transparent;
+                        border: none;
+                        color: #9ca3af;
+                        cursor: pointer;
+                        font-size: 16px;
+                        padding: 0 4px;
+                    "
+                    onclick="document.getElementById('gh-message-{{ forloop.counter }}').remove();"
+                >
+                    ✕
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
     <!-- Контент -->
 
     <main class="page-content">
@@ -55,5 +117,6 @@
     <!-- Футер -->
     {% include 'footer.html' %}
 </div>
+
 </body>
 </html>

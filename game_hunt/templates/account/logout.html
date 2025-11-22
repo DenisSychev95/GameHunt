@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}GameHunt — Выход{% endblock %}
+
+{% block content %}
+<section style="max-width: 400px; margin: 0 auto; text-align: center;">
+    <h2 style="color: #f97316; margin-bottom: 16px;">Выход из аккаунта</h2>
+
+    <p style="margin-bottom: 16px;">
+        Вы действительно хотите выйти из аккаунта?
+    </p>
+
+    <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit"
+                style="padding: 8px 16px; border: none;
+                       background-color: #f97316; color: #fff;
+                       border-radius: 4px; cursor: pointer;">
+            Выйти
+        </button>
+    </form>
+
+    <p style="margin-top: 12px;">
+        <a href="{% url 'homepage' %}" style="color: #9ca3af;">
+            Отменить и вернуться на главную
+        </a>
+    </p>
+</section>
+{% endblock %}

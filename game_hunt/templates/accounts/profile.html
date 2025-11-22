@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}GameHunt — Профиль{% endblock %}
+
+{% block content %}
+<section style="max-width: 800px; margin: 0 auto; display: flex; gap: 24px;">
+    <div>
+        <img src="{{ profile.profile_image.url }}" alt="Аватар"
+             style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+                    border: 2px solid #f97316;">
+    </div>
+
+    <div>
+        <h2 style="color: #f97316; margin-bottom: 8px;">
+            {{ profile.nickname|default:profile.user.username }}
+        </h2>
+
+        <p style="margin: 4px 0;">
+            Логин: <strong>{{ profile.user.username }}</strong>
+        </p>
+        <p style="margin: 4px 0;">
+            Имя: {{ profile.user.first_name|default:"—" }}
+        </p>
+        <p style="margin: 4px 0;">
+            Фамилия: {{ profile.user.last_name|default:"—" }}
+        </p>
+        <p style="margin: 4px 0;">
+            E-mail: {{ profile.user.email|default:"—" }}
+        </p>
+
+        <p style="margin: 4px 0;">
+            На сайте с: {{ profile.created|date:"d.m.Y" }}
+        </p>
+        <p style="margin: 4px 0;">
+            Возраст:
+            {% if profile.age %}
+                {{ profile.age }}
+            {% else %}
+                —
+            {% endif %}
+        </p>
+        <p style="margin: 4px 0;">
+            Статус:
+            {% if profile.is_online %}
+                <span style="color: #22c55e;">● онлайн</span>
+            {% else %}
+                <span style="color: #9ca3af;">оффлайн</span>
+            {% endif %}
+        </p>
+
+        <p style="margin-top: 8px;">
+            О себе:<br>
+            {{ profile.bio|default:"Пока ничего не рассказал о себе." }}
+        </p>
+        <div style="margin-top: 16px;">
+    <h3 style="color: #f97316; margin-bottom: 8px;">Безопасность</h3>
+    <p style="margin-bottom: 6px;">
+        <a href="{% url 'account_change_password' %}" style="color: #f97316;">
+            Сменить пароль
+        </a>
+    </p>
+    <p style="margin-bottom: 6px;">
+        <a href="{% url 'account_email' %}" style="color: #f97316;">
+            Управление e-mail и подтверждение
+        </a>
+    </p>
+</div>
+    </div>
+
+</section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}GameHunt — Регистрация{% endblock %}
+
+{% block content %}
+<section style="max-width: 480px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 16px;">Регистрация</h2>
+
+    <form method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {% for field in form %}
+            <div style="margin-bottom: 10px;">
+
+                {{ field.label_tag }}<br>
+
+                {# --- Добавляем id="id_phone" только для поля phone --- #}
+                {% if field.name == "phone" %}
+                    <input type="text"
+                           id="id_phone"
+                           name="phone"
+                           placeholder="+7(_ _ _)_ _ _-_ _-_ _"
+                           value="{{ field.value|default:'' }}"
+                           style="padding:6px;">
+                {% else %}
+                    {{ field }}
+                {% endif %}
+
+                {% if field.help_text %}
+                    <div style="font-size: 12px; color: #9ca3af;">
+                        {{ field.help_text }}
+                    </div>
+                {% endif %}
+
+                {% if field.errors %}
+                    <div style="color: #f87171; font-size: 13px;">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit"
+                style="margin-top: 12px; padding: 8px 16px; border: none;
+                       background-color: #f97316; color: #fff; border-radius: 4px; cursor: pointer;">
+            Зарегистрироваться
+        </button>
+    </form>
+
+    <p style="margin-top: 12px;">
+        Уже есть аккаунт?
+        <a href="{% url 'account_login' %}" style="color: #f97316;">Войти</a>
+    </p>
+</section>
+
+{# ==== Подключение маски IMask ==== #}
+<script src="https://unpkg.com/imask"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var phoneInput = document.getElementById("id_phone");
+    if (phoneInput) {
+        IMask(phoneInput, {
+            mask: '+{7} (000) 000-00-00'
+        });
+    }
+});
+</script>
+{% endblock %}
