@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+from cryptography.fernet import Fernet
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,8 +47,11 @@ INSTALLED_APPS = [
     # Подключаем allauth
     'allauth',
     'allauth.account',
-    # Добавить вход через соцсети?
-    'allauth.socialaccount',
+
+    # # Пока не пробуем добавить авторизацию через соцсети
+    #  'allauth.socialaccount',
+    # # именно через github
+    #  'allauth.socialaccount.providers.github',
     # Подключаем свои приложения
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
@@ -124,8 +129,8 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # вход по логину или email
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'optional'  # можно 'mandatory' если хочешь строго
 ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # можно 'mandatory' для строгой верификации
 
 # Редирект по умолчанию после входа
 LOGIN_REDIRECT_URL = 'homepage'
@@ -175,13 +180,26 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 SITE_URL = 'http://127.0.0.1:8000'
 
-# Используем свою форму регистрации пользователя в forms
+
 ACCOUNT_FORMS = {
+    # Используем свою форму регистрации пользователя в forms GameHuntSignupForm
     'signup': 'users.forms.GameHuntSignupForm',
+    # Используем свою форму авторизации пользователя в forms GameHuntLoginForm
+    'login': 'users.forms.GameHuntLoginForm',
 }
 # По умолчанию делаем долговечную сессию(закрыли браузер, вход сохранен)
 ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_REMEMBER_ME = True
 
 # При успешном подтверждении email редирект на account_email_confirmed
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'account_email_confirmed'
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'account_email_confirmed'
+
+# По-хорошему нужно хранить ключ шифрования в переменных окружения а не в коде
+# Забираем из .env ключ шифрования
+ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
+# Если ключ шифрования не прописан в .env выбрасываем ошибку
+if not ENCRYPTION_KEY:
+    raise ValueError('ENCRYPTION_KEY is not set in .env')
+# Симметричный алгоритм шифрования с секретным ключом, который обеспечивает аутентифицированную криптографию
+FERNET = Fernet(ENCRYPTION_KEY.encode())

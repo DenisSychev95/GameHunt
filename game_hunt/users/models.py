@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models import OneToOneField
 from datetime import date, timedelta
 from django.utils import timezone
+# Забираем из нашего encryption шифрующее поле
+from . encryption import EncryptedCharField
 
 
 # Создаем модель профиля пользователя
@@ -15,7 +17,7 @@ class Profile(models.Model):
                                       verbose_name='Картинка профиля')
     bio = models.TextField(blank=True, verbose_name='О себе')
     birth_date = models.DateField(blank=True, null=True, verbose_name='Дата рождения')
-    phone = models.CharField(blank=True, max_length=15, verbose_name='Телефон')
+    phone = EncryptedCharField(blank=True, null=True, max_length=15, unique=True, verbose_name='Телефон')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Зарегистрирован')
     updated = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     is_banned = models.BooleanField(default=False, verbose_name='Заблокирован')

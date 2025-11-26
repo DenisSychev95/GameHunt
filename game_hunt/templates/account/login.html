@@ -16,14 +16,14 @@
         {% csrf_token %}
 
         <div style="margin-bottom: 10px;">
-            {{ form.login.label_tag }}<br>
-            {{ form.login }}
-            {% if form.login.errors %}
-                <div style="color: #f87171; font-size: 13px;">
-                    {{ form.login.errors|striptags }}
-                </div>
-            {% endif %}
+    <label for="{{ form.login.id_for_label }}">Логин, e-mail или телефон</label><br>
+    {{ form.login }}
+    {% if form.login.errors %}
+        <div style="color: #f87171; font-size: 13px;">
+            {{ form.login.errors|striptags }}
         </div>
+    {% endif %}
+</div>
 
         <div style="margin-bottom: 10px;">
             {{ form.password.label_tag }}<br>
@@ -59,6 +59,6 @@
         <a href="{% url 'account_reset_password' %}" style="color: #9ca3af;">
             Забыли пароль?
         </a>
-    </p>
 </section>
+
 {% endblock %}

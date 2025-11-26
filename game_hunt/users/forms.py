@@ -1,8 +1,9 @@
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, LoginForm
 from django import forms
 from django.forms.widgets import SelectDateWidget
 from datetime import date
 import re
+from .models import Profile
 
 
 class GameHuntSignupForm(SignupForm):
@@ -110,3 +111,39 @@ class GameHuntSignupForm(SignupForm):
         profile.save()
 
         return user
+
+
+class GameHuntLoginForm(LoginForm):
+
+    # Расширяем форму LoginForm allauth для возможности авторизации по номеру телефона
+
+    def clean_login(self):
+        # базовая очистка allauth (обрежет пробелы и т.д.)
+        login = super().clean_login()
+
+        if not login:
+            return login
+
+        # пробуем распознать номер телефона
+        digits = re.sub(r'\D', '', login)
+
+        # формат: 11 цифр, начинается на 7 или 8
+        if len(digits) == 11 and digits[0] in ('7', '8'):
+            # приводим 8xxxxxxxxxx -> 7xxxxxxxxxx
+            if digits.startswith('8'):
+                digits = '7' + digits[1:]
+
+            normalized = digits  # именно так мы сохраняем телефон в Profile
+
+            # ИЩЕМ ПО РАССШИФРОВАННЫМ ТЕЛЕФОНАМ
+            for profile in Profile.objects.exclude(phone__isnull=True):
+                # profile.phone здесь уже РАСШИФРОВАНО EncryptedCharField'ом
+                if profile.phone == normalized:
+                    user = profile.user
+                    # возвращаем логин этого пользователя
+                    return user.get_username()
+
+            # если никого не нашли по телефону — идём дальше как обычный логин
+
+        # если логин не похож на телефон — остаётся стандартная логика allauth
+        return login
