@@ -3,21 +3,26 @@ from django.contrib.auth.models import User
 from django.db.models import OneToOneField
 from datetime import date, timedelta
 from django.utils import timezone
-# Забираем из нашего encryption шифрующее поле
-from . encryption import EncryptedCharField
+# Забираем из нашего encryption шифрующее поле.
+from . encryption import EncryptedCharField, EncryptedDateField
 
 
-# Создаем модель профиля пользователя
+# Создаем модель профиля пользователя.
 class Profile(models.Model):
 
     user = OneToOneField(User, on_delete=models.CASCADE, related_name='profile', verbose_name='Пользователь')
     nickname = models.CharField(blank=True, max_length=100, verbose_name='Никнейм')
+    # Далее шифруемые поля Profile.
+    first_name = EncryptedCharField(blank=True, null=True, max_length=150, verbose_name='Имя')
+    last_name = EncryptedCharField(blank=True, null=True, max_length=150, verbose_name='Фамилия')
+    email = EncryptedCharField(blank=True, null=True, max_length=250, verbose_name='Почта')
+    birth_date = EncryptedDateField(blank=True, null=True, verbose_name='Дата рождения')
+    phone = EncryptedCharField(blank=True, null=True, max_length=15, unique=True, verbose_name='Телефон')
+    # Далее не шифруемые поля Profile.
     # Добавить стандартную картинку профиля
     profile_image = models.ImageField(null=True, default='default.png', upload_to='profile_images/',
                                       verbose_name='Картинка профиля')
     bio = models.TextField(blank=True, verbose_name='О себе')
-    birth_date = models.DateField(blank=True, null=True, verbose_name='Дата рождения')
-    phone = EncryptedCharField(blank=True, null=True, max_length=15, unique=True, verbose_name='Телефон')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Зарегистрирован')
     updated = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     is_banned = models.BooleanField(default=False, verbose_name='Заблокирован')

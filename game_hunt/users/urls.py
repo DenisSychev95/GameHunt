@@ -11,5 +11,7 @@ urlpatterns = [
     path('email/confirmed/', TemplateView.as_view(template_name='account/email_confirmed.html'),
          name='account_email_confirmed'),
 
+    path('profile/edit/', views.profile_edit, name='profile_edit'),
+
 ]
 

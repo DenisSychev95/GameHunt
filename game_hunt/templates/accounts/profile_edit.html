@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование профиля — GameHunt{% endblock %}
+
+{% block content %}
+<section style="max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 16px;">Редактирование профиля</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {% for field in form %}
+            <div style="margin-bottom: 12px;">
+                {{ field.label_tag }}
+
+                <div>
+                    {{ field }}
+                </div>
+
+                {% if field.help_text %}
+                    <div style="font-size: 12px; color: #9ca3af;">
+                        {{ field.help_text }}
+                    </div>
+                {% endif %}
+
+                {% if field.errors %}
+                    <div style="color: #f87171; font-size: 13px;">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit"
+                style="margin-top: 12px; padding: 8px 16px; border: none;
+                       background-color: #f97316; color: #fff;
+                       border-radius: 4px; cursor: pointer;">
+            Сохранить изменения
+        </button>
+
+        <a href="{% url 'profile' %}"
+           style="margin-left: 12px; color: #9ca3af; font-size: 14px;">
+            Отмена
+        </a>
+    </form>
+</section>
+{% endblock %}
