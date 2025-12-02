@@ -5,6 +5,8 @@ from datetime import date, timedelta
 from django.utils import timezone
 # Забираем из нашего encryption шифрующее поле.
 from . encryption import EncryptedCharField, EncryptedDateField
+# Импортировали нашу модель с жанрами
+from games.models import Genre
 
 
 # Создаем модель профиля пользователя.
@@ -27,6 +29,8 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     is_banned = models.BooleanField(default=False, verbose_name='Заблокирован')
     last_seen = models.DateTimeField(blank=True, null=True, verbose_name='Последняя активность')
+    # Добавляем поле любимые жанры
+    favorite_genres = models.ManyToManyField(Genre, blank=True, related_name='fans', verbose_name='Любимые жанры')
 
     def __str__(self):
 

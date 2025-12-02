@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # Подключаем свои приложения
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
+    'games.apps.GamesConfig',
 
 ]
 

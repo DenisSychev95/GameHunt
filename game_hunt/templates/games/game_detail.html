@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.title }} — GameHunt{% endblock %}
+
+{% block content %}
+<section style="max-width: 900px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 8px;">{{ game.title }}</h2>
+
+    {% if game.cover_image %}
+        <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
+             style="max-width: 300px; border-radius: 4px; margin-bottom: 12px;">
+    {% endif %}
+
+    <p style="font-size: 14px; color: #9ca3af;">
+        Жанры:
+        {% for genre in game.genres.all %}
+            {{ genre.name }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            не указано
+        {% endfor %}
+        <br>
+        Платформы:
+        {% for platform in game.platforms.all %}
+            {{ platform.name }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            не указано
+        {% endfor %}
+        <br>
+        Просмотры: {{ game.views_count }} |
+        Лайки: {{ game.likes_count }} |
+        Дизлайки: {{ game.dislikes_count }}
+        {% if game.is_adult_only %}
+            <br><strong style="color: #f87171;">Контент 18+</strong>
+        {% endif %}
+    </p>
+
+    <p style="margin-top: 12px;">{{ game.description }}</p>
+
+    {% if user.is_authenticated %}
+        <div style="margin-top: 16px;">
+            <form method="post" action="{% url 'game_vote' slug=game.slug value='like' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit"
+                        style="padding: 4px 10px; border-radius: 4px; border: none;
+                               background-color: {% if user_vote and user_vote.value == 1 %}#16a34a{% else %}#4b5563{% endif %};
+                               color: #fff;">
+                    👍 Лайк
+                </button>
+            </form>
+
+            <form method="post" action="{% url 'game_vote' slug=game.slug value='dislike' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit"
+                        style="padding: 4px 10px; border-radius: 4px; border: none;
+                               background-color: {% if user_vote and user_vote.value == -1 %}#dc2626{% else %}#4b5563{% endif %};
+                               color: #fff; margin-left: 8px;">
+                    👎 Дизлайк
+                </button>
+            </form>
+        </div>
+    {% else %}
+        <p style="margin-top: 12px; font-size: 14px;">
+            Чтобы голосовать и комментировать, <a href="{% url 'account_login' %}" style="color: #f97316;">войдите</a>.
+        </p>
+    {% endif %}
+
+    <hr style="margin: 20px 0; border-color: #374151;">
+
+    <h3 style="margin-bottom: 8px;">Комментарии</h3>
+
+    {% if comments %}
+        <ul style="list-style: none; padding-left: 0;">
+            {% for comment in comments %}
+                <li style="margin-bottom: 12px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
+                    <strong>{{ comment.user.profile.nickname|default:comment.user.username }}</strong>
+                    <span style="font-size: 12px; color: #9ca3af;">
+                        {{ comment.created_at|date:"d.m.Y H:i" }}
+                    </span>
+                    <p style="margin-top: 4px;">{{ comment.text }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Пока нет комментариев.</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <h4 style="margin-top: 16px;">Оставить комментарий</h4>
+        <form method="post">
+            {% csrf_token %}
+            {{ comment_form.non_field_errors }}
+            <div style="margin-bottom: 8px;">
+                {{ comment_form.text }}
+                {% if comment_form.text.errors %}
+                    <div style="color: #f87171; font-size: 13px;">
+                        {{ comment_form.text.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+            <button type="submit"
+                    style="padding: 6px 12px; border: none; border-radius: 4px;
+                            background-color: #f97316; color: #fff;">
+                Отправить
+            </button>
+        </form>
+    {% endif %}
+</section>
+{% endblock %}
