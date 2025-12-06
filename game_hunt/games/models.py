@@ -6,11 +6,11 @@ from django.utils.text import slugify
 # Модель для жанров
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Жанр')
-    slug = models.SlugField(max_length=120, unique=True, verbose_name='Слаг')
+    slug = models.SlugField(max_length=120, unique=True, verbose_name='URL')
 
     class Meta:
-        verbose_name = 'Жанр'
-        verbose_name_plural = 'Жанры'
+        verbose_name = 'жанр'
+        verbose_name_plural = 'жанры'
         ordering = ['name']
 
     def __str__(self):
@@ -20,11 +20,11 @@ class Genre(models.Model):
 # Модель для платформ
 class Platform(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Платформа')
-    slug = models.SlugField(max_length=120, unique=True, verbose_name='Слаг')
+    slug = models.SlugField(max_length=120, unique=True, verbose_name='URL')
 
     class Meta:
-        verbose_name = 'Платформа'
-        verbose_name_plural = 'Платформы'
+        verbose_name = 'платформа'
+        verbose_name_plural = 'платформы'
         ordering = ['name']
 
     def __str__(self):
@@ -34,7 +34,7 @@ class Platform(models.Model):
 # Модель для игр
 class Game(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название')
-    slug = models.SlugField(max_length=220, unique=True, verbose_name='Слаг')
+    slug = models.SlugField(max_length=220, unique=True, verbose_name='URL')
     description = models.TextField(verbose_name='Описание')
     release_date = models.DateField(blank=True, null=True, verbose_name='Дата выхода')
 
@@ -56,8 +56,8 @@ class Game(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлена')
 
     class Meta:
-        verbose_name = 'Игра'
-        verbose_name_plural = 'Игры'
+        verbose_name = 'игра'
+        verbose_name_plural = 'игры'
         ordering = ['-created_at']
 
     def __str__(self):
@@ -102,8 +102,8 @@ class GameVote(models.Model):
     class Meta:
         # Уникальные пары: один user голосует за игру только 1 раз
         unique_together = ('user', 'game')
-        verbose_name = 'Оценка игры'
-        verbose_name_plural = 'Оценки игр'
+        verbose_name = 'оценка игры'
+        verbose_name_plural = 'оценки игр'
 
     def __str__(self):
         # Возвращаем человеко-читаемое представление какой user какую игру как оценил
@@ -121,8 +121,8 @@ class GameComment(models.Model):
     is_deleted = models.BooleanField(default=False, verbose_name='Удалён')
 
     class Meta:
-        verbose_name = 'Комментарий к игре'
-        verbose_name_plural = 'Комментарии к играм'
+        verbose_name = 'комментарий к игре'
+        verbose_name_plural = 'комментарии к играм'
         ordering = ['-created_at']
 
     def __str__(self):

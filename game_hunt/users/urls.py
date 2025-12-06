@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('profile/', views.profile, name='profile'),
+    path('profile-view/<str:pk>', views.profile_view, name='profile-view'),
+
     # После успешной смены пароля делаем редирект на профиль
     path('password/change/', PasswordChangeView.as_view(success_url=reverse_lazy('profile')),
          name='account_change_password'),

@@ -55,6 +55,8 @@
             О себе:<br>
             {{ profile.bio|default:"Пока ничего не рассказал о себе." }}
         </p>
+
+        {% if profile.id == request.user.id %}
             <a href="{% url 'profile_edit' %}"
    style="display: inline-block; margin-top: 12px; padding: 6px 12px;
           background-color: #f97316; color: #fff; border-radius: 4px; text-decoration: none;">
@@ -73,6 +75,7 @@
         </a>
     </p>
 </div>
+        {% endif %}
     </div>
 
 </section>

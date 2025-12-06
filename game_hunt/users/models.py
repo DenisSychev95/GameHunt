@@ -54,8 +54,8 @@ class Profile(models.Model):
         return age is not None and age >= 18
 
     class Meta:
-        verbose_name = 'Профиль'
-        verbose_name_plural = 'Профили'
+        verbose_name = 'профиль'
+        verbose_name_plural = 'профили'
 
     # Геттер для получения флага онлайн/оффлайн(пользователь онлайн если был активен в течение 5 минут)
     @property

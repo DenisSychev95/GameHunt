@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}{{ game.title }} — GameHunt{% endblock %}
 
 {% block content %}
@@ -60,29 +60,112 @@
         </div>
     {% else %}
         <p style="margin-top: 12px; font-size: 14px;">
-            Чтобы голосовать и комментировать, <a href="{% url 'account_login' %}" style="color: #f97316;">войдите</a>.
+            Чтобы голосовать и комментировать,
+            <a href="{% url 'account_login' %}" style="color: #f97316;">авторизуйтесь</a>.
         </p>
     {% endif %}
 
     <hr style="margin: 20px 0; border-color: #374151;">
 
     <h3 style="margin-bottom: 8px;">Комментарии</h3>
+{% if comments %}
+    {% for comment in comments %}
+        <div style="margin-bottom: 12px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
 
-    {% if comments %}
-        <ul style="list-style: none; padding-left: 0;">
-            {% for comment in comments %}
-                <li style="margin-bottom: 12px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
-                    <strong>{{ comment.user.profile.nickname|default:comment.user.username }}</strong>
-                    <span style="font-size: 12px; color: #9ca3af;">
-                        {{ comment.created_at|date:"d.m.Y H:i" }}
-                    </span>
-                    <p style="margin-top: 4px;">{{ comment.text }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Пока нет комментариев.</p>
-    {% endif %}
+            <!-- ВЕРХНЯЯ СТРОКА: АВАТАР + НИК СЛЕВА, КОНТРОЛЫ СПРАВА -->
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+
+                <!-- ЛЕВАЯ ЧАСТЬ -->
+    <div style="display: flex; flex-direction: column;">
+                <!-- Дата публикации -->
+        <span style="font-size: 12px; color: #9ca3af; margin-left: 36px;">
+            {{ comment.created_at|date:"d.m.Y H:i" }}
+        </span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            {% if comment.user.profile.profile_image %}
+                <img src="{{ comment.user.profile.profile_image.url }}"
+                     alt="{{ comment.user.profile.nickname }}"
+                     style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'images/default_avatar.png' %}"
+                     alt="avatar"
+                     style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+            {% endif %}
+
+            <a href="{% url 'profile-view' comment.user.id %}"
+               style="color: #f97316; font-size: 14px; text-decoration: none;">
+                {{ comment.user.profile.nickname|default:comment.user.username }}
+            </a>
+        </div>
+
+
+
+
+                </div>
+
+                <!-- ПРАВАЯ ЧАСТЬ — КНОПКИ УПРАВЛЕНИЯ -->
+                {% if user.is_superuser or request.user == comment.user %}
+                    <div style="display: flex; align-items: center; gap: 6px; justify-content: space-between;
+                               width: 68px;">
+
+                        {% if user == comment.user %}
+                            <!-- Кнопка редактирования -->
+                            <a href="{% url 'game_comment_edit' comment.id %}"
+                               title="Редактировать"
+                               style="
+                                   display: inline-flex;
+                                   align-items: center;
+                                   justify-content: center;
+                                   width: 24px;
+                                   height: 24px;
+                                   border-radius: 50%;
+                                   background-color: #4b5563;
+                                   color: white;
+                                   font-size: 12px;
+                                   text-decoration: none;
+                                   cursor: pointer;">
+                                ✏️
+                            </a>
+                        {% endif %}
+
+                        <!-- Кнопка удаления -->
+                        <form method="post"
+                              action="{% url 'game_comment_delete' comment.id %}"
+                              style="margin: 0; padding: 0;">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    onclick="return confirm('Удалить этот комментарий?');"
+                                    title="Удалить"
+                                    style="
+                                        width: 24px;
+                                        height: 24px;
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        border-radius: 50%;
+                                        border: none;
+                                        background-color: #dc2626;
+                                        color: white;
+                                        font-size: 12px;
+                                        cursor: pointer;">
+                                ✖️
+                            </button>
+                        </form>
+
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- ТЕКСТ КОММЕНТАРИЯ -->
+            <p style="font-size: 14px; color: #e5e7eb; margin-left: 36px;">
+                {{ comment.text }}
+            </p>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Пока нет комментариев.</p>
+{% endif %}
 
     {% if user.is_authenticated %}
         <h4 style="margin-top: 16px;">Оставить комментарий</h4>
