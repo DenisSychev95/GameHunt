@@ -17,7 +17,7 @@ def game_list(request):
     platform = int(platform_id) if platform_id else None
 
     # ---------- Пагинация ----------
-    count = 1
+    count = 3
     # Возвращаем games(объект Page)- итерируемый объект по которому можно пройтись в цикле и получить игры и
     # кастомный диапазон пагинации
     # Не стоит дублировать код и писать page_games= games.object_list(тут уже page_games- массив игр)

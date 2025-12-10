@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Админ-панель — Удаление игры{% endblock %}
+
+{% block content %}
+<h1>Удалить игру "{{ game.title }}"?</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit"
+            style="margin-top: 10px; padding: 8px 14px; border-radius: 6px; border: 1px solid #ef4444; color: #ef4444;">
+        Да, удалить
+    </button>
+    <a href="{% url 'admin_dashboard' %}" style="margin-left: 10px;">Отмена</a>
+</form>
+{% endblock %}

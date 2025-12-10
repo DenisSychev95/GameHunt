@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %}Админ-панель — GameHunt{% endblock %}
+
+{% block content %}
+
+<style>
+    .admin-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+        gap: 24px;
+        align-items: flex-start;
+        margin-bottom: 32px;
+    }
+
+    .admin-card {
+        background: #020617;          /* тёмный фон карточки */
+        border-radius: 12px;
+        border: 1px solid #1f2937;
+        padding: 18px 20px;
+    }
+
+    .admin-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .admin-card-title {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .admin-add-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid #f97316;
+        text-decoration: none;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .admin-table thead th {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid #4b5563;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #9ca3af;
+    }
+
+    .admin-table tbody td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #1f2937;
+        vertical-align: top;
+    }
+
+    .admin-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .admin-tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        border: 1px solid #374151;
+        margin-right: 4px;
+        margin-bottom: 2px;
+    }
+
+    .admin-tag--danger {
+        border-color: #ef4444;
+        color: #fecaca;
+    }
+
+    .admin-tag--muted {
+        color: #9ca3af;
+    }
+
+    .admin-inline-form {
+        display: inline;
+        margin: 0;
+        padding: 0;
+    }
+
+    .admin-inline-button {
+        background: none;
+        border: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .admin-inline-button--danger {
+        color: #ef4444;
+    }
+
+    .admin-inline-button--warning {
+        color: #f97316;
+    }
+</style>
+
+<h1 style="text-align:center;">Администрирование</h1>
+
+<div class="admin-layout">
+
+    <!-- КАРТОЧКА: ИГРЫ -->
+    <section class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="admin-card-title">Игры</h2>
+            <a href="{% url 'admin_game_create' %}" class="admin-add-btn">
+                + Добавить игру
+            </a>
+        </div>
+
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Добавлена</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for game in games %}
+                <tr>
+                    <td>{{ game.id }}</td>
+                    <td>
+                        <a href="{% url 'game_detail' game.slug %}" target="_blank">
+                            {{ game.title }}
+                        </a>
+                    </td>
+                    <td>{{ game.created_at|date:'d.m.Y H:i' }}</td>
+                    <td>
+                        <a href="{% url 'admin_game_edit' game.id %}">Редактировать</a>
+                        |
+                        <a href="{% url 'admin_game_delete' game.id %}"
+   style="color: #ef4444;">
+    Удалить
+</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">Игр пока нет.</td>
+                </tr>
+            {% endfor %}
+            </tbody></table>
+    </section>
+
+    <!-- КАРТОЧКА: ПОЛЬЗОВАТЕЛИ -->
+    <section class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="admin-card-title">Пользователи</h2>
+        </div>
+
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>Пользователь</th>
+                <th>Статусы</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for u in users %}
+                <tr>
+                    <td><a href="{% url 'profile-view' u.id %}">{{u.username}}</a></td>
+                    <td>
+                        <!-- ЗАБЛОКИРОВАН -->
+                        <span class="admin-tag {% if not u.is_active %}admin-tag--danger{% else %}admin-tag--muted{% endif %}">
+                            Заблокирован:
+                            {% if not u.is_active %}да{% else %}нет{% endif %}
+                        </span>
+                        <br>
+                        <!-- ОНЛАЙН / ОФФЛАЙН -->
+                        <span class="admin-tag admin-tag--muted">
+                            Статус:
+                            {% if u.profile.is_online %}
+                                онлайн
+                            {% else %}
+                                офлайн
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'admin_user_comments' u.id %}">Комментарии</a>
+                        |
+                        <form action="{% url 'admin_toggle_ban' u.id %}"
+                              method="post"
+                              class="admin-inline-form">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="admin-inline-button admin-inline-button--warning">
+                                {% if u.is_active %}Забанить{% else %}Разбанить{% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">Пользователей нет.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+</div>
+{% endblock %}

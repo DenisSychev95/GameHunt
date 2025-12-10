@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}Комментарии пользователя {{ user_obj.username }} — Админ-панель{% endblock %}
+
+{% block content %}
+
+<style>
+    .admin-card {
+        background: #020617;
+        border-radius: 12px;
+        border: 1px solid #1f2937;
+        padding: 20px 22px 22px;
+        margin: 0 auto;
+        max-width: 960px;
+    }
+
+    .admin-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+
+    .admin-card-title {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .admin-back-link {
+        font-size: 13px;
+        text-decoration: none;
+    }
+
+    .admin-tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        border: 1px solid #374151;
+        margin-right: 4px;
+        margin-top: 4px;
+    }
+
+    .admin-tag--danger {
+        border-color: #ef4444;
+        color: #fecaca;
+    }
+
+    .admin-tag--muted {
+        color: #9ca3af;
+    }
+
+    .admin-tag--accent {
+        border-color: #f97316;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin-top: 12px;
+    }
+
+    .admin-table thead th {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid #4b5563;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #9ca3af;
+    }
+
+    .admin-table tbody td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #1f2937;
+        vertical-align: top;
+    }
+
+    .admin-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .admin-comment-text {
+        line-height: 1.4;
+    }
+
+    .admin-empty {
+        padding: 6px 0 2px;
+        font-size: 14px;
+        color: #9ca3af;
+    }
+</style>
+
+<h1 style="margin-bottom: 18px;">Админ-панель</h1>
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div>
+            <h2 class="admin-card-title">
+                Комментарии пользователя {{ user_obj.username }}
+            </h2>
+
+            <div>
+                <!-- Заблокирован -->
+                <span class="admin-tag {% if not user_obj.is_active %}admin-tag--danger{% else %}admin-tag--muted{% endif %}">
+                    Заблокирован:
+                    {% if not user_obj.is_active %}да{% else %}нет{% endif %}
+                </span>
+
+                <!-- Онлайн / офлайн, если есть профиль -->
+                {% if user_obj.profile %}
+                    <span class="admin-tag admin-tag--muted">
+                        Статус:
+                        {% if user_obj.profile.is_online %}
+                            онлайн
+                        {% else %}
+                            офлайн
+                        {% endif %}
+                    </span>
+                {% endif %}
+
+                <!-- Количество комментариев -->
+                <span class="admin-tag admin-tag--accent">
+                    Комментариев: {{ comments|length }}
+                </span>
+            </div>
+        </div>
+
+        <div>
+            <a href="{% url 'admin_dashboard' %}" class="admin-back-link">
+                ← Назад в админ-панель
+            </a>
+        </div>
+    </div>
+
+    {% if comments %}
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>Игра</th>
+                <th>Комментарий</th>
+                <th>Дата</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in comments %}
+                <tr>
+                    <td>
+                        <a href="{% url 'game_detail' c.game.slug %}" target="_blank">
+                            {{ c.game.title }}
+                        </a>
+                    </td>
+                    <td class="admin-comment-text">
+                        {{ c.text }}
+                    </td>
+                    <td>
+                        {{ c.created_at|date:"d.m.Y H:i" }}
+                    </td>
+                </tr>{% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="admin-empty">У этого пользователя пока нет комментариев.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

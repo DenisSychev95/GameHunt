@@ -19,9 +19,17 @@ class GameCommentForm(forms.ModelForm):
 class GameAdminForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = '__all__'
+        exclude = ('views_count',)
         widgets = {
             'release_date': forms.SelectDateWidget(
                 years=range(date.today().year, date.today().year - 40, -1)
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # вешаем класс admin-input на ВСЕ поля формы
+        for field in self.fields.values():
+            existing = field.widget.attrs.get('class', '')
+            # аккуратно добавляем наш класс, не затирая предыдущие
+            field.widget.attrs['class'] = (existing + ' admin-input').strip()

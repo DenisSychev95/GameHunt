@@ -27,6 +27,9 @@
 
 <div class="auth">
     {% if user.is_authenticated %}
+        {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'admin_dashboard' %}" style="margin: 0 10px;">Админка</a>
+        {% endif %}
         <a href="{% url 'profile' %}" style="margin: 0 10px;">Профиль</a>
         <a href="{% url 'account_logout' %}" style="margin: 0 10px;">Выйти</a>
     {% else %}
