@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}GameHunt — {{ game.title }} — Новый обзор{% endblock %}
+
+{% block content %}
+<section style="max-width: 700px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 12px;">
+        Новый обзор: {{ game.title }}
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div>
+                <label for="{{ form.title.id_for_label }}">Заголовок</label><br>
+                {{ form.title }}
+                {{ form.title.errors }}
+            </div>
+
+            <div>
+                <label for="{{ form.text.id_for_label }}">Текст</label><br>
+                {{ form.text }}
+                {{ form.text.errors }}
+            </div>
+
+            <div>
+                <label for="{{ form.rating.id_for_label }}">Оценка (1–10)</label><br>
+                {{ form.rating }}
+                {{ form.rating.errors }}
+            </div>
+        </div>
+
+        <button type="submit"
+                style="margin-top: 12px; padding: 6px 12px; background-color: #f97316;
+                       border: none; color: #fff; border-radius: 4px;">
+            Сохранить обзор
+        </button>
+    </form>
+</section>
+{% endblock %}

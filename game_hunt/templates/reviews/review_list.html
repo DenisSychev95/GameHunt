@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}
+    {% if current_game %}
+        GameHunt — {{ current_game.title }} — Обзоры
+    {% else %}
+        GameHunt — Обзоры
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<section style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #f97316; margin-bottom: 16px;">
+        {% if current_game %}
+            Обзоры: {{ current_game.title }}
+        {% else %}
+            Обзоры игр
+        {% endif %}
+    </h2>
+
+    {% if reviews %}
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            {% for review in reviews %}
+                <article style="border: 1px solid #374151; border-radius: 8px; padding: 10px;">
+                    <h3 style="margin-bottom: 4px;">
+                        <a href="{% url 'review_detail' review.pk %}"
+                           style="color: #f97316; text-decoration: none;">
+                            {{ review.title }}
+                        </a>
+                    </h3>
+                    <p style="font-size: 14px; color: #9ca3af; margin-bottom: 4px;">
+                        Игра:
+                        <a href="{% url 'game_detail' slug=review.game.slug %}">
+                            {{ review.game.title }}
+                        </a>
+                        · Автор: {{ review.author.username }}
+                        · Оценка: {{ review.rating }}/10
+                    </p>
+                    <p style="font-size: 14px; color: #e5e7eb;">
+                        {{ review.text|truncatechars:200 }}
+                    </p>
+                </article>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+            <div style="margin-top: 16px;">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if current_game %}&game={{ current_game.slug }}{% endif %}">
+                        ← Предыдущая
+                    </a>
+                {% endif %}
+                <span style="margin: 0 8px;">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if current_game %}&game={{ current_game.slug }}{% endif %}">
+                        Следующая →
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p>Пока обзоров нет.</p>
+    {% endif %}
+</section>
+{% endblock %}

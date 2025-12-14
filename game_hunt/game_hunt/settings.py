@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'games.apps.GamesConfig',
+    'reviews.apps.ReviewsConfig',
+    'walkthroughs.apps.WalkthrougsConfig',
+    'cheats.apps.CheatsConfig',
 
 ]
 

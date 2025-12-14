@@ -3,6 +3,34 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 
+# Модель для Разработчика
+class Developer(models.Model):
+    name = models.CharField(max_length=200, unique=True, verbose_name='Разработчик')
+    slug = models.SlugField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'разработчик'
+        verbose_name_plural = 'разработчики'
+        ordering = ['name']
+
+
+# Модель для Издателя
+class Publisher(models.Model):
+    name = models.CharField(max_length=200, unique=True, verbose_name='Издатель')
+    slug = models.SlugField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'издатель'
+        verbose_name_plural = 'издатели'
+        ordering = ['name']
+
+
 # Модель для жанров
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Жанр')
@@ -54,6 +82,10 @@ class Game(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлена')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлена')
+    developer = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True,
+                                  related_query_name='games', verbose_name='Разработчик')
+    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True,
+                                  related_query_name='games', verbose_name='Издатель')
 
     class Meta:
         verbose_name = 'игра'

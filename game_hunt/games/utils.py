@@ -5,7 +5,9 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 def search_games(request):
     # Для минимизации числа запросов базовый поиск всех игр с подгрузкой жанров и платформ
-    games = Game.objects.all().prefetch_related('genres', 'platforms')
+    games_sq = Game.objects.all().select_related('developer', 'publisher')
+    games = games_sq.prefetch_related('genres', 'platforms')
+
 
     # Получаем все жанры для поиска по жанрам
     genres = Genre.objects.all()
@@ -30,7 +32,9 @@ def search_games(request):
             # или поиск по описанию игры(регистронезависимый поиск подстроки в полях description модели Game)
             Q(description__icontains=search_query) |
             # или поиск по названию жанров по прямой связи в модели Genre
-            Q(genres__name__icontains=search_query)
+            Q(genres__name__icontains=search_query) |
+            Q(developer__name__icontains=search_query) |
+            Q(publisher__name__icontains=search_query)
         )
 
     # Дополнительный фильтр поиска по жанрам: value из name 'genre', если ничего не выбрано поиск по всем жанрам.

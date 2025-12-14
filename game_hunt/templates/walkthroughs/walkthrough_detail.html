@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ walkthrough.title }}</h2>
+<p>Игра: <a href="{% url 'game_detail' slug=walkthrough.game.slug %}">{{ walkthrough.game.title }}</a></p>
+<div>
+    {{ walkthrough.content|linebreaks }}
+</div>
+{% endblock %}

@@ -50,7 +50,9 @@
                         <a href="{% url 'game_detail' slug=game.slug %}" style="color: #f97316;">
                             {{ game.title }}
                         </a>
+
                     </h3>
+
                     {% if game.cover_image %}
                         <a href="{% url 'game_detail' slug=game.slug %}">
                             <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
@@ -70,6 +72,7 @@
                         Лайки: {{ game.likes_count }} |
                         Дизлайки: {{ game.dislikes_count }}
                     </p>
+                    <p style="font-size: 13px; color: #9ca3af;">{{game.release_date}}</p>
                 </article>
             {% endfor %}
         </div>

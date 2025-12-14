@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ cheat.title }}</h2>
+<p>Игра: <a href="{% url 'game_detail' slug=cheat.game.slug %}">{{ cheat.game.title }}</a></p>
+<p>Платформа: {{ cheat.get_platform_display }}</p>
+
+<h3>Код</h3>
+<pre>{{ cheat.code }}</pre>
+
+{% if cheat.description %}
+    <h3>Описание</h3>
+    <p>{{ cheat.description|linebreaks }}</p>
+{% endif %}
+{% endblock %}

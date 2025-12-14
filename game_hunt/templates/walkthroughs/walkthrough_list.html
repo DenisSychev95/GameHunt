@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Прохождения{% if current_game %}: {{ current_game.title }}{% endif %}</h2>
+
+{% if walkthroughs %}
+    <ul>
+        {% for wt in walkthroughs %}
+            <li>
+                <a href="{% url 'walkthrough_detail' wt.slug %}">{{ wt.title }}</a>
+                ({{ wt.game.title }})
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Пока нет прохождений.</p>
+{% endif %}
+{% endblock %}

@@ -1,6 +1,20 @@
 from django.contrib import admin
-from .models import Genre, Platform, Game, GameVote, GameComment
+from .models import Genre, Platform, Game, GameVote, GameComment, Developer, Publisher
 from . forms import GameAdminForm
+
+
+@admin.register(Developer)
+class DeveloperAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ("name",)
+
+
+@admin.register(Publisher)
+class PublisherAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ("name",)
 
 
 @admin.register(Genre)
@@ -20,9 +34,9 @@ class PlatformAdmin(admin.ModelAdmin):
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     form = GameAdminForm
-    list_display = ('title', 'is_adult_only', 'views_count', 'created_at')
-    list_filter = ('is_adult_only', 'genres', 'platforms', 'release_date')
-    search_fields = ('title',)
+    list_display = ('title', 'is_adult_only', 'views_count', 'created_at', "release_date", "developer", "publisher")
+    list_filter = ('is_adult_only', 'genres', 'platforms', 'release_date', "developer", "publisher")
+    search_fields = ('title', "developer__name", "publisher__name")
     # автозаполняемые поля( слаг генерируется из поля title этой модели)
     prepopulated_fields = {'slug': ('title',)}
     # Добавляем фильтр на странице списка объектов в админке по возрасту, по жанру

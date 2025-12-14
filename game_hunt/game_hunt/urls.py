@@ -25,6 +25,9 @@ urlpatterns = [
     path('accounts/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
     path('games/', include('games.urls')),
+    path('reviews/', include('reviews.urls')),
+    path('walkthroughs/', include('walkthroughs.urls')),
+    path('cheats/', include('cheats.urls')),
 ]
 
 if settings.DEBUG:

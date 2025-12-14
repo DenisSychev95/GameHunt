@@ -7,112 +7,132 @@
     <h2 style="color: #f97316; margin-bottom: 8px;">{{ game.title }}</h2>
 
     {% if game.cover_image %}
-        <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
-             style="max-width: 300px; border-radius: 4px; margin-bottom: 12px;">
+    <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
+         style="max-width: 300px; border-radius: 4px; margin-bottom: 12px;">
     {% endif %}
 
     <p style="font-size: 14px; color: #9ca3af;">
         Жанры:
         {% for genre in game.genres.all %}
-            {{ genre.name }}{% if not forloop.last %}, {% endif %}
+        {{ genre.name }}{% if not forloop.last %}, {% endif %}
         {% empty %}
-            не указано
+        не указано
         {% endfor %}
         <br>
         Платформы:
         {% for platform in game.platforms.all %}
-            {{ platform.name }}{% if not forloop.last %}, {% endif %}
+        {{ platform.name }}{% if not forloop.last %}, {% endif %}
         {% empty %}
-            не указано
+        не указано
         {% endfor %}
         <br>
         Просмотры: {{ game.views_count }} |
         Лайки: {{ game.likes_count }} |
         Дизлайки: {{ game.dislikes_count }}
         {% if game.is_adult_only %}
-            <br><strong style="color: #f87171;">Контент 18+</strong>
+        <br><strong style="color: #f87171;">Контент 18+</strong>
         {% endif %}
     </p>
 
     <p style="margin-top: 12px;">{{ game.description }}</p>
 
     {% if user.is_authenticated %}
-        <div style="margin-top: 16px;">
-            <form method="post" action="{% url 'game_vote' slug=game.slug value='like' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit"
-                        style="padding: 4px 10px; border-radius: 4px; border: none;
+    <div style="margin-top: 16px;">
+        <form method="post" action="{% url 'game_vote' slug=game.slug value='like' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit"
+                    style="padding: 4px 10px; border-radius: 4px; border: none;
                                background-color: {% if user_vote and user_vote.value == 1 %}#16a34a{% else %}#4b5563{% endif %};
                                color: #fff;">
-                    👍 Лайк
-                </button>
-            </form>
+                👍 Лайк
+            </button>
+        </form>
 
-            <form method="post" action="{% url 'game_vote' slug=game.slug value='dislike' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit"
-                        style="padding: 4px 10px; border-radius: 4px; border: none;
+        <form method="post" action="{% url 'game_vote' slug=game.slug value='dislike' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit"
+                    style="padding: 4px 10px; border-radius: 4px; border: none;
                                background-color: {% if user_vote and user_vote.value == -1 %}#dc2626{% else %}#4b5563{% endif %};
                                color: #fff; margin-left: 8px;">
-                    👎 Дизлайк
-                </button>
-            </form>
-        </div>
+                👎 Дизлайк
+            </button>
+        </form>
+    </div>
     {% else %}
-        <p style="margin-top: 12px; font-size: 14px;">
-            Чтобы голосовать и комментировать,
-            <a href="{% url 'account_login' %}" style="color: #f97316;">авторизуйтесь</a>.
-        </p>
+    <p style="margin-top: 12px; font-size: 14px;">
+        Чтобы голосовать и комментировать,
+        <a href="{% url 'account_login' %}" style="color: #f97316;">авторизуйтесь</a>.
+    </p>
     {% endif %}
-
+    <p style="margin-top: 16px;">
+        <a href="{% url 'review_list' %}?game={{ game.slug }}" style="color: #f97316;">
+            Смотреть обзоры на эту игру
+        </a>
+        {% if user.is_authenticated %}
+        ·
+        <a href="{% url 'review_create' game_slug=game.slug %}" style="color: #f97316;">
+            Написать обзор
+        </a>
+        {% endif %}
+    </p>
+    <p>
+        <a href="{% url 'walkthrough_list' %}?game={{ game.slug }}">Прохождения по этой игре</a>
+        {% if user.is_authenticated %}
+        · <a href="{% url 'walkthrough_create' game_slug=game.slug %}">Добавить прохождение</a>
+        {% endif %}
+    </p>
+    <p>
+        <a href="{% url 'cheat_list' %}?game={{ game.slug }}">Читы для этой игры</a>
+        {% if user.is_authenticated %}
+        · <a href="{% url 'cheat_create' game_slug=game.slug %}">Добавить чит</a>
+        {% endif %}
+    </p>
     <hr style="margin: 20px 0; border-color: #374151;">
 
     <h3 style="margin-bottom: 8px;">Комментарии</h3>
-{% if comments %}
+    {% if comments %}
     {% for comment in comments %}
-        <div style="margin-bottom: 12px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
+    <div style="margin-bottom: 12px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
 
-            <!-- ВЕРХНЯЯ СТРОКА: АВАТАР + НИК СЛЕВА, КОНТРОЛЫ СПРАВА -->
-            <div style="display: flex; align-items: center; justify-content: space-between;">
+        <!-- ВЕРХНЯЯ СТРОКА: АВАТАР + НИК СЛЕВА, КОНТРОЛЫ СПРАВА -->
+        <div style="display: flex; align-items: center; justify-content: space-between;">
 
-                <!-- ЛЕВАЯ ЧАСТЬ -->
-    <div style="display: flex; flex-direction: column;">
+            <!-- ЛЕВАЯ ЧАСТЬ -->
+            <div style="display: flex; flex-direction: column;">
                 <!-- Дата публикации -->
-        <span style="font-size: 12px; color: #9ca3af; margin-left: 36px;">
+                <span style="font-size: 12px; color: #9ca3af; margin-left: 36px;">
             {{ comment.created_at|date:"d.m.Y H:i" }}
         </span>
-        <div style="display: flex; align-items: center; gap: 8px;">
-            {% if comment.user.profile.profile_image %}
-                <img src="{{ comment.user.profile.profile_image.url }}"
-                     alt="{{ comment.user.profile.nickname }}"
-                     style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-            {% else %}
-                <img src="{% static 'images/default_avatar.png' %}"
-                     alt="avatar"
-                     style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-            {% endif %}
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    {% if comment.user.profile.profile_image %}
+                    <img src="{{ comment.user.profile.profile_image.url }}"
+                         alt="{{ comment.user.profile.nickname }}"
+                         style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                    <img src="{% static 'images/default_avatar.png' %}"
+                         alt="avatar"
+                         style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+                    {% endif %}
 
-            <a href="{% url 'profile-view' comment.user.id %}"
-               style="color: #f97316; font-size: 14px; text-decoration: none;">
-                {{ comment.user.profile.nickname|default:comment.user.username }}
-            </a>
-        </div>
-
-
-
-
+                    <a href="{% url 'profile-view' comment.user.id %}"
+                       style="color: #f97316; font-size: 14px; text-decoration: none;">
+                        {{ comment.user.profile.nickname|default:comment.user.username }}
+                    </a>
                 </div>
 
-                <!-- ПРАВАЯ ЧАСТЬ — КНОПКИ УПРАВЛЕНИЯ -->
-                {% if user.is_superuser or request.user == comment.user %}
-                    <div style="display: flex; align-items: center; gap: 6px; justify-content: space-between;
+
+            </div>
+
+            <!-- ПРАВАЯ ЧАСТЬ — КНОПКИ УПРАВЛЕНИЯ -->
+            {% if user.is_superuser or request.user == comment.user %}
+            <div style="display: flex; align-items: center; gap: 6px; justify-content: space-between;
                                width: 68px;">
 
-                        {% if user == comment.user %}
-                            <!-- Кнопка редактирования -->
-                            <a href="{% url 'game_comment_edit' comment.id %}"
-                               title="Редактировать"
-                               style="
+                {% if user == comment.user %}
+                <!-- Кнопка редактирования -->
+                <a href="{% url 'game_comment_edit' comment.id %}"
+                   title="Редактировать"
+                   style="
                                    display: inline-flex;
                                    align-items: center;
                                    justify-content: center;
@@ -124,19 +144,19 @@
                                    font-size: 12px;
                                    text-decoration: none;
                                    cursor: pointer;">
-                                ✏️
-                            </a>
-                        {% endif %}
+                    ✏️
+                </a>
+                {% endif %}
 
-                        <!-- Кнопка удаления -->
-                        <form method="post"
-                              action="{% url 'game_comment_delete' comment.id %}"
-                              style="margin: 0; padding: 0;">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    onclick="return confirm('Удалить этот комментарий?');"
-                                    title="Удалить"
-                                    style="
+                <!-- Кнопка удаления -->
+                <form method="post"
+                      action="{% url 'game_comment_delete' comment.id %}"
+                      style="margin: 0; padding: 0;">
+                    {% csrf_token %}
+                    <button type="submit"
+                            onclick="return confirm('Удалить этот комментарий?');"
+                            title="Удалить"
+                            style="
                                         width: 24px;
                                         height: 24px;
                                         display: inline-flex;
@@ -148,44 +168,44 @@
                                         color: white;
                                         font-size: 12px;
                                         cursor: pointer;">
-                                ✖️
-                            </button>
-                        </form>
+                        ✖️
+                    </button>
+                </form>
 
-                    </div>
-                {% endif %}
             </div>
-
-            <!-- ТЕКСТ КОММЕНТАРИЯ -->
-            <p style="font-size: 14px; color: #e5e7eb; margin-left: 36px;">
-                {{ comment.text }}
-            </p>
-
+            {% endif %}
         </div>
+
+        <!-- ТЕКСТ КОММЕНТАРИЯ -->
+        <p style="font-size: 14px; color: #e5e7eb; margin-left: 36px;">
+            {{ comment.text }}
+        </p>
+
+    </div>
     {% endfor %}
-{% else %}
+    {% else %}
     <p>Пока нет комментариев.</p>
-{% endif %}
+    {% endif %}
 
     {% if user.is_authenticated %}
-        <h4 style="margin-top: 16px;">Оставить комментарий</h4>
-        <form method="post">
-            {% csrf_token %}
-            {{ comment_form.non_field_errors }}
-            <div style="margin-bottom: 8px;">
-                {{ comment_form.text }}
-                {% if comment_form.text.errors %}
-                    <div style="color: #f87171; font-size: 13px;">
-                        {{ comment_form.text.errors|striptags }}
-                    </div>
-                {% endif %}
+    <h4 style="margin-top: 16px;">Оставить комментарий</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.non_field_errors }}
+        <div style="margin-bottom: 8px;">
+            {{ comment_form.text }}
+            {% if comment_form.text.errors %}
+            <div style="color: #f87171; font-size: 13px;">
+                {{ comment_form.text.errors|striptags }}
             </div>
-            <button type="submit"
-                    style="padding: 6px 12px; border: none; border-radius: 4px;
+            {% endif %}
+        </div>
+        <button type="submit"
+                style="padding: 6px 12px; border: none; border-radius: 4px;
                             background-color: #f97316; color: #fff;">
-                Отправить
-            </button>
-        </form>
+            Отправить
+        </button>
+    </form>
     {% endif %}
 </section>
 {% endblock %}

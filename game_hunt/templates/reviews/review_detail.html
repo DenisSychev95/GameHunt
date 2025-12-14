@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}GameHunt — {{ review.title }} — Обзор{% endblock %}
+
+{% block content %}
+<section style="max-width: 800px; margin: 0 auto;">
+    <p style="margin-bottom: 8px;">
+        <a href="{% url 'review_list' %}" style="color: #9ca3af;">← Все обзоры</a>
+        ·
+        <a href="{% url 'game_detail' slug=review.game.slug %}" style="color: #9ca3af;">
+            {{ review.game.title }}
+        </a>
+    </p>
+
+    <h2 style="color: #f97316; margin-bottom: 8px;">{{ review.title }}</h2>
+    {% if user.is_authenticated and user == review.author %}
+    <div style="margin: 12px 0;">
+        <a href="{% url 'review_edit' review.pk %}"
+           style="margin-right: 12px; color: #facc15;">
+            ✏️ Редактировать
+        </a>
+
+        <a href="{% url 'review_delete' review.pk %}"
+           style="color: #ef4444;">
+            🗑 Удалить
+        </a>
+    </div>
+    {% endif %}
+
+    <p style="font-size: 14px; color: #9ca3af; margin-bottom: 8px;">
+        Автор: {{ review.author.username }}
+        · Оценка: {{ review.rating }}/10
+        · {{ review.created_at|date:"d.m.Y H:i" }}
+    </p>
+
+    <div style="font-size: 15px; line-height: 1.6; color: #e5e7eb;">
+        {{ review.text|linebreaks }}
+    </div>
+</section>
+{% endblock %}

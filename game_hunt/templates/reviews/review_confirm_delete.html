@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Удаление обзора — GameHunt{% endblock %}
+
+{% block content %}
+<section style="max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #ef4444; margin-bottom: 12px;">
+        Удалить обзор?
+    </h2>
+
+    <p>
+        Вы уверены, что хотите удалить обзор:
+        <strong>«{{ review.title }}»</strong>?
+    </p>
+
+    <p style="color: #9ca3af; font-size: 14px;">
+        Это действие нельзя отменить.
+    </p>
+
+    <form method="post" style="margin-top: 16px;">
+        {% csrf_token %}
+        <button type="submit"
+                style="background-color: #ef4444; color: #fff;
+                       border: none; padding: 6px 12px; border-radius: 4px;">
+            Да, удалить
+        </button>
+
+        <a href="{% url 'review_detail' review.pk %}"
+           style="margin-left: 12px; color: #9ca3af;">
+            Отмена
+        </a>
+    </form>
+</section>
+{% endblock %}

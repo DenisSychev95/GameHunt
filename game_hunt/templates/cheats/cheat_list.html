@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Читы{% if current_game %}: {{ current_game.title }}{% endif %}</h2>
+
+{% if cheats %}
+    <ul>
+        {% for cheat in cheats %}
+            <li>
+                <a href="{% url 'cheat_detail' cheat.pk %}">
+                    [{{ cheat.get_platform_display }}] {{ cheat.title }}
+                </a>
+                ({{ cheat.game.title }})
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Читов пока нет.</p>
+{% endif %}
+{% endblock %}
