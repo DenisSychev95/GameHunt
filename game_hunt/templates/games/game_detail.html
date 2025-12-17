@@ -4,13 +4,19 @@
 
 {% block content %}
 <section style="max-width: 900px; margin: 0 auto;">
+      <p style="margin-bottom: 10px;">
+    <a href="{% url 'game_list' %}" style="color: #9ca3af;">← К списку игр</a>
+
+  </p>
     <h2 style="color: #f97316; margin-bottom: 8px;">{{ game.title }}</h2>
 
     {% if game.cover_image %}
     <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
          style="max-width: 300px; border-radius: 4px; margin-bottom: 12px;">
     {% endif %}
-
+    {% if game.is_adult_only %}
+    <br><strong style="color: #f87171;">Возрастное ограничение 16+</strong>
+    {% endif %}
     <p style="font-size: 14px; color: #9ca3af;">
         Жанры:
         {% for genre in game.genres.all %}
@@ -30,11 +36,11 @@
         Лайки: {{ game.likes_count }} |
         Дизлайки: {{ game.dislikes_count }}
         {% if game.is_adult_only %}
-        <br><strong style="color: #f87171;">Контент 18+</strong>
+
         {% endif %}
     </p>
 
-    <p style="margin-top: 12px;">{{ game.description }}</p>
+    <p style="margin-top: 12px;">{{ game.description|linebreaksbr }}</p>
 
     {% if user.is_authenticated %}
     <div style="margin-top: 16px;">

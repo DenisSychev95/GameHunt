@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Прохождения{% if current_game %}: {{ current_game.title }}{% endif %}</h2>
-
+<form method="get" class="search-form">
+  <select class="select" name="sort">
+    <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
+    <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
+  </select>
+  <button class="btn" type="submit">Применить</button>
+</form>
 {% if walkthroughs %}
     <ul>
         {% for wt in walkthroughs %}
@@ -11,6 +17,7 @@
             </li>
         {% endfor %}
     </ul>
+{% include 'pagination.html' with queryset=walkthroughs %}
 {% else %}
     <p>Пока нет прохождений.</p>
 {% endif %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg, Count, Q
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
@@ -69,7 +70,7 @@ class Game(models.Model):
     genres = models.ManyToManyField(Genre, related_name='games', blank=True, verbose_name='Жанры')
     platforms = models.ManyToManyField(Platform, related_name='games', blank=True, verbose_name='Платформы')
 
-    is_adult_only = models.BooleanField(default=False, verbose_name='Контент 18+')
+    is_adult_only = models.BooleanField(default=False, verbose_name='Контент 16+')
     cover_image = models.ImageField(
         upload_to='game_covers/',
         default='default_game_cover.jpg',
@@ -87,6 +88,9 @@ class Game(models.Model):
     publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True,
                                   related_query_name='games', verbose_name='Издатель')
 
+    avg_rating = models.DecimalField(blank=True, max_digits=3, decimal_places=1, default=0)
+    liked_percent = models.PositiveSmallIntegerField(blank=True, default=0)
+
     class Meta:
         verbose_name = 'игра'
         verbose_name_plural = 'игры'
@@ -100,6 +104,32 @@ class Game(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)[:220]
         super().save(*args, **kwargs)
+
+    def recalc_stats(self):
+        """
+        Пересчитывает avg_rating и liked_percent по обзорам.
+        liked_percent = доля обзоров с rating >= 7 (можешь поменять порог).
+        """
+        qs = self.reviews.filter(is_published=True)
+
+        agg = qs.aggregate(
+            avg=Avg("rating"),
+            total=Count("id"),
+            liked=Count("id", filter=Q(rating__gte=7)),
+        )
+
+        total = agg["total"] or 0
+        avg = agg["avg"] or 0
+
+        self.avg_rating = round(float(avg), 1)
+        self.liked_percent = int(round((agg["liked"] / total) * 100)) if total else 0
+        self.save(update_fields=["avg_rating", "liked_percent"])
+
+    def avg_rating_display(self):
+        return f"{self.avg_rating}/10"
+
+    def liked_percent_display(self):
+        return f"{self.liked_percent}%"
 
     # получаем виртуальное поле по связанной модели GameVote через related_name - счетчик лайков для игры
     @property

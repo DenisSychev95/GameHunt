@@ -2,38 +2,120 @@
 {% block title %}GameHunt — {{ review.title }} — Обзор{% endblock %}
 
 {% block content %}
-<section style="max-width: 800px; margin: 0 auto;">
-    <p style="margin-bottom: 8px;">
-        <a href="{% url 'review_list' %}" style="color: #9ca3af;">← Все обзоры</a>
-        ·
-        <a href="{% url 'game_detail' slug=review.game.slug %}" style="color: #9ca3af;">
-            {{ review.game.title }}
-        </a>
-    </p>
+<section style="max-width: 900px; margin: 0 auto;">
 
-    <h2 style="color: #f97316; margin-bottom: 8px;">{{ review.title }}</h2>
-    {% if user.is_authenticated and user == review.author %}
-    <div style="margin: 12px 0;">
-        <a href="{% url 'review_edit' review.pk %}"
-           style="margin-right: 12px; color: #facc15;">
-            ✏️ Редактировать
-        </a>
+  <!-- Навигация -->
+  <p style="margin-bottom: 10px;">
+    <a href="{% url 'review_list' %}" style="color: #9ca3af;">← Все обзоры</a>
+    ·
+    <a href="{% url 'game_detail' slug=review.game.slug %}" style="color: #9ca3af;">
+      {{ review.game.title }}
+    </a>
+  </p>
 
-        <a href="{% url 'review_delete' review.pk %}"
-           style="color: #ef4444;">
-            🗑 Удалить
-        </a>
+  <!-- Заголовок + кнопки автора -->
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+    <div>
+      <h2 style="color:#f97316; margin: 0 0 6px;">{{ review.title }}</h2>
+
+      <p style="font-size:14px; color:#9ca3af; margin: 0;">
+        Автор: {{ review.author.username }}
+        · Оценка: <strong style="color:#e5e7eb;">{{ review.rating }}/10</strong>
+        · {{ review.created_at|date:"d.m.Y H:i" }}
+      </p>
     </div>
+
+    {% if user.is_authenticated and user == review.author %}
+      <div style="display:flex; gap:10px; margin-top: 2px;">
+        <a href="{% url 'review_edit' review.pk %}" style="color:#facc15; text-decoration:none;">
+          ✏️ Редактировать
+        </a>
+        <a href="{% url 'review_delete' review.pk %}" style="color:#ef4444; text-decoration:none;">
+          🗑 Удалить
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- TL;DR -->
+  {% if review.summary %}
+    <div style="margin-top: 16px; padding: 12px; border: 1px solid #374151; border-radius: 10px;">
+      <h3 style="margin:0 0 8px; color:#e5e7eb;">TL;DR</h3>
+      <div style="color:#e5e7eb; line-height:1.6;">
+        {{ review.summary|linebreaks }}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Галерея -->
+  {% if review.images.all %}
+    <h3 style="margin-top: 18px; margin-bottom: 10px; color:#e5e7eb;">Скриншоты</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px;">
+      {% for img in review.images.all %}
+        <figure style="border:1px solid #374151; border-radius:10px; padding:10px; margin:0;">
+          <img src="{{ img.image.url }}"
+               alt=""
+               style="width:100%; height:160px; object-fit:cover; border-radius:8px;">
+          {% if img.caption %}
+            <figcaption style="margin-top:6px; color:#9ca3af; font-size:13px;">
+              {{ img.caption }}
+            </figcaption>
+          {% endif %}
+        </figure>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Основной текст -->
+  <div style="margin-top: 18px;">
+    <h3 style="margin:0 0 10px; color:#e5e7eb;">Обзор</h3>
+    <div style="font-size:15px; line-height:1.7; color:#e5e7eb;">
+      {{ review.text|linebreaks }}
+    </div>
+  </div>
+
+  <!-- Плюсы / Минусы -->
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px;">
+    {% if review.pros %}
+      <div style="border:1px solid #374151; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px; color:#22c55e;">Плюсы</h3>
+        <div style="color:#e5e7eb; line-height:1.6;">
+          {{ review.pros|linebreaks }}
+        </div>
+      </div>
     {% endif %}
 
-    <p style="font-size: 14px; color: #9ca3af; margin-bottom: 8px;">
-        Автор: {{ review.author.username }}
-        · Оценка: {{ review.rating }}/10
-        · {{ review.created_at|date:"d.m.Y H:i" }}
-    </p>
+    {% if review.cons %}
+      <div style="border:1px solid #374151; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px; color:#ef4444;">Минусы</h3>
+        <div style="color:#e5e7eb; line-height:1.6;">
+          {{ review.cons|linebreaks }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
 
-    <div style="font-size: 15px; line-height: 1.6; color: #e5e7eb;">
-        {{ review.text|linebreaks }}
+  <!-- Итог -->
+  {% if review.conclusion %}
+    <div style="margin-top: 18px; padding: 12px; border: 1px solid #374151; border-radius: 10px;">
+      <h3 style="margin:0 0 8px; color:#e5e7eb;">Итог</h3>
+      <div style="color:#e5e7eb; line-height:1.6;">
+        {{ review.conclusion|linebreaks }}
+      </div>
     </div>
+  {% endif %}
+
+  <!-- Видео -->
+  {% if review.video_url %}
+    <div style="margin-top: 18px; padding: 12px; border: 1px solid #374151; border-radius: 10px;">
+      <h3 style="margin:0 0 8px; color:#e5e7eb;">Видео</h3>
+      <p style="margin:0;">
+        <a href="{{ review.video_url }}" target="_blank" rel="noopener" style="color:#f97316;">
+          Открыть видео-обзор
+        </a>
+      </p>
+    </div>
+  {% endif %}
+
 </section>
 {% endblock %}

@@ -2,36 +2,38 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from django.db.models import F
+from games.utils import paginate_games
 from .models import Review
-from .forms import ReviewForm
+from .forms import ReviewForm, ReviewImageFormSet
 from games.models import Game
 from django.http import HttpResponseForbidden
 
 
 def review_list(request):
-    """
-    Список обзоров. Можно отфильтровать по игре:
-    /reviews/?game=<slug>
-    """
-    reviews = Review.objects.select_related('game', 'author').filter(is_published=True)
 
-    game_slug = request.GET.get('game')
-    current_game = None
-    if game_slug:
-        current_game = get_object_or_404(Game, slug=game_slug)
-        reviews = reviews.filter(game=current_game)
+    qs = Review.objects.select_related("game", "author").filter(is_published=True)
 
-    paginator = Paginator(reviews, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    sort = request.GET.get("sort", "new")
+    if sort == "popular":
+        qs = qs.order_by("-views_count", "-created_at")
+    elif sort == "rating":
+        qs = qs.order_by("-rating", "-created_at")
+    else:
+        qs = qs.order_by("-created_at")
 
-    context = {
-        'reviews': page_obj.object_list,
-        'page_obj': page_obj,
-        'current_game': current_game,
-    }
-    return render(request, 'reviews/review_list.html', context)
+    # пагинация
+    page_obj, custom_range = paginate_games(request, qs, 2)  # или твой paginate_queryset
+    params = request.GET.copy()
+    params.pop("page", None)
+    extra_query = params.urlencode()
+
+    return render(request, "reviews/review_list.html", {
+        "reviews": page_obj,
+        "custom_range": custom_range,
+        "extra_query": extra_query,
+        "current_sort": sort,
+    })
 
 
 def review_detail(request, pk):
@@ -43,6 +45,21 @@ def review_detail(request, pk):
         pk=pk,
         is_published=True
     )
+    # увеличиваем счетчик просмотров в пределах одной сессии только на один
+    # пытаемся получить доступ к данным сесии пользователя по ключу 'viewed_reviews', т.к его изначально нет
+    # инициализируем пустым списком и кладем в viewed_reviews
+    viewed_reviews = request.session.get('viewed_reviews', [])
+
+    # на момент начала сессии пользователя список всегда пуст, ни один обзор туда еще не попал
+    if review.id not in viewed_reviews:
+        # у выбранного обзора по id не извлекая данных из БД внутри поля views_count увеличиваем его значение на +1
+        # при использовании класса F позволяющего осуществлять простые арифметические операции внутри самой БД
+        Review.objects.filter(pk=review.id).update(views_count=F('views_count') + 1)
+        # после увеличения views_count на +=1 добавляем id игры в viewed_reviews
+        viewed_reviews.append(review.id)
+        # т.к request.session только позволяет получить данные нужно в его ключ 'viewed_reviews' переприсвоить
+        # обновленный массив viewed_reviews
+        request.session['viewed_reviews'] = viewed_reviews
     context = {
         'review': review,
     }
@@ -51,47 +68,61 @@ def review_detail(request, pk):
 
 @login_required
 def review_create(request, game_slug):
-    """
-    Создание обзора для игры.
-    URL: /reviews/game/<slug>/add/
-    """
     game = get_object_or_404(Game, slug=game_slug)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReviewForm(request.POST)
-        if form.is_valid():
+        # ВАЖНО: для картинок нужен request.FILES
+        formset = ReviewImageFormSet(request.POST, request.FILES)
+
+        if form.is_valid() and formset.is_valid():
             review = form.save(commit=False)
             review.game = game
             review.author = request.user
             review.save()
-            messages.success(request, 'Обзор успешно добавлен.')
-            return redirect('review_detail', pk=review.pk)
+
+            formset.instance = review
+            formset.save()
+
+            messages.success(request, "Обзор создан.")
+            return redirect("review_detail", pk=review.pk)
     else:
         form = ReviewForm()
+        formset = ReviewImageFormSet()
 
-    context = {
-        'game': game,
-        'form': form,
-    }
-    return render(request, 'reviews/review_form.html', context)
+    return render(request, "reviews/review_form.html", {
+        "game": game,
+        "form": form,
+        "formset": formset,
+    })
 
 
 @login_required
 def review_edit(request, pk):
     review = get_object_or_404(Review, pk=pk)
+
     if review.author != request.user:
         return HttpResponseForbidden("Вы не можете редактировать этот обзор.")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReviewForm(request.POST, instance=review)
-        if form.is_valid():
+        formset = ReviewImageFormSet(request.POST, request.FILES, instance=review)
+
+        if form.is_valid() and formset.is_valid():
             form.save()
-            messages.success(request, 'Обзор обновлён.')
-            return redirect('review_detail', pk=review.pk)
+            formset.save()
+            messages.success(request, "Обзор обновлён.")
+            return redirect("review_detail", pk=review.pk)
     else:
         form = ReviewForm(instance=review)
+        formset = ReviewImageFormSet(instance=review)
 
-    return render(request, 'reviews/review_form.html', {'form': form, 'game': review.game})
+    return render(request, "reviews/review_form.html", {
+        "game": review.game,
+        "form": form,
+        "formset": formset,
+        "review": review,
+    })
 
 
 @login_required

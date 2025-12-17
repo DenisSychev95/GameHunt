@@ -47,11 +47,11 @@ class Profile(models.Model):
             years -= 1
         return years
 
-    # Геттер для проверки совершеннолетия
+    # Геттер для проверки 16+
     @property
     def is_adult(self):
         age = self.age
-        return age is not None and age >= 18
+        return age is not None and age >= 16
 
     class Meta:
         verbose_name = 'профиль'

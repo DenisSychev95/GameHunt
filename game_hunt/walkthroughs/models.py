@@ -24,6 +24,7 @@ class Walkthrough(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
+    views_count = models.PositiveIntegerField(default=0, verbose_name='Просмотры')
 
     class Meta:
         verbose_name = 'прохождение'

@@ -10,7 +10,7 @@ from . utils import get_adult, search_games, paginate_games
 def game_list(request):
     # ---------- Поиск ----------
     # Весь поиск сжимаем в одну строку, все остальное в utils
-    games, search_query, genres, platforms,  sort, genre_id, platform_id = search_games(request)
+    games, search_query, genres, platforms,  sort, genre_id, platform_id, min_rating = search_games(request)
 
     # Если в фильтр поиска приходит id жанра или платформы, преобразуем к числу или возвращаем None
     genre = int(genre_id) if genre_id else None
@@ -30,6 +30,8 @@ def game_list(request):
         # Формируем extra_query
     extra_query = params.urlencode()  # например: "search=шутер&genre=1&sort=new"
 
+    rating_choices = list(range(1, 11))
+
     context = {
         'games': games,
         'custom_range': custom_range,
@@ -38,8 +40,10 @@ def game_list(request):
         'current_query': search_query,
         'current_genre': genre,
         'current_platform': platform,
+        'min_rating': min_rating,
         'current_sort': sort,
-        'extra_query': extra_query
+        'extra_query': extra_query,
+        'rating_choices': rating_choices,
     }
     return render(request, 'games/game_list.html', context)
 
@@ -48,7 +52,7 @@ def game_detail(request, slug):
 
     game = get_object_or_404(Game, slug=slug)
 
-    # защита 18+
+    # защита 16+
     is_adult = get_adult(request)
     if game.is_adult_only and not is_adult:
         messages.error(request, 'Эта игра доступна только пользователям 18+.')

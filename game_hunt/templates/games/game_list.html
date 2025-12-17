@@ -1,126 +1,117 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}GameHunt — Игры{% endblock %}
 
 {% block content %}
-<section style="max-width: 1000px; margin: 0 auto;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Каталог игр</h2>
+<section class="container">
 
-    <form method="get" style="margin-bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
-        <input type="text"
-               name="search"
-               placeholder="Поиск игр"
-               value="{{ current_query|default:'' }}"
-               style="padding: 6px 8px;">
+  <h2 class="page-title center">Каталог игр</h2>
 
-        <select name="genre" style="padding: 6px 8px;">
-            <option value="">Все жанры</option>
-            {% for genre in genres %}
-                <option value="{{ genre.id }}" {% if genre.id == current_genre %}selected{% endif %}>
-                    {{ genre.name }}
-                </option>
-            {% endfor %}
-        </select>
+  <!-- Поиск -->
+  <form method="get" class="search-form">
+    <input class="input"
+           type="text"
+           name="search"
+           placeholder="Поиск игр"
+           value="{{ current_query|default:'' }}">
 
-        <select name="platform" style="padding: 6px 8px;">
-            <option value="">Все платформы</option>
-            {% for platform in platforms %}
-                <option value="{{ platform.id }}" {% if platform.id == current_platform %}selected{% endif %}>
-                    {{ platform.name }}
-                </option>
-            {% endfor %}
-        </select>
+    <select class="select" name="genre">
+      <option value="">Все жанры</option>
+      {% for genre in genres %}
+        <option value="{{ genre.id }}" {% if genre.id == current_genre %}selected{% endif %}>
+          {{ genre.name }}
+        </option>
+      {% endfor %}
+    </select>
 
-        <select name="sort" style="padding: 6px 8px;">
-            <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
-            <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
-        </select>
+    <select class="select" name="platform">
+      <option value="">Все платформы</option>
+      {% for platform in platforms %}
+        <option value="{{ platform.id }}" {% if platform.id == current_platform %}selected{% endif %}>
+          {{ platform.name }}
+        </option>
+      {% endfor %}
+    </select>
 
-        <button type="submit"
-                style="padding: 6px 12px; background-color: #f97316; border: none; color: #fff; border-radius: 4px;">
-            Найти
-        </button>
-    </form>
+    <select class="select" name="sort">
+      <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
+      <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
+      <option value="top" {% if current_sort == "top" %}selected{% endif %}>По рейтингу</option>
+    </select>
 
-    {% if games %}
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
-            {% for game in games %}
-                <article style="border: 1px solid #374151; border-radius: 8px; padding: 10px;">
-                    <h3 style="margin-bottom: 8px;">
-                        <a href="{% url 'game_detail' slug=game.slug %}" style="color: #f97316;">
-                            {{ game.title }}
-                        </a>
+    <!-- Рейтинг -->
+    <select class="select" name="min_rating">
+      <option value="">Рейтинг: любой</option>
+      {% for r in rating_choices %}
+        <option value="{{ r }}" {% if min_rating|stringformat:"s" == r|stringformat:"s" %}selected{% endif %}>
+          от {{ r }}/10
+        </option>
+      {% endfor %}
+    </select>
 
-                    </h3>
+    <button class="btn" type="submit">Найти</button>
 
-                    {% if game.cover_image %}
-                        <a href="{% url 'game_detail' slug=game.slug %}">
-                            <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
-                                 style="max-width: 100%; border-radius: 4px; margin-bottom: 8px;">
-                        </a>
-                    {% endif %}
-                    <p style="font-size: 14px; color: #9ca3af;">
-                        Жанры:
-                        {% for genre in game.genres.all %}
-                            {{ genre.name }}{% if not forloop.last %}, {% endif %}
-                        {% empty %}
-                            не указано
-                        {% endfor %}
-                    </p>
-                    <p style="font-size: 13px; color: #9ca3af;">
-                        Просмотры: {{ game.views_count }} |
-                        Лайки: {{ game.likes_count }} |
-                        Дизлайки: {{ game.dislikes_count }}
-                    </p>
-                    <p style="font-size: 13px; color: #9ca3af;">{{game.release_date}}</p>
-                </article>
-            {% endfor %}
-        </div>
-
-        {# ---- Пагинация ---- #}
-        {% if games.has_other_pages %}
-            <div style="margin-top: 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-
-                {% if games.has_previous %}
-                    <a href="?page=1{% if extra_query %}&{{ extra_query }}{% endif %}"
-                       style="padding: 4px 8px; border: 1px solid #4b5563; border-radius: 4px;">
-                        « Первая
-                    </a>
-
-                    <a href="?page={{ games.previous_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}"
-                       style="padding: 4px 8px; border: 1px solid #4b5563; border-radius: 4px;">
-                        ‹ Назад
-                    </a>
-                {% endif %}
-                {% for page in custom_range %}
-                {% if page == games.number %}
-                <span style="padding: 4px 8px; border: 1px solid #9ca3af;; border-radius: 4px;">
-                     {{ page }}
-                </span>
-                {% else %}
-                <a href="?page={{ page }}{% if extra_query %}&{{ extra_query }}{% endif %}"
-                       style="padding: 4px 8px; border: 1px solid #4b5563; border-radius: 4px;">
-                        {{ page }}
-                    </a>
-
-
-                {% endif %}
-                {% endfor %}
-                {% if games.has_next %}
-                    <a href="?page={{ games.next_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}"
-                       style="padding: 4px 8px; border: 1px solid #4b5563; border-radius: 4px;">
-                        Вперёд ›
-                    </a>
-
-                    <a href="?page={{ games.paginator.num_pages }}{% if extra_query %}&{{ extra_query }}{% endif %}"
-                       style="padding: 4px 8px; border: 1px solid #4b5563; border-radius: 4px;">
-                        Последняя »
-                    </a>
-                {% endif %}
-            </div>
-        {% endif %}
-    {% else %}
-        <p>Игры не найдены.</p>
+    {% if current_query or current_genre or current_platform or current_sort != "new" or min_rating %}
+      <a class="link-muted" href="{% url 'game_list' %}">Сброс</a>
     {% endif %}
+  </form>
+
+  {% if games %}
+    <div class="game-grid">
+      {% for game in games %}
+<article class="game-card">
+
+  <div class="game-head">
+    <h3 class="game-title">
+      <a href="{% url 'game_detail' slug=game.slug %}">{{ game.title }}</a>
+    </h3>
+
+    <div class="game-views" title="Просмотры">👁 {{ game.views_count }}</div>
+  </div>
+
+  <a href="{% url 'game_detail' slug=game.slug %}" class="game-cover-link">
+    {% if game.cover_image %}
+      <img class="game-cover" src="{{ game.cover_image.url }}" alt="{{ game.title }}">
+    {% else %}
+      <div class="game-cover-placeholder">Нет обложки</div>
+    {% endif %}
+  </a>
+
+  <div class="game-meta">
+    Дата выхода:
+    {% if game.release_date %}
+      {{ game.release_date|date:"d.m.Y" }}
+    {% else %}
+      —
+    {% endif %}
+  </div>
+
+  <div class="game-stats">
+    <div>👍 {{ game.liked_percent|default:0 }}%</div>
+    <div>⭐️ {{ game.avg_rating|default:"0.0" }}/10</div>
+  </div>
+
+  <div class="tags">
+    {% for g in game.genres.all|slice:":6" %}
+      <span class="tag">{{ g.name }}</span>
+    {% empty %}
+      <span class="tag">жанры не указаны</span>
+    {% endfor %}
+  </div>
+
+  <div class="game-footer">
+    <a class="btn btn-secondary" href="{% url 'game_detail' slug=game.slug %}">Подробнее</a>
+  </div>
+
+</article>
+      {% endfor %}
+    </div>
+
+{% include 'pagination.html' with queryset=games %}
+
+  {% else %}
+    <p class="center muted">Игры не найдены.</p>
+  {% endif %}
+
 </section>
 {% endblock %}

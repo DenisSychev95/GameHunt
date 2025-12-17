@@ -16,7 +16,14 @@
             Обзоры игр
         {% endif %}
     </h2>
-
+    <form method="get" class="search-form">
+  <select class="select" name="sort">
+    <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
+    <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
+    <option value="rating" {% if current_sort == "rating" %}selected{% endif %}>По рейтингу</option>
+  </select>
+  <button class="btn" type="submit">Применить</button>
+</form>
     {% if reviews %}
         <div style="display: flex; flex-direction: column; gap: 12px;">
             {% for review in reviews %}
@@ -42,23 +49,8 @@
             {% endfor %}
         </div>
 
-        {% if page_obj.has_other_pages %}
-            <div style="margin-top: 16px;">
-                {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}{% if current_game %}&game={{ current_game.slug }}{% endif %}">
-                        ← Предыдущая
-                    </a>
-                {% endif %}
-                <span style="margin: 0 8px;">
-                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}{% if current_game %}&game={{ current_game.slug }}{% endif %}">
-                        Следующая →
-                    </a>
-                {% endif %}
-            </div>
-        {% endif %}
+{% include 'pagination.html' with queryset=reviews %}
+
     {% else %}
         <p>Пока обзоров нет.</p>
     {% endif %}

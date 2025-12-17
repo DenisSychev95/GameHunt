@@ -48,24 +48,37 @@ def search_games(request):
     if platform_id:
         games = games.filter(platforms__id=platform_id)
 
+    # Фильтр поиска по рейтингу
+    min_rating = request.GET.get('min_rating', '').strip()
+    if min_rating:
+        try:
+            games = games.filter(avg_rating__gte=float(min_rating))
+        except ValueError:
+            min_rating = ''  # если пришло не число — игнорируем
+
     # СОРТИРОВКА
     # Дополнительная настройка определяет порядок выведения игр если по умолчанию ничего не выбрано в name 'sort':
-    # идет сортировка по дате добавления игры, если в name пришло 'popular'- сортируем по количеству просмотров
+    # идет сортировка по дате добавления игры, если в name пришло 'popular'- сортируем по количеству просмотров,
+    #  аналогично по среднему рейтингу
     sort = request.GET.get('sort', 'new')
 
+    # Сортировка
+    sort = request.GET.get('sort', 'new')
     if sort == 'popular':
         games = games.order_by('-views_count', '-id')
+    elif sort == 'top':
+        games = games.order_by('-avg_rating', '-views_count', '-id')
     else:
-        games = games.order_by('-created_at', '-id')
+        games = games.order_by('-release_date', '-id')
 
     # Избавляемся от дублирования из-за JOIN по жанрам/платформам -distinct.
     games = games.distinct()
 
     # Возвращаем найденный список игр
-    return games, search_query, genres, platforms,  sort, genre_id, platform_id
+    return games, search_query, genres, platforms,  sort, genre_id, platform_id, min_rating
 
 
-# Получаем флаг 18+
+# Получаем флаг 16+
 def get_adult(request):
     # получаем текущего пользователя
     user = request.user

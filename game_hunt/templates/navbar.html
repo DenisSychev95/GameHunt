@@ -1,40 +1,30 @@
 {% load static %}
-<header style="
-    height: 70px;
-    box-sizing: border-box;
-    background-color: #1f2937;
-    padding: 10px 30px 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-">
-    <div class="logo" style="display: flex; align-items: center;">
-        <a href="{% url 'homepage' %}">
-            <img src="{% static 'images/logo.jpg' %}"
-                 alt="GameHunt Logo"
-                 style="height: 100%; width: auto;">
-        </a>
-    </div>
+<header class="site-header">
+  <div class="header-logo">
+    <a href="{% url 'homepage' %}">
+      <img src="{% static 'images/logo.jpg' %}" alt="GameHunt Logo">
+    </a>
+  </div>
 
-    <nav style="display: flex; gap: 15px;">
-        <a href="{% url 'homepage' %}" style="color: #f97316;">Главная</a>
-        <a href="{% url 'game_list' %}" style="color: #f97316;">Игры</a>
-        <a href="{% url 'review_list' %}" style="color: #f97316;">Обзоры</a>
-        <a href="{% url 'walkthrough_list' %}" style="color: #f97316;">Прохождения</a>
-        <a href="{% url 'cheat_list' %}" style="color: #f97316;">Читы</a>
-        <a href="{% url 'about' %}" style="color: #f97316;">О проекте</a>
-    </nav>
+  <nav class="header-nav">
+    <a href="{% url 'homepage' %}">Главная</a>
+    <a href="{% url 'game_list' %}">Игры</a>
+    <a href="{% url 'review_list' %}">Обзоры</a>
+    <a href="{% url 'walkthrough_list' %}">Прохождения</a>
+    <a href="{% url 'cheat_list' %}">Читы</a>
+    <a href="{% url 'about' %}">О проекте</a>
+  </nav>
 
-<div class="auth">
+  <div class="header-auth">
     {% if user.is_authenticated %}
-        {% if user.is_staff or user.is_superuser %}
-            <a href="{% url 'admin_dashboard' %}" style="margin: 0 10px;">Админка</a>
-        {% endif %}
-        <a href="{% url 'profile' %}" style="margin: 0 10px;">Профиль</a>
-        <a href="{% url 'account_logout' %}" style="margin: 0 10px;">Выйти</a>
+      {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'admin_dashboard' %}">Админка</a>
+      {% endif %}
+      <a href="{% url 'profile' %}">Профиль</a>
+      <a href="{% url 'account_logout' %}">Выйти</a>
     {% else %}
-        <a href="{% url 'account_login' %}" style="margin: 0 10px;">Вход</a>
-        <a href="{% url 'account_signup' %}" style="margin: 0 10px;">Регистрация</a>
+      <a href="{% url 'account_login' %}">Вход</a>
+      <a href="{% url 'account_signup' %}">Регистрация</a>
     {% endif %}
-</div>
+  </div>
 </header>

@@ -1,0 +1,24 @@
+    {% if queryset.has_other_pages %}
+      <nav class="pager center">
+        {% if queryset.has_previous %}
+          <a class="pager-link" href="?page=1{% if extra_query %}&{{ extra_query }}{% endif %}">«</a><a class="pager-link" href="?page={{ queryset.previous_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}">‹</a>
+        {% else %}
+
+        {% endif %}
+
+        {% for page in custom_range %}
+          {% if page == queryset.number %}
+            <span class="pager-current">{{ page }}</span>
+          {% else %}
+            <a class="pager-link" href="?page={{ page }}{% if extra_query %}&{{ extra_query }}{% endif %}">{{ page }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if queryset.has_next %}
+          <a class="pager-link" href="?page={{ queryset.next_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}">›</a>
+          <a class="pager-link" href="?page={{ queryset.paginator.num_pages }}{% if extra_query %}&{{ extra_query }}{% endif %}">»</a>
+        {% else %}
+
+        {% endif %}
+      </nav>
+    {% endif %}
