@@ -88,8 +88,14 @@ class Game(models.Model):
     publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True,
                                   related_query_name='games', verbose_name='Издатель')
 
-    avg_rating = models.DecimalField(blank=True, max_digits=3, decimal_places=1, default=0)
-    liked_percent = models.PositiveSmallIntegerField(blank=True, default=0)
+    avg_rating = models.DecimalField(blank=True, max_digits=3, decimal_places=1, default=0,
+                                     verbose_name="Средний рейтинг")
+    liked_percent = models.PositiveSmallIntegerField(blank=True, default=0, verbose_name="Понравилось")
+    trailer_url = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name="Ссылка на трейлер (YouTube/Vimeo)"
+    )
 
     class Meta:
         verbose_name = 'игра'
@@ -125,6 +131,26 @@ class Game(models.Model):
         self.liked_percent = int(round((agg["liked"] / total) * 100)) if total else 0
         self.save(update_fields=["avg_rating", "liked_percent"])
 
+    def recalc_liked_percent(self):
+        """
+        liked_percent = процент лайков среди всех голосов
+        """
+        votes = self.votes.all()
+
+        agg = votes.aggregate(
+            total=Count('id'),
+            likes=Count('id', filter=Q(value=GameVote.LIKE)),
+        )
+
+        total = agg['total'] or 0
+
+        if total > 0:
+            self.liked_percent = round((agg['likes'] / total) * 100)
+        else:
+            self.liked_percent = 0
+
+        self.save(update_fields=['liked_percent'])
+
     def avg_rating_display(self):
         return f"{self.avg_rating}/10"
 
@@ -142,6 +168,27 @@ class Game(models.Model):
         return self.votes.filter(value=-1).count()
         # получили количество полей value где, было выбрано(DISLIKE, 'Дизлайк')
 
+
+class GameImage(models.Model):
+    game = models.ForeignKey(
+        "Game",
+        on_delete=models.CASCADE,
+        related_name="gallery",
+        verbose_name="Игра"
+    )
+    image = models.ImageField(upload_to="game_gallery/", verbose_name="Картинка")
+    caption = models.CharField(max_length=255, blank=True, verbose_name="Подпись")
+    position = models.PositiveIntegerField(default=1, verbose_name="Порядок")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "картинку игры"
+        verbose_name_plural = "картинки игры"
+        ordering = ["position", "id"]
+
+    def __str__(self):
+        return f"{self.game.title} — #{self.position}"
 
 # Модель отданных голосов за игру
 class GameVote(models.Model):

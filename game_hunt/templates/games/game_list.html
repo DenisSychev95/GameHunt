@@ -5,7 +5,7 @@
 {% block content %}
 <section class="container">
 
-  <h2 class="page-title center">Каталог игр</h2>
+  <h1 class="page-title center">Каталог игр</h1>
 
   <!-- Поиск -->
   <form method="get" class="search-form">
@@ -66,7 +66,10 @@
       <a href="{% url 'game_detail' slug=game.slug %}">{{ game.title }}</a>
     </h3>
 
-    <div class="game-views" title="Просмотры">👁 {{ game.views_count }}</div>
+    <div class="game-views" title="Просмотры"><span class="ui-meta">
+  <span class="ui-icon ui-icon-eye"></span>
+  {{ game.views_count }}
+</span></div>
   </div>
 
   <a href="{% url 'game_detail' slug=game.slug %}" class="game-cover-link">
@@ -78,7 +81,7 @@
   </a>
 
   <div class="game-meta">
-    Дата выхода:
+    Дата релиза:
     {% if game.release_date %}
       {{ game.release_date|date:"d.m.Y" }}
     {% else %}
@@ -87,17 +90,34 @@
   </div>
 
   <div class="game-stats">
-    <div>👍 {{ game.liked_percent|default:0 }}%</div>
-    <div>⭐️ {{ game.avg_rating|default:"0.0" }}/10</div>
+    <div class="like-love" title="Понравилось пользователям">
+  <svg class="icon-love" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 21s-7.5-4.35-10.5-9C-0.7 8.1 1.6 4 5.5 4
+             c2.2 0 4.1 1.2 5 3 0.9-1.8 2.8-3 5-3
+             3.9 0 6.2 4.1 4 8-3 4.65-10.5 9-10.5 9z"/>
+  </svg>
+  <span class="like-value">{{ game.liked_percent }}%</span>
+</div>
+<div class="rating-badge" title="Средний рейтинг">
+  <svg class="icon-star" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 17.3L18.2 21l-1.6-7L22 9.2l-7.2-.6L12 2
+             9.2 8.6 2 9.2 7.4 14 5.8 21z"/>
+  </svg>
+  <span class="rating-text">{{ game.avg_rating }}/10</span>
+</div>
   </div>
 
-  <div class="tags">
-    {% for g in game.genres.all|slice:":6" %}
-      <span class="tag">{{ g.name }}</span>
-    {% empty %}
-      <span class="tag">жанры не указаны</span>
-    {% endfor %}
-  </div>
+<div class="game-genres">
+  {% for genre in game.genres.all %}
+    <a class="genre-link"
+       href="{% url 'game_list' %}?genre={{ genre.id }}"
+       title="Показать игры жанра: {{ genre.name }}">
+      {{ genre.name }}
+    </a>
+  {% empty %}
+    <span class="genre-muted">Жанры не указаны</span>
+  {% endfor %}
+</div>
 
   <div class="game-footer">
     <a class="btn btn-secondary" href="{% url 'game_detail' slug=game.slug %}">Подробнее</a>

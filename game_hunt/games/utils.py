@@ -1,6 +1,12 @@
 from .models import Game, Genre, Platform
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+import re
+from urllib.parse import urlparse, parse_qs
+
+
+YOUTUBE_HOSTS = {"youtube.com", "www.youtube.com", "youtu.be", "m.youtube.com"}
+VIMEO_HOSTS = {"vimeo.com", "www.vimeo.com", "player.vimeo.com"}
 
 
 def search_games(request):
@@ -125,3 +131,42 @@ def paginate_games(request, games, count):
     custom_range = range(left_index, right_index)
     # Возвращаем объект Page, кастомный диапазон для пагинации
     return view_games, custom_range
+
+
+def trailer_embed_url(url: str) -> str | None:
+    if not url:
+        return None
+
+    try:
+        u = urlparse(url.strip())
+    except Exception:
+        return None
+
+    host = (u.netloc or "").lower()
+
+    # ---- YouTube ----
+    if host in YOUTUBE_HOSTS:
+        video_id = None
+
+        if host == "youtu.be":
+            video_id = u.path.lstrip("/") or None
+        else:
+            qs = parse_qs(u.query)
+            if "v" in qs and qs["v"]:
+                video_id = qs["v"][0]
+            else:
+                # /embed/<id> or /shorts/<id>
+                m = re.search(r"/(embed|shorts)/([^/?]+)", u.path)
+                if m:
+                    video_id = m.group(2)
+
+        if video_id:
+            return f"https://www.youtube.com/embed/{video_id}"
+
+    # ---- Vimeo ----
+    if host in VIMEO_HOSTS:
+        m = re.search(r"/(\d+)", u.path)
+        if m:
+            return f"https://player.vimeo.com/video/{m.group(1)}"
+
+    return None

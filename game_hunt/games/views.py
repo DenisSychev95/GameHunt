@@ -5,6 +5,11 @@ from django.contrib import messages
 from .models import Game, Genre, Platform, GameVote, GameComment
 from .forms import GameCommentForm
 from . utils import get_adult, search_games, paginate_games
+import time
+from .utils import trailer_embed_url
+
+
+COMMENT_COOLDOWN_SECONDS = 60
 
 
 def game_list(request):
@@ -49,111 +54,115 @@ def game_list(request):
 
 
 def game_detail(request, slug):
-
     game = get_object_or_404(Game, slug=slug)
+
 
     # защита 16+
     is_adult = get_adult(request)
     if game.is_adult_only and not is_adult:
-        messages.error(request, 'Эта игра доступна только пользователям 18+.')
+        messages.error(request, 'Эта игра доступна только пользователям 16+.')
         return redirect('game_list')
 
-    # увеличиваем счетчик просмотров в пределах одной сессии только на один
-    # пытаемся получить доступ к данным сесии пользователя по ключу 'viewed_games', т.к его изначально нет
-    # инициализируем пустым списком и кладем в viewed_games
+    # +1 просмотр за сессию
     viewed_games = request.session.get('viewed_games', [])
-
-    # на момент начала сессии пользователя список всегда пуст, ни одна игра туда еще не попала
     if game.id not in viewed_games:
-        # у выбранной игры по id не извлекая данных из БД внутри поля views_count увеличиваем его значение на +1
-        # при использовании класса F позволяющего осуществлять простые арифметические операции внутри самой БД
         Game.objects.filter(pk=game.id).update(views_count=F('views_count') + 1)
-        # после увеличения views_count на +=1 добавляем id игры в viewed_games
         viewed_games.append(game.id)
-        # т.к request.session только позволяет получить данные нужно в его ключ 'viewed_games' переприсвоить
-        # обновленный массив viewed_games
         request.session['viewed_games'] = viewed_games
+        request.session.modified = True
 
-    # Для оптимизации числа SQL-запросов получаем за один запрос все неудаленные комментарии и
-    # связанные с ними пользователи с помощью select_related
+    # комментарии (у тебя comment.user, значит related_name вероятно 'comments' и поле user)
     comments = game.comments.filter(is_deleted=False).select_related('user')
 
-    if request.method == 'POST':
-        # при попытке отправки комментария незарегистрированным пользователем - редирект на авторизацию
-        if not request.user.is_authenticated:
-            messages.error(request, 'Чтобы комментировать, нужно войти на сайт.')
-            return redirect('account_login')
+    # форма комментария (пустая, отправка идёт в отдельный url)
+    form = GameCommentForm()
 
-        form = GameCommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            # четко устанавливаем автора комментария - текущий авторизованный пользователь
-            comment.user = request.user
-            # присваиваем в поле comment.game объект выше полученной игры
-            comment.game = game
-            # сохраняем экземпляр GameComment в модель
-            comment.save()
-            messages.success(request, 'Комментарий добавлен.')
-            # редирект на страницу текущей игры
-            return redirect('game_detail', slug=game.slug)
-    else:
-        form = GameCommentForm()
-
-    # Изначально присвоим в голос пользователя None
+    # голос пользователя
     user_vote = None
-    # Если пользователь авторизован
     if request.user.is_authenticated:
-        # Пробуем узнать результат голосования пользователя путем получения первого результата queryset
-        # из модели GameVote для вывода на страницу
         user_vote = GameVote.objects.filter(user=request.user, game=game).first()
+
+    trailer_embed = trailer_embed_url(game.trailer_url)
 
     context = {
         'game': game,
         'comments': comments,
         'comment_form': form,
         'user_vote': user_vote,
+        'trailer_embed': trailer_embed,
     }
     return render(request, 'games/game_detail.html', context)
 
 
 @login_required
-def game_vote(request, slug, value):
+def game_vote(request, slug):
     game = get_object_or_404(Game, slug=slug)
 
-    # защита 18+
     is_adult = get_adult(request)
-    # если контент игры 18+ и флаг совершеннолетия False
-    # Выводим сообщение об ошибке
     if game.is_adult_only and not is_adult:
-        messages.error(request, 'Эта игра доступна только пользователям 18+.')
-        # перенаправили на страницу со всеми играми
+        messages.error(request, 'Эта игра доступна только пользователям 16+.')
         return redirect('game_list')
 
-    # если в адресную строку пришло что-то кроме 'like'/'dislike' после slug
-    if value not in ('like', 'dislike'):
-        # перенаправим на страницу с текущей игрой
+    if request.method != "POST":
         return redirect('game_detail', slug=slug)
 
-    # присвоим в vote_value 1 если выбран- like, -1 - если dislike
-    vote_value = 1 if value == 'like' else -1
+    value = request.POST.get("value")
+    if value not in ("1", "-1"):
+        return redirect('game_detail', slug=slug)
 
-    # получаем доступ к полю экземпляру модели GameVote по queryset текущего пользователя и текущей игры
-    # если created=True- мы создали экземпляр, далее с помощью defaults={'value': vote_value} в его поле поместили
-    # текущий голос пользователя
-    vote, created = GameVote.objects.get_or_create(user=request.user, game=game, defaults={'value': vote_value})
-    # если created=False
-    if not created:
-        # мы переопределяем результат голосования пользователя, вдруг решение изменено
+    vote_value = int(value)
+
+    vote, created = GameVote.objects.get_or_create(
+        user=request.user, game=game,
+        defaults={'value': vote_value}
+    )
+    if not created and vote.value != vote_value:
         vote.value = vote_value
-        # сохраняем экземпляр модели GameVote
-        vote.save()
-    # Выводим сообщение об успешном результате голосования
+        vote.save(update_fields=["value"])
+
     messages.success(request, 'Ваш голос учтён.')
     return redirect('game_detail', slug=slug)
 
 
-@login_required(login_url='account_login')
+def game_add_comment(request, slug):
+    game = get_object_or_404(Game, slug=slug)
+
+    if request.method != 'POST':
+        return redirect('game_detail', slug=slug)
+
+    if not request.user.is_authenticated:
+        messages.error(request, 'Чтобы комментировать, нужно войти на сайт.')
+        return redirect('account_login')
+
+    # --- антиспам: 1 комментарий в минуту ---
+    # ключ привязан к пользователю и игре
+    key = f'comment_cooldown_game_{game.id}_user_{request.user.id}'
+    last_ts = request.session.get(key)
+
+    now = int(time.time())
+    if last_ts and (now - int(last_ts)) < COMMENT_COOLDOWN_SECONDS:
+        messages.error(request, 'Слишком часто. Можно оставлять комментарий не чаще 1 раза в минуту.')
+        return redirect('game_detail', slug=slug)
+
+    form = GameCommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.game = game
+        comment.save()
+
+        request.session[key] = now
+        request.session.modified = True
+
+        messages.success(request, 'Комментарий добавлен.')
+    else:
+        messages.error(request, 'Комментарий не отправлен. Проверь текст.')
+
+    return redirect('game_detail', slug=slug)
+
+
 # Удаление комментариев со страницы игры
+@login_required(login_url='account_login')
 def game_comment_delete(request, pk):
     # Получаем доступ к нужному комментарию
     comment = get_object_or_404(GameComment, id=pk)

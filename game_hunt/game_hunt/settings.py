@@ -207,3 +207,6 @@ if not ENCRYPTION_KEY:
     raise ValueError('ENCRYPTION_KEY is not set in .env')
 # Симметричный алгоритм шифрования с секретным ключом, который обеспечивает аутентифицированную криптографию
 FERNET = Fernet(ENCRYPTION_KEY.encode())
+
+# Настройки корректной работы фрейма для видео
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"

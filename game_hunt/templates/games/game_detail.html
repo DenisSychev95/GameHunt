@@ -1,217 +1,228 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{ game.title }} — GameHunt{% endblock %}
+
+{% block title %}GameHunt — {{ game.title }}{% endblock %}
 
 {% block content %}
-<section style="max-width: 900px; margin: 0 auto;">
-      <p style="margin-bottom: 10px;">
-    <a href="{% url 'game_list' %}" style="color: #9ca3af;">← К списку игр</a>
+<section class="gd">
 
-  </p>
-    <h2 style="color: #f97316; margin-bottom: 8px;">{{ game.title }}</h2>
+  <!-- Верхняя строка: назад ко всем играм -->
+  <div class="gd-topbar">
+    <a class="gd-back" href="{% url 'game_list' %}">← Все игры</a>
+  </div>
 
-    {% if game.cover_image %}
-    <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
-         style="max-width: 300px; border-radius: 4px; margin-bottom: 12px;">
-    {% endif %}
-    {% if game.is_adult_only %}
-    <br><strong style="color: #f87171;">Возрастное ограничение 16+</strong>
-    {% endif %}
-    <p style="font-size: 14px; color: #9ca3af;">
-        Жанры:
-        {% for genre in game.genres.all %}
-        {{ genre.name }}{% if not forloop.last %}, {% endif %}
-        {% empty %}
-        не указано
-        {% endfor %}
-        <br>
-        Платформы:
-        {% for platform in game.platforms.all %}
-        {{ platform.name }}{% if not forloop.last %}, {% endif %}
-        {% empty %}
-        не указано
-        {% endfor %}
-        <br>
-        Просмотры: {{ game.views_count }} |
-        Лайки: {{ game.likes_count }} |
-        Дизлайки: {{ game.dislikes_count }}
-        {% if game.is_adult_only %}
+  <!-- Заголовок -->
+  <header class="gd-header">
+    <h1 class="gd-title">{{ game.title }}</h1>
 
+    <!-- Навигация -->
+    <div class="gd-nav">
+      <div class="gd-nav-left">
+        Смотреть
+        <a class="btn gd-view_content" href="{% url 'review_list' %}?game={{ game.slug }}">Обзоры</a>
+        <a class="btn gd-view_content" href="{% url 'walkthrough_list' %}?game={{ game.slug }}">Прохождения</a>
+        <a class="btn gd-view_content" href="{% url 'cheat_list' %}?game={{ game.slug }}">Читы</a>
+      </div>
+
+      <div class="gd-nav-right">
+        {% if user.is_authenticated %}
+        Добавить
+          <a class="pager-link gd-add_content" href="{% url 'review_create' game.slug %}">Обзор</a>
+          <a class="pager-link gd-add_content" href="{% url 'walkthrough_create' game.slug %}">Прохождение</a>
+          <a class="pager-link gd-add_content" href="{% url 'cheat_create' game.slug %}">Чит</a>
+        {% else %}
+          <a class="gd-pill gd-pill-add" href="{% url 'account_login' %}">Войти, чтобы добавить</a>
         {% endif %}
-    </p>
-
-    <p style="margin-top: 12px;">{{ game.description|linebreaksbr }}</p>
-
-    {% if user.is_authenticated %}
-    <div style="margin-top: 16px;">
-        <form method="post" action="{% url 'game_vote' slug=game.slug value='like' %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit"
-                    style="padding: 4px 10px; border-radius: 4px; border: none;
-                               background-color: {% if user_vote and user_vote.value == 1 %}#16a34a{% else %}#4b5563{% endif %};
-                               color: #fff;">
-                👍 Лайк
-            </button>
-        </form>
-
-        <form method="post" action="{% url 'game_vote' slug=game.slug value='dislike' %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit"
-                    style="padding: 4px 10px; border-radius: 4px; border: none;
-                               background-color: {% if user_vote and user_vote.value == -1 %}#dc2626{% else %}#4b5563{% endif %};
-                               color: #fff; margin-left: 8px;">
-                👎 Дизлайк
-            </button>
-        </form>
+      </div>
     </div>
-    {% else %}
-    <p style="margin-top: 12px; font-size: 14px;">
-        Чтобы голосовать и комментировать,
-        <a href="{% url 'account_login' %}" style="color: #f97316;">авторизуйтесь</a>.
-    </p>
-    {% endif %}
-    <p style="margin-top: 16px;">
-        <a href="{% url 'review_list' %}?game={{ game.slug }}" style="color: #f97316;">
-            Смотреть обзоры на эту игру
-        </a>
-        {% if user.is_authenticated %}
-        ·
-        <a href="{% url 'review_create' game_slug=game.slug %}" style="color: #f97316;">
-            Написать обзор
-        </a>
-        {% endif %}
-    </p>
-    <p>
-        <a href="{% url 'walkthrough_list' %}?game={{ game.slug }}">Прохождения по этой игре</a>
-        {% if user.is_authenticated %}
-        · <a href="{% url 'walkthrough_create' game_slug=game.slug %}">Добавить прохождение</a>
-        {% endif %}
-    </p>
-    <p>
-        <a href="{% url 'cheat_list' %}?game={{ game.slug }}">Читы для этой игры</a>
-        {% if user.is_authenticated %}
-        · <a href="{% url 'cheat_create' game_slug=game.slug %}">Добавить чит</a>
-        {% endif %}
-    </p>
-    <hr style="margin: 20px 0; border-color: #374151;">
+  </header>
 
-    <h3 style="margin-bottom: 8px;">Комментарии</h3>
-    {% if comments %}
-    {% for comment in comments %}
-    <div style="margin-bottom: 12px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
+  <!-- Основной контент: слева обложка+мета, справа описание -->
+  <div class="gd-main">
 
-        <!-- ВЕРХНЯЯ СТРОКА: АВАТАР + НИК СЛЕВА, КОНТРОЛЫ СПРАВА -->
-        <div style="display: flex; align-items: center; justify-content: space-between;">
+    <aside class="gd-left">
+      {% if game.cover_image %}
+        <img class="gd-cover" src="{{ game.cover_image.url }}" alt="{{ game.title }}">
+      {% endif %}
 
-            <!-- ЛЕВАЯ ЧАСТЬ -->
-            <div style="display: flex; flex-direction: column;">
-                <!-- Дата публикации -->
-                <span style="font-size: 12px; color: #9ca3af; margin-left: 36px;">
-            {{ comment.created_at|date:"d.m.Y H:i" }}
-        </span>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    {% if comment.user.profile.profile_image %}
-                    <img src="{{ comment.user.profile.profile_image.url }}"
-                         alt="{{ comment.user.profile.nickname }}"
-                         style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-                    {% else %}
-                    <img src="{% static 'images/default_avatar.png' %}"
-                         alt="avatar"
-                         style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-                    {% endif %}
-
-                    <a href="{% url 'profile-view' comment.user.id %}"
-                       style="color: #f97316; font-size: 14px; text-decoration: none;">
-                        {{ comment.user.profile.nickname|default:comment.user.username }}
-                    </a>
-                </div>
-
-
-            </div>
-
-            <!-- ПРАВАЯ ЧАСТЬ — КНОПКИ УПРАВЛЕНИЯ -->
-            {% if user.is_superuser or request.user == comment.user %}
-            <div style="display: flex; align-items: center; gap: 6px; justify-content: space-between;
-                               width: 68px;">
-
-                {% if user == comment.user %}
-                <!-- Кнопка редактирования -->
-                <a href="{% url 'game_comment_edit' comment.id %}"
-                   title="Редактировать"
-                   style="
-                                   display: inline-flex;
-                                   align-items: center;
-                                   justify-content: center;
-                                   width: 24px;
-                                   height: 24px;
-                                   border-radius: 50%;
-                                   background-color: #4b5563;
-                                   color: white;
-                                   font-size: 12px;
-                                   text-decoration: none;
-                                   cursor: pointer;">
-                    ✏️
-                </a>
-                {% endif %}
-
-                <!-- Кнопка удаления -->
-                <form method="post"
-                      action="{% url 'game_comment_delete' comment.id %}"
-                      style="margin: 0; padding: 0;">
-                    {% csrf_token %}
-                    <button type="submit"
-                            onclick="return confirm('Удалить этот комментарий?');"
-                            title="Удалить"
-                            style="
-                                        width: 24px;
-                                        height: 24px;
-                                        display: inline-flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        border-radius: 50%;
-                                        border: none;
-                                        background-color: #dc2626;
-                                        color: white;
-                                        font-size: 12px;
-                                        cursor: pointer;">
-                        ✖️
-                    </button>
-                </form>
-
-            </div>
-            {% endif %}
+      <div class="gd-meta-card">
+        <div class="gd-meta-row">
+          <span class="gd-meta-label">Дата релиза:</span>
+          <span class="gd-meta-value">
+            {% if game.release_date %}{{ game.release_date|date:"d.m.Y" }}{% else %}—{% endif %}
+          </span>
         </div>
 
-        <!-- ТЕКСТ КОММЕНТАРИЯ -->
-        <p style="font-size: 14px; color: #e5e7eb; margin-left: 36px;">
-            {{ comment.text }}
-        </p>
+        <div class="gd-meta-row">
+          <span class="gd-meta-label">Платформы:</span>
+          <span class="gd-meta-value">
+            {% for p in game.platforms.all %}
+              {{ p.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}—{% endfor %}
+          </span>
+        </div>
 
+        <div class="gd-meta-row">
+          <span class="gd-meta-label">Разработчик:</span>
+          <span class="gd-meta-value">{{ game.developer|default:"—" }}</span>
+        </div>
+
+        <div class="gd-meta-row">
+          <span class="gd-meta-label">Издатель:</span>
+          <span class="gd-meta-value">{{ game.publisher|default:"—" }}</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="gd-right">
+      <div class="gd-text">{{ game.description|linebreaks }}</div>
     </div>
-    {% endfor %}
-    {% else %}
-    <p>Пока нет комментариев.</p>
-    {% endif %}
 
+  </div>
+
+  {% if game.gallery.all %}
+<section class="gd-gallery" data-gallery data-page-size="5">
+  <h2 class="gd-section-title">Галерея</h2>
+
+  <div class="gd-carousel">
+    <button class="gd-carousel-btn" type="button" data-prev aria-label="Назад">‹</button>
+
+    <div class="gd-carousel-viewport">
+      <div class="gd-carousel-track">
+        {% for img in game.gallery.all %}
+          <a href="{{ img.image.url }}"
+   class="gd-thumb glightbox"
+   data-gallery="game-{{ game.id }}"
+   data-title="{{ img.caption|default:'' }}"
+   data-index="{{ forloop.counter0 }}">
+  <img src="{{ img.image.url }}">
+</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button class="gd-carousel-btn" type="button" data-next aria-label="Вперёд">›</button>
+  </div>
+
+  <p class="gd-hint" data-counter></p>
+</section>
+{% endif %}
+
+  {% if trailer_embed %}
+<section class="gd-block">
+  <h2 class="gd-section-title">Трейлер</h2>
+
+  <div class="gd-video">
+    <iframe
+      src="{{ trailer_embed }}"
+      title="Trailer"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+{% endif %}
+  <!-- Оценить контент -->
+  <section class="gd-block">
+    <h2 class="gd-section-title">Оценить</h2>
+
+    <div class="gd-vote">
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'game_vote' game.slug %}" class="gd-vote-row">
+          {% csrf_token %}<button class="gd-vote-btn" name="value" value="1" type="submit">👍 <span>Лайк</span></button>
+          <button class="gd-vote-btn" name="value" value="-1" type="submit">👎 <span>Дизлайк</span></button>
+        </form>
+        <p class="gd-hint">Голос можно менять — учитывается только один голос на пользователя.</p>
+      {% else %}
+        <p class="gd-hint">Чтобы голосовать, нужно <a href="{% url 'account_login' %}">войти</a>.</p>
+      {% endif %}
+    </div>
+  </section>
+<!-- потом форма добавления -->
     {% if user.is_authenticated %}
-    <h4 style="margin-top: 16px;">Оставить комментарий</h4>
-    <form method="post">
+      <form class="gd-comment-form" method="post" action="{% url 'game_add_comment' game.slug %}">
         {% csrf_token %}
         {{ comment_form.non_field_errors }}
-        <div style="margin-bottom: 8px;">
-            {{ comment_form.text }}
-            {% if comment_form.text.errors %}
-            <div style="color: #f87171; font-size: 13px;">
-                {{ comment_form.text.errors|striptags }}
-            </div>
-            {% endif %}
+
+        <div class="gd-comment-field">
+          {{ comment_form.text.errors }}
+          {{ comment_form.text }}
         </div>
-        <button type="submit"
-                style="padding: 6px 12px; border: none; border-radius: 4px;
-                            background-color: #f97316; color: #fff;">
-            Отправить
-        </button>
-    </form>
+
+        <button class="gd-btn-primary" type="submit">Отправить</button>
+        <p class="gd-hint">Не чаще 1 комментария в минуту.</p>
+      </form>
+    {% else %}
+      <p class="gd-hint"><a href="{% url 'account_login' %}">Войдите</a>, чтобы писать комментарии.</p>
     {% endif %}
+  <!-- Комментарии: сначала список -->
+  <section class="gd-comments">
+    <h2 class="gd-section-title">Комментарии</h2>
+
+    <div class="gd-comment-list">
+      {% for comment in comments %}
+        <article class="gd-comment">
+
+          <div class="gd-comment-head">
+            <div class="gd-comment-left">
+              <span class="gd-comment-date">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+
+              <div class="gd-comment-user">
+                {% if comment.user.profile.profile_image %}
+                  <img class="gd-comment-avatar"
+                       src="{{ comment.user.profile.profile_image.url }}"
+                       alt="{{ comment.user.profile.nickname }}">
+                {% else %}
+                  <img class="gd-comment-avatar"
+                       src="{% static 'images/default_avatar.png' %}"
+                       alt="avatar">
+                {% endif %}
+
+                <a class="gd-comment-author" href="{% url 'profile-view' comment.user.id %}">
+                  {{ comment.user.profile.nickname|default:comment.user.username }}
+                </a>
+              </div>
+            </div>
+
+            {% if user.is_superuser or request.user == comment.user %}
+              <div class="gd-comment-actions">
+
+                {% if user == comment.user %}
+                  <a class="gd-comment-action gd-comment-edit"
+                     href="{% url 'game_comment_edit' comment.id %}"
+                     title="Редактировать">✏️</a>
+                {% endif %}
+
+                <form method="post" action="{% url 'game_comment_delete' comment.id %}" class="gd-comment-delete-form">
+                  {% csrf_token %}
+                  <button class="gd-comment-action gd-comment-delete"
+                          type="submit"
+                          onclick="return confirm('Удалить этот комментарий?');"
+                          title="Удалить">✖️</button>
+                </form>
+
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="gd-comment-body">
+            {{ comment.text|linebreaks }}
+          </div>
+
+        </article>
+      {% empty %}
+        <p class="gd-hint">Комментариев пока нет.</p>
+      {% endfor %}
+    </div>
+
+  </section>
+
 </section>
+
+
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/game_detail.js' %}"></script>
 {% endblock %}

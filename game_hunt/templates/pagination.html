@@ -1,24 +1,47 @@
-    {% if queryset.has_other_pages %}
-      <nav class="pager center">
-        {% if queryset.has_previous %}
-          <a class="pager-link" href="?page=1{% if extra_query %}&{{ extra_query }}{% endif %}">«</a><a class="pager-link" href="?page={{ queryset.previous_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}">‹</a>
-        {% else %}
+{% if queryset.has_other_pages %}
+  <nav class="pager center" aria-label="Пагинация">
 
-        {% endif %}
+    {# ЛЕВО: показываем только если есть previous #}
+    {% if queryset.has_previous %}
+      <a class="pager-btn"
+         href="?page=1{% if extra_query %}&{{ extra_query }}{% endif %}"
+         title="Первая" aria-label="Первая">
+        <span class="icon icon-first" aria-hidden="true"></span>
+      </a>
 
-        {% for page in custom_range %}
-          {% if page == queryset.number %}
-            <span class="pager-current">{{ page }}</span>
-          {% else %}
-            <a class="pager-link" href="?page={{ page }}{% if extra_query %}&{{ extra_query }}{% endif %}">{{ page }}</a>
-          {% endif %}
-        {% endfor %}
-
-        {% if queryset.has_next %}
-          <a class="pager-link" href="?page={{ queryset.next_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}">›</a>
-          <a class="pager-link" href="?page={{ queryset.paginator.num_pages }}{% if extra_query %}&{{ extra_query }}{% endif %}">»</a>
-        {% else %}
-
-        {% endif %}
-      </nav>
+      <a class="pager-btn"
+         href="?page={{ queryset.previous_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}"
+         title="Назад" aria-label="Назад">
+        <span class="icon icon-prev" aria-hidden="true"></span>
+      </a>
     {% endif %}
+
+    {# ЦИФРЫ #}
+    {% for page in custom_range %}
+      {% if page == queryset.number %}
+        <span class="pager-current" aria-current="page">{{ page }}</span>
+      {% else %}
+        <a class="pager-link"
+           href="?page={{ page }}{% if extra_query %}&{{ extra_query }}{% endif %}">
+          {{ page }}
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    {# ПРАВО: показываем только если есть next #}
+    {% if queryset.has_next %}
+      <a class="pager-btn"
+         href="?page={{ queryset.next_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}"
+         title="Вперёд" aria-label="Вперёд">
+        <span class="icon icon-next" aria-hidden="true"></span>
+      </a>
+
+      <a class="pager-btn"
+         href="?page={{ queryset.paginator.num_pages }}{% if extra_query %}&{{ extra_query }}{% endif %}"
+         title="Последняя" aria-label="Последняя">
+        <span class="icon icon-last" aria-hidden="true"></span>
+      </a>
+    {% endif %}
+
+  </nav>
+{% endif %}

@@ -6,6 +6,7 @@
     <title>{% block title %}GameHunt{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/glightbox/glightbox.min.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Подключим базовые стили позже, пока просто фон -->
@@ -119,6 +120,10 @@
     <!-- Футер -->
     {% include 'footer.html' %}
 </div>
+
+<script src="{% static 'vendor/glightbox/glightbox.min.js' %}"></script>
+
+{% block page_js %}{% endblock %}
 
 </body>
 </html>

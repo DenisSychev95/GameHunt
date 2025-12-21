@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Genre, Platform, Game, GameVote, GameComment, Developer, Publisher
+from .models import Genre, Platform, Game, GameVote, GameComment, Developer, Publisher, GameImage
 from . forms import GameAdminForm
 
 
@@ -31,6 +31,13 @@ class PlatformAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+class GameImageInline(admin.StackedInline):
+    model = GameImage
+    extra = 0
+    fields = ('caption', 'image', 'position', )
+    ordering = ('position', )
+
+
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     form = GameAdminForm
@@ -41,6 +48,7 @@ class GameAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     # Добавляем фильтр на странице списка объектов в админке по возрасту, по жанру
     filter_horizontal = ('genres', 'platforms')
+    inlines = [GameImageInline]
 
 
 @admin.register(GameVote)
