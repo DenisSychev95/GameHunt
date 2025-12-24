@@ -73,3 +73,42 @@ function render() {
 
   render();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const shareBtn = document.querySelector('[data-share]');
+  if (!shareBtn) return;
+
+  function showToast(text) {
+    let toast = document.querySelector('.gh-toast');
+
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'gh-toast';
+      document.body.appendChild(toast);
+    }
+
+    toast.textContent = text;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
+
+  shareBtn.addEventListener('click', async () => {
+    const url = window.location.href;
+
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+        showToast('Ссылка скопирована в буфер обмена');
+        return;
+      }
+
+      // fallback
+      prompt('Скопируй ссылку:', url);
+    } catch (e) {
+      console.error('Share failed:', e);
+    }
+  });
+});

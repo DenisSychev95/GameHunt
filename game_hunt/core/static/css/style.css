@@ -315,7 +315,7 @@
 }
 
 /* From Uiverse.io by Codecite */ 
-.btn, .link-muted, .pager-link, .pager-btn{
+.btn, .link-muted, .pager-link, .pager-btn, .gd-back, .gd-shar{
   transition: all 0.3s ease-in-out;
   text-align: center;
   text-decoration: none;
@@ -716,18 +716,96 @@
 }
 
 .gd-topbar{
-  margin-bottom: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom: 14px;
 }
 
-.gd-back{
-  color: #9ca3af;
+.gd-back, .gd-share{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  text-decoration:none;
+  cursor:pointer;
+  font-weight: 700;
+  font-size: 15px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color:#e5e7eb;
+  
+
+  transition: transform .15s ease, background .2s ease;
+}
+
+.gd-back:hover, .gd-share:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(3px);
   text-decoration: none;
-  font-size: 13px;
 }
 
-.gd-back:hover{
-  color: #e5e7eb;
-  text-decoration: underline;
+.gd-share{
+  outline:none;
+  
+}
+
+
+
+/* Иконки через mask (как ты любишь, без SVG в шаблоне) */
+.ui-icon{
+  width: 18px;
+  height: 18px;
+  display:inline-block;
+  background-color:#9ca3af;
+
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:contain;
+
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:contain;
+}
+
+/* стрелка назад */
+.ui-icon-arrow-left{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* share */
+.ui-icon-share{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16 8a3 3 0 1 0-2.8-4' fill='none'/%3E%3Cpath d='M18 8a3 3 0 0 0-2.9 2.2L8.9 13.1A3 3 0 0 0 6 12a3 3 0 1 0 2.9 3.8l6.2 2.9A3 3 0 1 0 16 17a3 3 0 0 0 .9-.1l-6.2-2.9a3.1 3.1 0 0 0 0-1.9l6.2-2.9A3 3 0 1 0 18 8Z' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18 8a3 3 0 0 0-2.9 2.2L8.9 13.1A3 3 0 0 0 6 12a3 3 0 1 0 2.9 3.8l6.2 2.9A3 3 0 1 0 16 17a3 3 0 0 0 .9-.1l-6.2-2.9a3.1 3.1 0 0 0 0-1.9l6.2-2.9A3 3 0 1 0 18 8Z' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Toast уведомление */
+.gh-toast {
+  position: fixed;
+  left: 50%;
+  top: 90px;
+  transform: translateX(-50%) translateY(20px);
+  background: #bdbecb;
+  color: rgba(16, 16, 18, 1);
+  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+  z-index: 9999;
+}
+
+.gh-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .gd-title{
@@ -736,12 +814,34 @@
   text-align: center;
 }
 
-.gd-nav{
+.gd-nav {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
+  gap: 40px;
+  margin: 20px 0;
+}
+
+/* Группа: Смотреть / Добавить */
+.gd-nav-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Надпись */
+.gd-nav-label {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bdbecb;
+  font-weight: bold;
+}
+
+/* Ссылки */
+.gd-nav-links {
+  display: flex;
+  gap: 10px;
 }
 
 .gd-nav-left,
@@ -787,6 +887,7 @@
   display: flex;
   gap: 40px;
   align-items: flex-start;
+  margin-bottom: 20px;
 }
 
 .gd-left{
@@ -829,12 +930,13 @@
 }
 
 .gd-meta-label{ color: #9ca3af; }
-.gd-meta-value{ color: #bdbecb; }
+.gd-meta-value{ color: #bdbecb; font-weight: bold; }
 
 .gd-section-title{
   margin: 14px 0 10px;
-  color: #e5e7eb;
-  font-size: 18px;
+  color: #f3f4f6;
+  margin-bottom: 5px;
+
   
 }
 
@@ -865,12 +967,14 @@
    Game gallery: pages of up to 5
 ========================= */
 
-.gd-gallery{ margin-top: 14px; }
+.gd-gallery,.gd-block{ margin-bottom: 15px;}
+
 
 .gd-carousel{
   display: flex;
   align-items: center;
   gap: 10px;
+  
 }
 
 .gd-carousel-btn{
@@ -908,7 +1012,7 @@
 
 .gd-thumb{
   flex: 0 0 auto;
-  width: 220px;
+  width: 230px;
   height: 140px;
   border-radius: 14px;
   overflow: hidden;

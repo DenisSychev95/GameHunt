@@ -7,9 +7,17 @@
 <section class="gd">
 
   <!-- Верхняя строка: назад ко всем играм -->
-  <div class="gd-topbar">
-    <a class="gd-back" href="{% url 'game_list' %}">← Все игры</a>
-  </div>
+ <div class="gd-topbar">
+  <a class="gd-back" href="{% url 'game_list' %}">
+    <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+    <span>Все игры</span>
+  </a>
+
+  <button class="gd-share" type="button" data-share>
+    <span class="ui-icon ui-icon-share" aria-hidden="true"></span>
+    <span>Поделиться</span>
+  </button>
+</div>
 
   <!-- Заголовок -->
   <header class="gd-header">
@@ -17,24 +25,38 @@
 
     <!-- Навигация -->
     <div class="gd-nav">
-      <div class="gd-nav-left">
-        Смотреть
+
+  <div class="gd-nav-left">
+    <div class="gd-nav-group">
+      <div class="gd-nav-label">Смотреть</div>
+
+      <div class="gd-nav-links">
         <a class="btn gd-view_content" href="{% url 'review_list' %}?game={{ game.slug }}">Обзоры</a>
         <a class="btn gd-view_content" href="{% url 'walkthrough_list' %}?game={{ game.slug }}">Прохождения</a>
         <a class="btn gd-view_content" href="{% url 'cheat_list' %}?game={{ game.slug }}">Читы</a>
       </div>
+    </div>
+  </div>
 
-      <div class="gd-nav-right">
-        {% if user.is_authenticated %}
-        Добавить
+  <div class="gd-nav-right">
+    {% if user.is_authenticated %}
+      <div class="gd-nav-group">
+        <div class="gd-nav-label">Добавить</div>
+
+        <div class="gd-nav-links">
           <a class="pager-link gd-add_content" href="{% url 'review_create' game.slug %}">Обзор</a>
           <a class="pager-link gd-add_content" href="{% url 'walkthrough_create' game.slug %}">Прохождение</a>
           <a class="pager-link gd-add_content" href="{% url 'cheat_create' game.slug %}">Чит</a>
-        {% else %}
-          <a class="gd-pill gd-pill-add" href="{% url 'account_login' %}">Войти, чтобы добавить</a>
-        {% endif %}
+        </div>
       </div>
-    </div>
+    {% else %}
+      <a class="gd-pill gd-pill-add" href="{% url 'account_login' %}">
+        Войти, чтобы добавить
+      </a>
+    {% endif %}
+  </div>
+
+</div>
   </header>
 
   <!-- Основной контент: слева обложка+мета, справа описание -->
@@ -125,7 +147,7 @@
 {% endif %}
   <!-- Оценить контент -->
   <section class="gd-block">
-    <h2 class="gd-section-title">Оценить</h2>
+    <h4 class="gd-section-title">Оцените контент</h4>
 
     <div class="gd-vote">
       {% if user.is_authenticated %}
