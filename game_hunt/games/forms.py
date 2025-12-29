@@ -7,12 +7,14 @@ from datetime import date
 class GameCommentForm(forms.ModelForm):
     class Meta:
         model = GameComment
-        fields = ('text',)
-        labels = {
-            'text': 'Комментарий',
-        }
+        fields = ["text"]
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 3}),
+            "text": forms.Textarea(attrs={
+                "class": "gd-textarea",
+                "placeholder": "Оставьте комментарий…",
+                "rows": 6,
+                "maxlength": 500,
+            })
         }
 
 

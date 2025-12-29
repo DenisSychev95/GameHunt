@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       toast.classList.remove('show');
-    }, 3000);
+    }, 2000);
   }
 
   shareBtn.addEventListener('click', async () => {
@@ -111,4 +111,153 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Share failed:', e);
     }
   });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const voteForm = document.querySelector('.gd-vote-row');
+  if (!voteForm) return;
+
+  const toast = document.querySelector('.gd-vote-toast');
+
+  function showToast(text, type='ok') {
+    if (!toast) return;
+    toast.textContent = text;
+    toast.classList.remove('is-ok','is-err');
+    toast.classList.add('is-show', type === 'err' ? 'is-err' : 'is-ok');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('is-show'), 2000);
+  }
+
+  voteForm.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[name="value"]');
+    if (!btn) return;
+
+    e.preventDefault();
+
+    const csrfToken = voteForm.querySelector('[name=csrfmiddlewaretoken]').value;
+    const formData = new FormData();
+    formData.append('value', btn.value);
+
+    const resp = await fetch(voteForm.action, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      body: formData
+    });
+
+    if (!resp.ok) {
+      showToast('Не удалось отправить голос. Попробуйте ещё раз.', 'err');
+      return;
+    }
+
+    // успех: подсветка кнопок
+    voteForm.querySelectorAll('.gd-vote-btn').forEach(b => {
+      b.classList.remove('is-active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-pressed', 'true');
+
+    // скрыть подсказку (если есть)
+    const hint = document.querySelector('.gd-vote .gd-hint');
+    if (hint) hint.style.display = 'none';
+
+    showToast('Спасибо, ваш голос учтён', 'ok');
+  });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ---------- TOAST ----------
+  function showToast(text) {
+    let toast = document.querySelector('.gh-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'gh-toast';
+      document.body.appendChild(toast);
+    }
+
+    toast.textContent = text;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
+  // ---------- COMMENT FORM ----------
+  const form = document.querySelector('.gd-comment-form');
+  if (!form) return;
+
+  const textarea = form.querySelector('textarea');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  // счетчик
+  const counter = document.createElement('div');
+  counter.style.fontSize = '12px';
+  counter.style.marginTop = '4px';
+  counter.textContent = '0 / 500';
+  textarea.after(counter);
+
+  // блокировка кнопки
+  submitBtn.disabled = true;
+
+  textarea.addEventListener('input', () => {
+    const len = textarea.value.length;
+    counter.textContent = len + ' / 500';
+    submitBtn.disabled = (len === 0 || len > 500);
+  });
+
+  // ✅ Enter без Shift отправляет
+  textarea.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+      form.requestSubmit();
+    }
+  });
+
+  // ---------- AJAX SEND ----------
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    submitBtn.disabled = true;
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showToast(data.error || 'Ошибка отправки');
+        submitBtn.disabled = false;
+        return;
+      }
+
+      // вставляем HTML комментария
+      const list = document.querySelector('.gd-comment-list');
+      list.insertAdjacentHTML('afterbegin', data.html);
+
+      textarea.value = '';
+      counter.textContent = '0 / 500';
+      submitBtn.disabled = true;
+
+      showToast('Комментарий добавлен');
+
+    } catch (err) {
+      showToast('Ошибка сети');
+      submitBtn.disabled = false;
+    }
+  });
+
 });

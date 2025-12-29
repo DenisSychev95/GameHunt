@@ -1,14 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import F, Q
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from .models import Game, Genre, Platform, GameVote, GameComment
 from .forms import GameCommentForm
 from . utils import get_adult, search_games, paginate_games
 import time
+from django.utils import timezone
+from datetime import timedelta
 from .utils import trailer_embed_url
-
-
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 COMMENT_COOLDOWN_SECONDS = 60
 
 
@@ -63,6 +66,8 @@ def game_detail(request, slug):
         messages.error(request, 'Эта игра доступна только пользователям 16+.')
         return redirect('game_list')
 
+
+
     # +1 просмотр за сессию
     viewed_games = request.session.get('viewed_games', [])
     if game.id not in viewed_games:
@@ -100,6 +105,8 @@ def game_vote(request, slug):
 
     is_adult = get_adult(request)
     if game.is_adult_only and not is_adult:
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"error": "adult_only"}, status=403)
         messages.error(request, 'Эта игра доступна только пользователям 16+.')
         return redirect('game_list')
 
@@ -112,53 +119,65 @@ def game_vote(request, slug):
 
     vote_value = int(value)
 
-    vote, created = GameVote.objects.get_or_create(
-        user=request.user, game=game,
-        defaults={'value': vote_value}
+    vote, created = GameVote.objects.update_or_create(
+        user=request.user,
+        game=game,
+        defaults={"value": vote_value},
     )
-    if not created and vote.value != vote_value:
-        vote.value = vote_value
-        vote.save(update_fields=["value"])
+
+    # ⬇️ ВОТ КЛЮЧЕВОЕ
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return JsonResponse({
+            "success": True,
+            "value": vote_value,
+        })
 
     messages.success(request, 'Ваш голос учтён.')
     return redirect('game_detail', slug=slug)
 
 
+@login_required
+@require_POST
 def game_add_comment(request, slug):
     game = get_object_or_404(Game, slug=slug)
 
-    if request.method != 'POST':
-        return redirect('game_detail', slug=slug)
+    text = request.POST.get("text", "").strip()
+    if not text:
+        return JsonResponse({"error": "Комментарий пустой"}, status=400)
 
-    if not request.user.is_authenticated:
-        messages.error(request, 'Чтобы комментировать, нужно войти на сайт.')
-        return redirect('account_login')
+    # 🔴 ОГРАНИЧЕНИЕ: 1 комментарий в минуту
+    last_comment = (
+        GameComment.objects
+        .filter(user=request.user)
+        .order_by("-created_at")
+        .first()
+    )
 
-    # --- антиспам: 1 комментарий в минуту ---
-    # ключ привязан к пользователю и игре
-    key = f'comment_cooldown_game_{game.id}_user_{request.user.id}'
-    last_ts = request.session.get(key)
+    if last_comment:
+        delta = timezone.now() - last_comment.created_at
+        if delta < timedelta(minutes=1):
+            seconds_left = 60 - int(delta.total_seconds())
+            return JsonResponse({
+                "error": f"Можно комментировать раз в минуту. Подождите {seconds_left} сек."
+            }, status=429)
 
-    now = int(time.time())
-    if last_ts and (now - int(last_ts)) < COMMENT_COOLDOWN_SECONDS:
-        messages.error(request, 'Слишком часто. Можно оставлять комментарий не чаще 1 раза в минуту.')
-        return redirect('game_detail', slug=slug)
+    comment = GameComment.objects.create(
+        game=game,
+        user=request.user,
+        text=text
+    )
 
-    form = GameCommentForm(request.POST)
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.user = request.user
-        comment.game = game
-        comment.save()
+    # ✔️ ВОЗВРАЩАЕМ HTML КОММЕНТАРИЯ
+    html = render_to_string(
+        "games/partials/game_comment.html",
+        {"comment": comment, "user": request.user},
+        request=request
+    )
 
-        request.session[key] = now
-        request.session.modified = True
-
-        messages.success(request, 'Комментарий добавлен.')
-    else:
-        messages.error(request, 'Комментарий не отправлен. Проверь текст.')
-
-    return redirect('game_detail', slug=slug)
+    return JsonResponse({
+        "success": True,
+        "html": html
+    })
 
 
 # Удаление комментариев со страницы игры

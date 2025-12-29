@@ -1,0 +1,26 @@
+{% load static %}
+
+<article class="gd-comment">
+  <div class="gd-comment-head">
+    <div class="gd-comment-left">
+      <span class="gd-comment-date">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+
+      <div class="gd-comment-user">
+        {% if comment.user.profile.profile_image %}
+          <img class="gd-comment-avatar" src="{{ comment.user.profile.profile_image.url }}">
+        {% else %}
+          <img class="gd-comment-avatar" src="{% static 'images/default_avatar.png' %}">
+        {% endif %}
+
+        <a class="gd-comment-author"
+           href="{% url 'profile-view' comment.user.id %}">
+          {{ comment.user.profile.nickname|default:comment.user.username }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="gd-comment-body">
+    {{ comment.text|linebreaks }}
+  </div>
+</article>
