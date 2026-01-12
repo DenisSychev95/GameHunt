@@ -1,16 +1,136 @@
 
-/* Стили для шаблона navbar.html */
+/* ========================================================== BASE STYLES(base.html) start ========================================================== */
 
-.site-header {
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(90deg, #054c76, #0c192a, #471c3a);
+  color: #f3f4f6;
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.site-container{
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px; /* чтобы не прилипало на мобилке */
+}
+
+main {
+  padding: 40px 20px;
+}
+
+a {
+  color: #f97316;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.gh-messages {
+  max-width: 900px;
+  margin: 10px auto 0;
+  padding: 0 16px;
+}
+
+.gh-message {
+  position: relative;
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #111827;
+  color: #e5e7eb;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  border: 1px solid #4b5563;
+}
+
+.gh-message-success { border-color: #10b981; }
+.gh-message-error   { border-color: #ef4444; }
+.gh-message-warning { border-color: #f97316; }
+
+.gh-message-icon {
+  font-size: 16px;
+}
+
+.gh-message-text {
+  flex: 1;
+}
+
+.gh-message-close {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 4px;
+}
+
+/* ========================================================== BASE STYLES(base.html) end ========================================================== */
+
+
+/* ========================================================== HOME(home.html) start ========================================================== */
+
+
+.home {
+  text-align: center;
+}
+
+.home-page-center-p{
+  color: #bdbecb;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  text-align: center;
+  text-indent: 2em;
+  margin: 0;
+}
+
+.home-text {
+  max-width: 50%;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+  color: #e5e7eb;
+}
+
+.home-image {
+  width: 80%;
+  margin-top: 20px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* ========================================================== HOME(home.html) end ========================================================== */
+
+
+/* ========================================================== NAVBAR(navbar.html) start ========================================================== */
+
+.site-header{
   height: 70px;
   box-sizing: border-box;
-
   background: linear-gradient(90deg, #0b5c8f, #10243b, #5a2047);
 
-  padding: 10px 30px 5px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  /* padding убираем отсюда, он будет у inner-контейнера */
+  padding: 10px 0 5px;
 
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
@@ -20,59 +140,51 @@
   transform-style: preserve-3d;
 }
 
-.site-header:before {
-  height: 70px;
-  box-sizing: border-box;
-  content: "";
-  position: absolute; 
-  padding: 10px 30px 5px;
+/* ВОТ ЗДЕСЬ теперь flex и spacing */
+.site-header__inner{
+  height: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: space-evenly; /* оставил как у тебя */
   align-items: center;
+  padding: 0 30px;               /* вернули твои 30px внутрь */
+}
+
+/* Свечение оставляем тем же, но убираем лишний мусор */
+.site-header:before{
+  content: "";
+  position: absolute;
+  inset: 0;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-  z-index: 10;
-  content: "";
-  inset: 0px;
+  z-index: -1; /* важное: чтобы не перекрывало клики/контент */
   background: conic-gradient(from 90deg at 40% -20%, #EE14FF, #00c6f8, #00c6f8, #EE14FF);
   filter: blur(11px);
   transform: translate3d(-4px, 5px, -1px);
-  border-radius: inherit;
   pointer-events: none;
 }
-  
 
-
-/* -------------------------
-   Logo
--------------------------- */
-
-.header-logo {
-  height: 100%;
+/* Лого */
+.header-logo{
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  
 }
 
 .header-logo img {
-  height: 100%;
-  width: auto;
+  width: 75px;
   display: block;
-  border-radius: 8px; /* если хочешь слегка скруглить лого */
+  border-radius: 12px; /* если хочешь слегка скруглить лого */
 }
-
-/* -------------------------
-   Navigation
--------------------------- */
 
 .header-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 40px;
   align-items: center;
   
 }
-
-
-
 .header-nav a {
   font-size: 13px;
   color: #bdbecb;
@@ -140,10 +252,6 @@
   filter: blur(5px);
 }
 
-/* -------------------------
-   Auth block 
--------------------------- */
-
 .header-auth {
   font-size: 15px;
   color: #9ca3af;
@@ -173,402 +281,14 @@
   
 }
 
-
-/* стили для footer.html */
-
-.site-footer {
-  height: 70px;
-  box-sizing: border-box;
-
-  padding: 8px 20px;
-  text-align: center;
-
-  background: linear-gradient(
-    90deg,
-    #041d2e,
-    #081321,
-    #1c0d20
-  );
-
-  color: #9ca3af;
-
-  position: relative;
-  z-index: 5;
-
-  /* мягкое, не слепящее свечение */
-
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-
-  z-index: 10;
-  transform-style: preserve-3d;
-}
-
-.site-footer:before {
-  height: 70px;
-  box-sizing: border-box;
-  content: "";
-  position: absolute; 
-  padding: 10px 30px 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  z-index: 10;
-  content: "";
-  inset: 0px;
-  background: conic-gradient(from 90deg at 40% -20%, #EE14FF, #00c6f8, #00c6f8, #EE14FF);
-  filter: blur(11px);
-  transform: translate3d(-4px, -5px, -1px);
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-/* Текст */
-.footer-copy {
-  margin: 4px auto;
-  font-size: 13px;
-  color: #9ca3af;
-  font-weight: bold;
-}
-
-/* Ссылки */
-.footer-links {
-  margin: 4px auto;
-  font-size: 13px;
-  font-weight: bold;
-
-}
-
-.footer-links a {
-  color: #00c6f8bd;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.footer-links a:hover {
-  color: #70defaef;
-  text-decoration: none;
-}
+/* ========================================================== NAVBAR end(navbar.html) ========================================================== */
 
 
-/* Стили для шаблона game_list.html*/
-
-.container { max-width: 1200px; margin: 0 auto; padding: 0 12px; }
-.center { text-align: center; }
-.muted { color: #9ca3af; }
-.page-title { margin: 12px 0 16px; }
-
-.search-form {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.input {
-  font-family: "Montserrat", sans-serif;
-  width: 15%;
-  height: 22px;
-  padding-left: 2.5rem;
-  box-shadow: 0 0 0 1.5px #2b2c37, 0 0 25px -17px #000;
-  border: 0;
-  border-radius: 12px;
-  background-color: #16171d;
-  outline: none;
-  color: #bdbecb;
-  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
-  cursor: text;
-  z-index: 0;
-}
-
-.input::placeholder {
-  color: #bdbecb;
-}
-
-.input:hover {
-  box-shadow: 0 0 0 2.5px #2f303d, 0px 0px 25px -15px #000;
-}
-
-.input:active {
-  transform: scale(0.95);
-}
-
-.input:focus {
-  box-shadow: 0 0 0 2.5px #2f303d;
-}
-
-.input, .select {
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid #374151;
-  height: 40px;
-  box-sizing: border-box;
-}
-
-.select {
-  background-color: #16171d;
-  color:  #bdbecb;
-
-}
-
-/* From Uiverse.io by Codecite */ 
-.btn, .link-muted, .pager-link, .pager-btn, .gd-back, .gd-shar, .gd-vote-btn:hover{
-  transition: all 0.3s ease-in-out;
-  text-align: center;
-  text-decoration: none;
-}
-
-.btn, .link-muted{
-  width: 100px;
-  height: 40px;
-  border-radius: 12px;
-  background-image: linear-gradient(135deg, #00c6f8bd 0%, #0b5c8f 100%);
-  box-shadow: 0 1px 30px -6px rgba(97, 182, 238, 0.856);
-  outline: none;
-  cursor: pointer;
-  border: none;
-  font-size: 15px;
-  color: #e5e6ee;
-  text-align: center;
-  font-weight: bold;
-}
-
-.link-muted{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  padding: 0;
-  background: #16171d;
-  border: 1px solid rgba(255, 255, 255, .12);
-  box-shadow: none
-}
-
-.btn-secondary {
-  padding-top: 5px;
-  height: 30px;
-  width: 120px;
-  
-}
-
-.btn:hover, .link-muted:hover, .gd-vote-btn:hover {
-  transform: translateY(3px);
-  box-shadow: none;
-  text-decoration: none;
-}
-
-.btn:active, .link-muted:active {
-  opacity: 0.5;
-}
-
-
-/* --- Сброс поиска --- */
-
-/* --- контейнер списка игр --- */
-.game-grid{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center; /* 1 карточка будет по центру */
-  align-items: stretch;
-  margin-bottom: 22px;     /* чтобы не налезало на пагинацию */
-}
-
-/* --- карточка --- */
-.game-card {
- margin-right: 30px;
- width: 230px;
- height: 400px;
- background: rgb(40,40,55);
- background: linear-gradient(344deg, rgba(40,40,55,1) 0%, rgba(16,16,18,1) 50%);
- box-shadow: 4px 6px 14px #00000036;
- border-radius: 3px;
- color: #F9F9F9;
- padding: 16px;
- transition: all .3s;
- border-radius: 12px;
-}
-
-.game-card:hover {
- margin-top: -2px;
-}
-
-/* верхняя строка: заголовок + просмотры */
-.game-head{
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-/* заголовок не раздувает карточку */
-.game-title{
-  margin: 0;
-  line-height: 1.25;
-  flex: 1;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: calc(1.25em * 2);
-}
-
-.game-title a{
-  color:#bdbecb;
-  text-decoration:none;
-}
-
-.game-title a:hover {
-  color: #ffffff;
-  text-decoration: none;
-}
-
-/* просмотры справа, компактно */
-
-/* =========================
-   UI icons (eye / views)
-========================= */
-
-/* Базовая иконка */
-/* Базовая иконка */
-.ui-icon{
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  position: relative;
-}
-
-/* 👁 СКЛЕРА (заливка глаза) */
-.ui-icon-eye{
-  background-color: #f3f4f6; /* склера */
-
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  -webkit-mask-size: contain;
-
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2.5 12s3.8-6.5 9.5-6.5S21.5 12 21.5 12s-3.8 6.5-9.5 6.5S2.5 12 2.5 12Z' fill='black'/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2.5 12s3.8-6.5 9.5-6.5S21.5 12 21.5 12s-3.8 6.5-9.5 6.5S2.5 12 2.5 12Z' fill='black'/%3E%3C/svg%3E");
-}
-
-/* 👁 РАДУЖКА */
-.ui-icon-eye::before{
-  content: "";
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: #4d8bc5dc; /* серо-голубая радужка */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* 👁 ЗРАЧОК */
-.ui-icon-eye::after{
-  content: "";
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background-color: #1a0b0b; /* чёрный зрачок */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Обёртка меты */
-.ui-meta{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #bdbecb;
-  font-weight: bold;
-}
-
-/* обложка фикс по высоте -> все карточки ровные */
-.game-cover{
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  display: block;
-}
-
-.game-cover-placeholder{
-  width:100%;
-  height:180px;
-  border-radius:12px;
-  border:1px dashed #374151;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#9ca3af;
-}
-
-.game-meta{ 
-    margin-top:10px;
-    font-size:13px;
-    color:#9ca3af;
-    text-align: center;
-    font-weight: bold;
-    }
-
-.game-stats{
-  margin-top:10px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  font-size:14px;
-}
-
-.game-genres{
-  margin-top:10px;
-  padding: 10px 0;
-  display:flex;
-  justify-content: center;
-  flex-wrap:wrap;
-  gap:6px;
-  max-height: 52px;
-  overflow: hidden;
-}
-
-.genre-link, .genre-muted{
-  font-size:13px;
-  padding:1px 8px;
-  border:1px solid #374151;
-  border-radius:999px;
-  color: rgba(16, 16, 18, 1);
-  background: #bdbecb;
-  font-weight: bold;
-}
-
-.genre-link:hover{
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 1px 30px -6px #ffffff;
-}
-
-/* кнопка всегда внизу */
-.game-footer{
-  margin-top: 15px;
-  display:flex;
-  justify-content:center;
-  
-}
-
-/* ---------- Pagination ---------- */
+/* ========================================================== PAGINATION start (pagination.html) ========================================================== */
 
 .pager{
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -580,6 +300,7 @@
   height: 34px;
   border-radius: 12px;
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   background: transparent;
@@ -597,7 +318,8 @@
   transform: translateY(3px);
 }
 
-/* ---------- Текущая страница ---------- */
+/* ---------- Для текущей страницы ---------- */
+
 .pager-current, .pager-link{
   min-width: 34px;
   text-align: center;
@@ -610,7 +332,9 @@
   padding: 7px 0;
   font-weight: bold;
 }
-/* ---------- Другая страница ---------- */
+
+/* ---------- Для другой страницы ---------- */
+
 .pager-link{
   background: transparent;
   color: #f3f4f6;
@@ -624,8 +348,7 @@
 
 }
 
-
-/* ---------- Icons ---------- */
+/* Для иконок */
 
 .icon{
   width: 16px;
@@ -663,755 +386,196 @@
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l6 6-6 6M12 6l6 6-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
+/* ========================================================== PAGINATION end(pagination.html) ========================================================== */
 
 
+/* ========================================================== FOOTER start(footer.html) ========================================================== */
 
-
-/* ДЛЯ ПОНРАВИЛОСЬ МОЖНО УДАЛИТЬ */
-.like-love {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: #bdbecb;
-  font-weight: bold;
-}
-
-.icon-love {
-  width: 16px;
-  height: 16px;
-  fill: #db0e4bce;   /* залитая иконка */
-}
-
-.rating-badge {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: #bdbecb;
-}
-
-.icon-star {
-  width: 16px;
-  height: 16px;
-  fill: #f1ca1cea;   /* залитая звезда */
-}
-
-.rating-text {
-  font-weight: 500;
-  letter-spacing: 0; /* гарантированно без лишних зазоров */
-}
-
-
-/* Стили для шаблона game_detail.html*/
-/* =========================
-   Game detail (gd)
-========================= */
-/* ===== Game detail: layout ===== */
-
-.gd{
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 18px;
-}
-
-.gd-topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom: 14px;
-}
-
-.gd-back, .gd-share{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  height: 38px;
-  padding: 0 14px;
-  border-radius: 12px;
-  text-decoration:none;
-  cursor:pointer;
-  font-weight: 700;
-  font-size: 15px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
-  color:#e5e7eb;
-  
-
-  transition: transform .15s ease, background .2s ease;
-}
-
-.gd-back:hover, .gd-share:hover{
-  background: rgba(255,255,255,.12);
-  transform: translateY(3px);
-  text-decoration: none;
-}
-
-.gd-share{
-  outline:none;
-  
-}
-
-
-
-/* Иконки через mask (как ты любишь, без SVG в шаблоне) */
-.ui-icon{
-  width: 18px;
-  height: 18px;
-  display:inline-block;
-  background-color:#9ca3af;
-
-  mask-repeat:no-repeat;
-  mask-position:center;
-  mask-size:contain;
-
-  -webkit-mask-repeat:no-repeat;
-  -webkit-mask-position:center;
-  -webkit-mask-size:contain;
-}
-
-/* стрелка назад */
-.ui-icon-arrow-left{
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
-}
-
-/* share */
-.ui-icon-share{
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16 8a3 3 0 1 0-2.8-4' fill='none'/%3E%3Cpath d='M18 8a3 3 0 0 0-2.9 2.2L8.9 13.1A3 3 0 0 0 6 12a3 3 0 1 0 2.9 3.8l6.2 2.9A3 3 0 1 0 16 17a3 3 0 0 0 .9-.1l-6.2-2.9a3.1 3.1 0 0 0 0-1.9l6.2-2.9A3 3 0 1 0 18 8Z' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18 8a3 3 0 0 0-2.9 2.2L8.9 13.1A3 3 0 0 0 6 12a3 3 0 1 0 2.9 3.8l6.2 2.9A3 3 0 1 0 16 17a3 3 0 0 0 .9-.1l-6.2-2.9a3.1 3.1 0 0 0 0-1.9l6.2-2.9A3 3 0 1 0 18 8Z' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-/* Toast уведомление */
-.gh-toast, .gd-vote-toast {
-  position: fixed;
-  left: 50%;
-  top: 90px;
-  transform: translateX(-50%) translateY(20px);
-  background: #bdbecb;
-  color: rgba(16, 16, 18, 1);
-  font-weight: bold;
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  box-shadow: 0 8px 30px rgba(0,0,0,.45);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease, transform .25s ease;
-  z-index: 9999;
-}
-
-.gh-toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-.gd-title{
-  margin: 0 0 10px;
-  color: #f3f4f6;
+.site-footer {
+  padding: 10px;
   text-align: center;
+  background: linear-gradient(90deg, #0b5c8f, #10243b, #5a2047);
+  color: #9ca3af;
+  position: relative;
+  z-index: 5;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  z-index: 10;
+  transform-style: preserve-3d;
 }
 
-.gd-nav {
+.site-footer:before {
+  content: "";
+  position: absolute; 
+  padding: 10px 30px 5px;
   display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  margin: 20px 0;
-}
-
-/* Группа: Смотреть / Добавить */
-.gd-nav-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Надпись */
-.gd-nav-label {
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #bdbecb;
-  font-weight: bold;
-}
-
-/* Ссылки */
-.gd-nav-links {
-  display: flex;
-  gap: 10px;
-}
-
-.gd-nav-left,
-.gd-nav-right{
-  display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  z-index: 10;
+  content: "";
+  inset: 0px;
+  background: conic-gradient(from 90deg at 40% -20%, #EE14FF, #00c6f8, #00c6f8, #EE14FF);
+  filter: blur(11px);
+  transform: translate3d(-4px, -5px, -1px);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
-.gd-view_content{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 7px;
-  width: auto;
-  height: auto;
-  
-  
-  
-  text-decoration: none;
-
-}
-
-.gd-pill:hover{
-  border-color: rgba(255,255,255,.22);
-  background: rgba(255,255,255,.06);
-}
-
-.gd-add_content{
-  color:#bd59ffe8;
-  padding: 7px;
-}
-
-.gd-pill-add:hover{
-  border-color: rgba(249,115,22,.55);
-  background: rgba(249,115,22,.10);
-}
-
-/* ===== Main split: left cover+meta / right description ===== */
-
-.gd-main{
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-  margin-bottom: 20px;
-}
-
-.gd-left{
-  width: 450px;          /* как ты хочешь */
-  flex: 0 0 450px;
-}
-
-.gd-right{
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-
-
-.gd-cover{
-  width: 100%;
-  height: 600px;
-  object-fit: cover;
-  display: block;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.12);
-}
-
-.gd-meta-card{
-  margin-top: 10px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.12);
-  display: grid;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.gd-meta-row{
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 10px;
-}
-
-.gd-meta-label{ color: #9ca3af; }
-.gd-meta-value{ color: #bdbecb; font-weight: bold; }
-
-.gd-section-title{
-  margin: 10px 0 ;
-  color: #f3f4f6;
-  
+.site-footer__inner{
   text-align: center;
-
   
+}
+
+.footer-copy{
+  margin: 4px auto;
+  font-size: 14px;
+  color: #d1d5db;
+  font-weight: bold;
+}
+
+.footer-links{
+  margin: 4px auto;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.footer-links a {
+  color: #00c6f8bd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  color: #70defaef;
+  text-decoration: none;
+}
+
+/* ========================================================== FOOTER end(footer.html) ========================================================== */
+
+
+/* ========================================================== ABOUT start(about.html) ========================================================== */
+
+.about-page {
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.span-bright{
+  font-weight: bold;
+  color: #f3f4f6;
 }
 
 .gd-text{
+  margin: 0;
   color: #bdbecb;
   font-size: 16px;
   line-height: 1.6;
   letter-spacing: 0.01em;
   font-weight: 500;
+  text-align: justify;
+  text-indent: 1.5em;
+}
+
+.about-text {
+  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #e5e7eb;
   
 }
-.gd-text p{
+
+.about-list {
   margin: 0;
-  margin-bottom: 5px;
-  text-indent: 2em;
-}
-
-/* ===== Gallery slider ===== */
-
-/* ===== Gallery (GLightbox thumbs) ===== */
-/* =========================
-   Game detail gallery (thumbs + buttons)
-========================= */
-/* ===== Carousel with fixed visible count ===== */
-/* ===== Gallery carousel (pages of up to 5) ===== */
-
-/* =========================
-   Game gallery: pages of up to 5
-========================= */
-
-
-
-
-.gd-vote{
-  max-width: 300px;
-  margin: 0 auto;
-  text-align: center;
-  
-}
-.gd-vote-row{
-  margin: 0 auto;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content: space-evenly;
+  color: #e5e7eb;
+  padding: 0;
+  margin-left: 20px;
   
 }
 
-/* кнопка */
-.gd-vote-dislike {
-  color: #9aa0a6; /* серый */
-}
-
-/* лицо */
-.gd-ico-sad .face {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-}
-
-/* глаза и рот */
-.gd-ico-sad .features {
-  fill: currentColor;
-  stroke: currentColor;
-}
-.gd-vote-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 12px;
-  border:1px solid #e6e6e6;
-  border-radius:12px;
-  background:#fff;
-  cursor:pointer;
-  transition:transform .05s ease, border-color .15s ease, background .15s ease, color .15s ease;
-  
-}
-
-.gd-vote-btn:active{ transform:scale(0.98); }
-
-.gd-vote-icon{
-  display:inline-flex;
-  line-height:0;
-}
-
-/* КЛЮЧ: SVG должен наследовать color кнопки */
-.gd-vote-btn .gd-vote-icon svg{
-  display:block;
-  color: inherit;
-}
-
-/* БАЗОВЫЕ цвета */
-.gd-vote-btn.gd-vote-like{ color:#9aa0a6; }
-.gd-vote-btn.gd-vote-dislike{ color:#9aa0a6; }
-
-.gd-ico-heart{
-  stroke-width: 2;
-}
-
-/* АКТИВНЫЕ (сильнее по специфичности + !important чтобы не перебивали глобальные стили) */
-.gd-vote-btn.gd-vote-like.is-active{
-  color:#b30b3dce !important;
-  stroke: #f1f1f3;
-  
-
-}
-
-/* базовое */
-.gd-vote-dislike { color:#9aa0a6; }
-
-.gd-ico-sad .face{
-  fill: none;
-  stroke-width: 2;
-}
-
-.gd-ico-sad .features{ fill: currentColor; }
-.gd-ico-sad .mouth{ stroke: currentColor; }
-
-/* активное: лицо оранжевое, глаза/рот чёрные */
-.gd-vote-dislike.is-active{ color:#f1ca1cea; }
-
-.gd-vote-dislike.is-active .gd-ico-sad .face{
-  fill: currentColor;
-  stroke: #f1f1f3;;
-}
-
-.gd-vote-dislike.is-active .gd-ico-sad .features{ fill:rgba(209, 234, 238, 0.856); }
-.gd-vote-dislike.is-active .gd-ico-sad .mouth{ stroke:#752b2b; }
-.gd-ico-sad .sparkle{ fill:rgba(71, 45, 11, 0.87); }
-
-.gd-vote-btn{
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, .12);
-  padding: 7px;
-  
-  box-sizing: border-box;
-}
-
-
-
-.gd-vote-toast.is-show{
-
-  display: block;
-  opacity: 1; transform: translateX(-50%) translateY(0); }
-.gd-vote-toast.is-ok{
-  background: #bdbecb;
-  color: rgba(16, 16, 18, 1);
-  font-weight: bold;
-  padding: 6px;
-  border-radius: 12px;
-  font-size: 14px;
-  width: 210px;
-  margin: 10px auto;
-
-
- }
-.gd-vote-toast.is-err{ border-color: rgba(255,80,80,.45); }
-
-.gd-hint {
-  font-size: 14px;
+.about-list li {
+  margin-bottom: 4px;
   color: #bdbecb;
-  padding:0;
-  margin: 0 auto;
-  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  text-align: left;
+  
 }
 
-/* ===== Блок "Оставить комментарий" ===== */
-
-.gd-comment-create{
-
-  text-align: center;
+.about-list li::marker{
+  color:  #f3f4f6;
 }
 
-.auth-link{
-  padding: 5px;
-  background: #bdbecb;
-  color:rgba(16, 16, 18, 1);
+.bottom{
+  margin-top: 20px;
+}
+
+/* ========================================================== ABOUT end(about.html) ========================================================== */
+
+/* ========================================================== CONTACTS start(contacts.html) ========================================================== */
+
+.contacts-ul{
+  list-style: none;
+  
+}
+
+.contacts-flex-li{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  
+}
+
+.contact-links {
+  font-size: 16px;
+  color: #87ceeb;
+  text-decoration: none;
   font-weight: bold;
+  transition: font-size .2s ease, transform .2s ease;
+}
+
+.contact-links:hover {
+  
+  text-decoration: none;
+  transform: scale(1.03);
 
 }
 
-.gd-comment-form{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+.contact-icon {
+  width: 32px;
+  height: 32px;
+  transition: filter .2s ease, transform .2s ease;
+   filter:
+    brightness(0)
+    saturate(100%)
+    invert(96%)
+    sepia(3%)
+    saturate(150%)
+    hue-rotate(180deg)
+    brightness(95%)
+    contrast(95%);
 }
 
-#comment-text{
-  width: 300px;
-  max-width: 100%;
-  height: 120px;          /* можно под себя */
-  max-height: 220px;      /* чтобы не раздувалось */
-  overflow: auto;
-  resize: none;
-
-  background: #bdbecb;
-  color: rgba(16, 16, 18, 1);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 12px;
-  padding: 10px 12px;
-  box-sizing: border-box;
-
-  outline: none;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.45;
+.contact-icon:hover {
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(72%)
+    sepia(41%)
+    saturate(385%)
+    hue-rotate(165deg)
+    brightness(102%)
+    contrast(100%);
+  transform: scale(1.08);
 }
 
-.gd-comment-field textarea:focus{
-  box-shadow: 0 0 0 2px rgba(0, 198, 248, .35);
-}
-
-/* ====== Блок “Оставить комментарий” ====== */
-
-.gd-center-title{
+.center-text{
   text-align: center;
 }
 
-.gd-comment-create{
-  margin-top: 18px;
-  padding: 14px 16px;
-  border-radius: 14px;
-}
-
-.gd-textarea{
-  width: 300px;
-  max-width: 100%;
-  height: 120px;
-  resize: none;           /* запрет растягивания */
-  overflow: auto;         /* скролл при переполнении */
-  box-sizing: border-box;
-
-  background: #bdbecb;
-  color: #0c192a;
-  border: 1px solid rgba(0,0,0,.25);
-  border-radius: 12px;
-  padding: 10px 12px;
-  outline: none;
-}
-
-.gd-textarea:focus{
-  box-shadow: 0 0 0 2px rgba(249,115,22,.35);
-}
-
-.gd-comment-controls{
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.gd-comment-counter{
-  font-size: 13px;
-  color: #9ca3af;
-}
-
-.btn[disabled]{
-  opacity: .55;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.gd-carousel{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 auto;
-  
-}
-
-/* Галерея: центрируем секцию и её содержимое */
-.gd-gallery{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Сам карусельный блок — по центру и с ограничением ширины */
-.gd-gallery .gd-carousel{
-  max-width: 1200px;
-  justify-content: center;
-}
-
-
-
-.gd-carousel-btn{
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.45);
-  color: #e5e7eb;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  flex: 0 0 auto;
-}
-
-.gd-carousel-btn:hover{ background: rgba(0,0,0,.65); }
-.gd-carousel-btn:disabled{ opacity: .35; cursor: default; }
-
-.gd-carousel-viewport{
-  overflow: hidden;
-  flex: 1 1 auto;
-}
-
-.gd-carousel-track{
-  display: flex;
-  gap: 10px;
-}
-
-.gd-carousel{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 auto;
-  
-}
-
-/* ===== ФРЕЙМ ДЛЯ ВИДЕО! ===== */
-.gd-video{
-  
-  max-width: 900px;
-  margin: 10px auto;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.25);
-
-  /* 16:9 */
-  aspect-ratio: 16 / 9;
-}
-
-.gd-video iframe{
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-
-.gd-block{
-  text-align: center;
-}
-
-/* Fallback: если JS не загрузился — показываем первые 5 */
-.gd-carousel-track .gd-thumb{ display:none; }
-.gd-carousel-track .gd-thumb:nth-child(-n+5){ display:grid; }
-
-/* Когда JS работает — он управляет видимостью этим классом */
-.gd-carousel-track .gd-thumb.is-visible{ display:grid; }
-
-.gd-thumb{
-  flex: 0 0 auto;
-  width: 230px;
-  height: 140px;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  place-items: center;
-  text-decoration: none;
-}
-
-.gd-thumb img{
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain; /* НЕ режем */
-  display: block;
-}
-
-.is-hidden{ display:none !important; }
-
-/* ===== Комментарии на странице игры ===== */
-
-.gd-comments {
-  margin-top: 24px;
-}
-
-.gd-comment-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.gd-comment {
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Шапка комментария */
-.gd-comment-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.gd-comment-left {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.gd-comment-date {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-/* Пользователь */
-.gd-comment-user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 🔥 АВАТАР — ВАЖНО */
-.gd-comment-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex: 0 0 28px;
-  display: block;
-}
-
-/* Ник */
-.gd-comment-author {
-  font-size: 14px;
-  color: #f97316;
-  text-decoration: none;
-}
-
-.gd-comment-author:hover {
-  text-decoration: underline;
-}
-
-/* Текст комментария */
-.gd-comment-body {
-  margin-top: 8px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #e5e7eb;
-}
-
-/* Кнопки управления */
-.gd-comment-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.gd-comment-action {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  text-decoration: none;
-  cursor: pointer;
-  border: none;
-}
-
-.gd-comment-edit {
-  background: #4b5563;
-  color: #fff;
-}
-
-.gd-comment-delete {
-  background: #dc2626;
-  color: #fff;
-}
-
+/* ========================================================== CONTACTS end(contacts.html) ========================================================== */

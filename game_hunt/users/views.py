@@ -18,7 +18,7 @@ def profile_view(request, pk):
     pr = get_object_or_404(Profile, id=pk)
     if not request.user.is_authenticated:
         messages.error(request, "Просматривать профили могут только зарегистрированные пользователи.")
-        # Пытаемся вернуть пользователя на предыдущую станицу, страницу с игрой
+        # Пытаемся вернуть пользователя на предыдущую станицу, страницу с игрой(на ту же страницу, где были)
         referer = request.META.get('HTTP_REFERER')
         if referer:
             return redirect(referer)

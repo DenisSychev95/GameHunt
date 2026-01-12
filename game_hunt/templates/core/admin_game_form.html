@@ -135,6 +135,15 @@
             </div>
         {% endfor %}
 
+
+<h3>Картинки</h3>
+{{ formset.management_form }}
+{% for f in formset %}
+  <div class="admin-inline">
+    {{ f.as_p }}
+  </div>
+{% endfor %}
+
         <div class="admin-form-actions">
             <button type="submit" class="admin-btn-primary">Сохранить</button>
             <a href="{% url 'admin_dashboard' %}" class="admin-btn-secondary">Отмена</a>

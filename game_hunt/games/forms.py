@@ -1,7 +1,8 @@
 from django import forms
 from .models import GameComment
-from .models import Game
+from .models import Game, GameImage
 from datetime import date
+from django.forms import inlineformset_factory
 
 
 class GameCommentForm(forms.ModelForm):
@@ -35,3 +36,13 @@ class GameAdminForm(forms.ModelForm):
             existing = field.widget.attrs.get('class', '')
             # аккуратно добавляем наш класс, не затирая предыдущие
             field.widget.attrs['class'] = (existing + ' admin-input').strip()
+
+
+# Вот он — inline formset: “несколько ReviewImage для одного Review”
+GameImageFormSet = inlineformset_factory(
+    parent_model=Game,
+    model=GameImage,
+    fields=("image", "caption", "position"),
+    extra=5,         # покажем 0 пустых формы под новые картинки
+    can_delete=True  # можно удалить существующую картинку
+)

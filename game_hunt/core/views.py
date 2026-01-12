@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from games.models import Game, GameComment
-from games.forms import GameAdminForm
+from games.forms import GameAdminForm, GameImageFormSet
 from .utils import staff_check
 
 
@@ -43,18 +43,25 @@ def admin_game_create(request):
         form = GameAdminForm(request.POST, request.FILES)
         if form.is_valid():
             game = form.save(commit=False)
-            game.views_count = 0  # первоначальное значение просмотров
+            game.views_count = 0
             game.save()
-            messages.success(request, 'Игра успешно добавлена.')
-            return redirect('admin_dashboard')
+
+            formset = GameImageFormSet(request.POST, request.FILES, instance=game)
+            if formset.is_valid():
+                formset.save()
+                messages.success(request, 'Игра успешно добавлена.')
+                return redirect('admin_dashboard')
+        else:
+            formset = GameImageFormSet(request.POST, request.FILES)
     else:
         form = GameAdminForm()
+        formset = GameImageFormSet()
 
-    context = {
+    return render(request, 'core/admin_game_form.html', {
         'form': form,
-        'title': 'Добавить игру'
-    }
-    return render(request, 'core/admin_game_form.html', context)
+        'formset': formset,
+        'title': 'Добавить игру',
+    })
 
 
 # Редактирование игры
@@ -65,19 +72,24 @@ def admin_game_edit(request, pk):
 
     if request.method == 'POST':
         form = GameAdminForm(request.POST, request.FILES, instance=game)
-        if form.is_valid():
+        formset = GameImageFormSet(request.POST, request.FILES, instance=game)
+
+        if form.is_valid() and formset.is_valid():
             game = form.save(commit=False)
-            game.views_count = old_views  # возвращаем старое значение
+            game.views_count = old_views
             game.save()
+            formset.save()
             messages.success(request, 'Игра обновлена.')
             return redirect('admin_dashboard')
     else:
         form = GameAdminForm(instance=game)
-    context = {
+        formset = GameImageFormSet(instance=game)
+
+    return render(request, 'core/admin_game_form.html', {
         'form': form,
-        'title': f'Редактировать игру: {game.title}'
-    }
-    return render(request, 'core/admin_game_form.html', context)
+        'formset': formset,
+        'title': f'Редактировать игру: {game.title}',
+    })
 
 
 # Удаление игры

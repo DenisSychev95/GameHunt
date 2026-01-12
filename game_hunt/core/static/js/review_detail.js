@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-   document.documentElement.classList.add('js');
   // 🔥 Инициализация ОДИН раз
   const lightbox = GLightbox({
     selector: '.glightbox',
@@ -8,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     touchNavigation: true
   });
 
-  const root = document.querySelector('[data-gallery]');
+const root = document.querySelector('[data-gallery-root]');
   if (!root) return;
   root.classList.add('is-js');
 
@@ -106,8 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('Ссылка скопирована в буфер обмена');
         return;
       }
-
-      // fallback
       prompt('Скопируй ссылку:', url);
     } catch (e) {
       console.error('Share failed:', e);
@@ -121,13 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const toast = document.querySelector('.gd-vote-toast');
 
-  function showToast(text, type='ok') {
+  function showVoteToast(text, type='ok') {
     if (!toast) return;
     toast.textContent = text;
     toast.classList.remove('is-ok','is-err');
     toast.classList.add('is-show', type === 'err' ? 'is-err' : 'is-ok');
-    clearTimeout(showToast._t);
-    showToast._t = setTimeout(() => toast.classList.remove('is-show'), 2000);
+    clearTimeout(showVoteToast._t);
+    showVoteToast._t = setTimeout(() => toast.classList.remove('is-show'), 2000);
   }
 
   voteForm.addEventListener('click', async (e) => {
@@ -150,11 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (!resp.ok) {
-      showToast('Не удалось отправить голос. Попробуйте ещё раз.', 'err');
+      showVoteToast('Не удалось отправить голос. Попробуйте ещё раз.', 'err');
       return;
     }
 
-    // успех: подсветка кнопок
     voteForm.querySelectorAll('.gd-vote-btn').forEach(b => {
       b.classList.remove('is-active');
       b.setAttribute('aria-pressed', 'false');
@@ -162,19 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.classList.add('is-active');
     btn.setAttribute('aria-pressed', 'true');
 
-    // скрыть подсказку (если есть)
     const hint = document.querySelector('.gd-vote .gd-hint');
     if (hint) hint.style.display = 'none';
 
-    showToast('Спасибо, ваш голос учтён', 'ok');
+    showVoteToast('Спасибо, ваш голос учтён', 'ok');
   });
 });
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
-
-  // ---------- TOAST ----------
   function showToast(text) {
     let toast = document.querySelector('.gh-toast');
     if (!toast) {
@@ -191,21 +182,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2500);
   }
 
-  // ---------- COMMENT FORM ----------
   const form = document.querySelector('.gd-comment-form');
   if (!form) return;
 
   const textarea = form.querySelector('textarea');
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  // счетчик
   const counter = document.createElement('div');
   counter.style.fontSize = '12px';
   counter.style.marginTop = '4px';
   counter.textContent = '0 / 500';
   textarea.after(counter);
 
-  // блокировка кнопки
   submitBtn.disabled = true;
 
   textarea.addEventListener('input', () => {
@@ -214,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled = (len === 0 || len > 500);
   });
 
-  // ✅ Enter без Shift отправляет
   textarea.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -223,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ---------- AJAX SEND ----------
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -246,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // вставляем HTML комментария
       const list = document.querySelector('.gd-comment-list');
       list.insertAdjacentHTML('afterbegin', data.html);
 
@@ -261,55 +246,4 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = false;
     }
   });
-
-  // ---------- AJAX DELETE (delegation) ----------
-  const list = document.querySelector('.gd-comment-list');
-
-  list?.addEventListener('submit', async (e) => {
-    /* Возможно не потребуется ==> */
-    const delForm = e.target.closest('.gd-comment-delete-form');
-    /* <== Возможно не потребуется == */
-    if (!delForm) return;
-
-    e.preventDefault();
-
-    try {
-  // страховка: если вдруг форма почему-то указывает на reviews
-  let url = delForm.action;
-  if (
-    url.includes('/reviews/comments/') &&
-    window.location.pathname.startsWith('/games/')
-  ) {
-    url = url.replace('/reviews/comments/', '/games/comments/');
-  }
-
-  const resp = await fetch(url, {
-    method: 'POST',
-    body: new FormData(delForm),
-    headers: {
-      'X-Requested-With': 'XMLHttpRequest'
-    }
-  });
-
-  // ❗️КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
-  const contentType = resp.headers.get('content-type') || '';
-  const data = contentType.includes('application/json')
-    ? await resp.json()
-    : null;
-
-  if (!resp.ok || !data || !data.ok) {
-    showToast(data?.error || 'Не удалось удалить');
-    return;
-  }
-
-  const article = delForm.closest('.gd-comment');
-  if (article) article.remove();
-
-  showToast('Комментарий удалён');
-
-} catch (err) {
-  showToast('Ошибка сети');
-}
-  });
-
 });

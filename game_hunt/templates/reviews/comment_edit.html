@@ -1,22 +1,24 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ game.title }} — Редактировать комментарий{% endblock %}
+{% block title %}{{ review.title }} — Редактировать комментарий{% endblock %}
+
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/games.css' %}">
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
 {% endblock %}
+
 {% block content %}
 <section class="ce-wrap">
 
   <div class="ce-card">
     <div class="ce-top">
-      <a class="gd-back" href="{% url 'game_detail' slug=game.slug %}">
+      <a class="gd-back" href="{% url 'review_detail' review.pk %}">
         <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
-        <span>Назад к игре</span>
+        <span>Назад к обзору</span>
       </a>
     </div>
 
-    <h4 class="gd-section-title center">Редактировать комментарий к «{{ game.title }}»</h4>
+    <h4 class="gd-section-title center">Редактировать комментарий к «{{ review.title }}»</h4>
 
     <form method="post" class="ce-form">
       {% csrf_token %}
@@ -31,7 +33,7 @@
 
       <div class="ce-actions">
         <button type="submit" class="gd-back save">Сохранить</button>
-        <a class="gd-back cancel" href="{% url 'game_detail' slug=game.slug %}" >Отменить</a>
+        <a class="gd-back cancel" href="{% url 'review_detail' review.pk %}">Отменить</a>
       </div>
     </form>
   </div>

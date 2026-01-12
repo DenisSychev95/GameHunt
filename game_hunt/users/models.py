@@ -56,6 +56,7 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'профиль'
         verbose_name_plural = 'профили'
+        ordering = ['created',]
 
     # Геттер для получения флага онлайн/оффлайн(пользователь онлайн если был активен в течение 5 минут)
     @property

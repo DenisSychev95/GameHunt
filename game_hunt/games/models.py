@@ -35,7 +35,7 @@ class Publisher(models.Model):
 # Модель для жанров
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Жанр')
-    slug = models.SlugField(max_length=120, unique=True, verbose_name='URL')
+    slug = models.SlugField(max_length=120, unique=True, verbose_name='Slug')
 
     class Meta:
         verbose_name = 'жанр'
@@ -49,7 +49,7 @@ class Genre(models.Model):
 # Модель для платформ
 class Platform(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Платформа')
-    slug = models.SlugField(max_length=120, unique=True, verbose_name='URL')
+    slug = models.SlugField(max_length=120, unique=True, verbose_name='Slug')
 
     class Meta:
         verbose_name = 'платформа'
@@ -62,8 +62,8 @@ class Platform(models.Model):
 
 # Модель для игр
 class Game(models.Model):
-    title = models.CharField(max_length=200, verbose_name='Название')
-    slug = models.SlugField(max_length=220, unique=True, verbose_name='URL')
+    title = models.CharField(max_length=200, verbose_name='Название игры')
+    slug = models.SlugField(max_length=220, unique=True, verbose_name='Slug')
     description = models.TextField(verbose_name='Описание')
     release_date = models.DateField(blank=True, null=True, verbose_name='Дата выхода')
 
@@ -81,7 +81,7 @@ class Game(models.Model):
 
     views_count = models.PositiveIntegerField(default=0, verbose_name='Просмотры')
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлена')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Опубликована на сайте')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлена')
     developer = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True,
                                   related_query_name='games', verbose_name='Разработчик')
@@ -106,7 +106,7 @@ class Game(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        # если слаг не задан — он генерируется  автоматически
+        # если слаг не задан — он генерируется автоматически
         if not self.slug:
             self.slug = slugify(self.title)[:220]
         super().save(*args, **kwargs)
@@ -176,19 +176,20 @@ class GameImage(models.Model):
         related_name="gallery",
         verbose_name="Игра"
     )
-    image = models.ImageField(upload_to="game_gallery/", verbose_name="Картинка")
-    caption = models.CharField(max_length=255, blank=True, verbose_name="Подпись")
-    position = models.PositiveIntegerField(default=1, verbose_name="Порядок")
+    image = models.ImageField(upload_to="game_gallery/", verbose_name="Добавить изображение")
+    caption = models.CharField(max_length=255, blank=True, verbose_name="Описание")
+    position = models.PositiveIntegerField(default=1, verbose_name="Номер картинки")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "картинку игры"
+        verbose_name = "картинка для"
         verbose_name_plural = "картинки игры"
-        ordering = ["position", "id"]
+        ordering = ["position",]
 
     def __str__(self):
-        return f"{self.game.title} — #{self.position}"
+        return f"{self.game.title} — №{self.position}"
+
 
 # Модель отданных голосов за игру
 class GameVote(models.Model):
@@ -201,12 +202,12 @@ class GameVote(models.Model):
         (DISLIKE, 'Дизлайк'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_votes')
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='votes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_votes', verbose_name='Пользователь')
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='votes', verbose_name='Игра')
     # Поле выбора для лайка/дизлайка предлагает 2 варианта на выбор
-    value = models.SmallIntegerField(choices=VOTE_CHOICES)
+    value = models.SmallIntegerField(choices=VOTE_CHOICES, verbose_name='Оценка')
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
 
     class Meta:
         # Уникальные пары: один user голосует за игру только 1 раз
@@ -217,17 +218,18 @@ class GameVote(models.Model):
     def __str__(self):
         # Возвращаем человеко-читаемое представление какой user какую игру как оценил
         # + строковое представление из VOTE_CHOICES
-        return f'{self.user} -> {self.game} ({self.get_value_display()})'
+        return f'{self.user} оценил {self.game} -  и поставил {self.get_value_display()}'
 
 
 # Модель комментария для игры
 class GameComment(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_comments')
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='comments', verbose_name='Игра')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_comments', verbose_name='Пользователь')
     text = models.TextField(verbose_name='Комментарий')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлен')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     is_deleted = models.BooleanField(default=False, verbose_name='Удалён')
+    is_edited = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'комментарий к игре'

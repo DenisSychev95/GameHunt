@@ -1,0 +1,1255 @@
+/* ========================================================== GAMES APP ========================================================== */
+
+/* ======================= (game_list.html) start ======================= */
+
+.center { text-align: center; }
+.muted { color: #9ca3af; }
+.page-title {
+  margin: 0;
+  margin-bottom: 15px; }
+
+/* ========= (блок search-form) =========> */
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.input {
+  font-family: "Montserrat", sans-serif;
+  width: 15%;
+  height: 22px;
+  padding-left: 2.5rem;
+  box-shadow: 0 0 0 1.5px #2b2c37, 0 0 25px -17px #000;
+  border: 0;
+  border-radius: 12px;
+  background-color: #16171d;
+  outline: none;
+  color: #bdbecb;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  cursor: text;
+  z-index: 0;
+}
+
+.input::placeholder {
+  color: #bdbecb;
+}
+
+.input:hover {
+  box-shadow: 0 0 0 2.5px #2f303d, 0px 0px 25px -15px #000;
+}
+
+.input:active {
+  transform: scale(0.95);
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2.5px #2f303d;
+}
+
+.input, .select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #374151;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.select {
+  background-color: #16171d;
+  color:  #bdbecb;
+
+}
+
+/* <========= (блок search-form) ========= */
+
+
+/* ========= (КНОПКИ) =========> */
+
+.btn, .link-muted, .pager-link, .pager-btn, .gd-back, .gd-share, .gd-vote-btn{
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn, .link-muted{
+  width: 100px;
+  height: 40px;
+  border-radius: 12px;
+  background-image: linear-gradient(135deg, #00c6f8bd 0%, #0b5c8f 100%);
+  box-shadow: 0 1px 30px -6px rgba(97, 182, 238, 0.856);
+  outline: none;
+  cursor: pointer;
+  border: none;
+  font-size: 15px;
+  color: #e5e6ee;
+  text-align: center;
+  font-weight: bold;
+}
+
+.link-muted{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  background: #16171d;
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: none
+}
+
+.btn-secondary {
+  padding-top: 5px;
+  height: 30px;
+  width: 120px;
+  
+}
+
+.btn:hover, .link-muted:hover, .gd-vote-btn:hover {
+  transform: translateY(3px);
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.btn:active, .link-muted:active {
+  opacity: 0.5;
+}
+
+/* <========= (КНОПКИ) ========= */
+
+/* ========= (контейнер game-grid) =========> */
+
+.game-grid{
+  display: flex;
+  flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center; /* 1 карточка будет по центру */
+  align-items: stretch;
+  margin-bottom: 22px;     /* чтобы не налезало на пагинацию */
+}
+
+/* <========= (контейнер game-grid) ========= */
+
+
+/* ========= (карточка игры game-card) =========> */
+.game-card {
+ margin-right: 30px;
+ width: 230px;
+ height: 400px;
+ background: rgb(40,40,55);
+ background: linear-gradient(344deg, rgba(40,40,55,1) 0%, rgba(16,16,18,1) 50%);
+ box-shadow: 4px 6px 14px #00000036;
+ border-radius: 3px;
+ color: #F9F9F9;
+ padding: 16px;
+ transition: all .3s;
+ border-radius: 12px;
+}
+
+.game-card:hover {
+ margin-top: -2px;
+}
+
+.game-head{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.game-title{
+  margin: 0;
+  line-height: 1.25;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(1.25em * 2);
+}
+
+.game-title a{
+  color:#bdbecb;
+  text-decoration:none;
+}
+
+.game-title a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/*______ Общее для иконок ______*/
+.ui-icon{
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  position: relative;
+}
+
+/*______ Глаз ______ ==>*/
+.ui-icon-eye{
+  background-color: #f3f4f6; /* склера */
+
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2.5 12s3.8-6.5 9.5-6.5S21.5 12 21.5 12s-3.8 6.5-9.5 6.5S2.5 12 2.5 12Z' fill='black'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2.5 12s3.8-6.5 9.5-6.5S21.5 12 21.5 12s-3.8 6.5-9.5 6.5S2.5 12 2.5 12Z' fill='black'/%3E%3C/svg%3E");
+}
+
+.ui-icon-eye::before{
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #4d8bc5dc; /* серо-голубая радужка */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ui-icon-eye::after{
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #1a0b0b; /* чёрный зрачок */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/*<==______ Глаз ______*/
+
+.ui-meta{
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #bdbecb;
+  font-weight: bold;
+}
+
+.game-cover{
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
+.game-cover-placeholder{
+  width:100%;
+  height:180px;
+  border-radius:12px;
+  border:1px dashed #374151;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#9ca3af;
+}
+
+.game-meta{ 
+    margin-top:10px;
+    font-size:14px;
+    color:#9ca3af;
+    text-align: center;
+    font-weight: bold;
+    }
+
+.game-stats{
+  margin-top:10px;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content:space-between;
+  gap:10px;
+  font-size:14px;
+}
+
+.game-genres{
+  margin-top:10px;
+  padding: 10px 0;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-wrap:wrap;
+  gap:6px;
+  max-height: 52px;
+  overflow: hidden;
+}
+
+
+/*______ Ссылки на поиск по жанрам ______ ==>*/
+.genre-link, .genre-muted{
+  font-size:13px;
+  padding:1px 8px;
+  border:1px solid #374151;
+  border-radius:999px;
+  color: rgba(16, 16, 18, 1);
+  background: #bdbecb;
+  font-weight: bold;
+}
+
+.genre-link:hover{
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 30px -6px #ffffff;
+}
+
+/*<==______ Ссылки на поиск по жанрам ______*/
+
+.game-footer{
+  margin-top: 15px;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content:center;
+  
+}
+
+/*______ Иконки карточки(понравилось, рейтинг) ______ ==>*/
+.like-love {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #bdbecb;
+  font-weight: bold;
+}
+
+.icon-love {
+  width: 16px;
+  height: 16px;
+  fill: #db0e4bce;  
+}
+
+.rating-badge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #bdbecb;
+}
+
+.icon-star {
+  width: 16px;
+  height: 16px;
+  fill: #f1ca1cea; 
+}
+
+.rating-text {
+  font-weight: 500;
+  letter-spacing: 0; 
+}
+
+.review-rating{
+  color: #f1ca1cea; 
+}
+
+
+/*<==______ Иконки карточки(понравилось, рейтинг) ______*/
+
+/* <========= (карточка игры game-card) ========= */
+
+/* ======================= (game_list.html) end ======================= */
+
+
+/* ======================= (game_detail.html) start ======================= */
+
+.gd{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.gd-topbar{
+  display:flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom: 14px;
+}
+
+gd-topbar
+/* ========= (блок gd-topbar навигация) =========> */
+.gd-topbar-left, .gd-topbar-right{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+}
+
+.gd-back, .gd-share{
+  display:inline-flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  text-decoration:none;
+  cursor:pointer;
+  font-weight: 700;
+  font-size: 15px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color:#e5e7eb;
+  
+  transition: all 0.3s ease-in-out;
+}
+
+.gd-back:hover, .gd-share:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(3px);
+  text-decoration: none;
+  
+}
+
+.gd-share{
+  outline:none;
+  
+}
+
+.gd-share:hover{
+  background: transparent;
+}
+
+/*______ Общее для иконок ______*/
+
+/*______ Иконки ______ ==>*/
+
+.ui-icon{
+  width: 18px;
+  height: 18px;
+  display:inline-block;
+  background-color:#9ca3af;
+
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:contain;
+
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:contain;
+}
+
+/*__ Стрелка назад __*/
+.ui-icon-arrow-left{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/*__ Поделиться __*/
+.ui-icon-share{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16 8a3 3 0 1 0-2.8-4' fill='none'/%3E%3Cpath d='M18 8a3 3 0 0 0-2.9 2.2L8.9 13.1A3 3 0 0 0 6 12a3 3 0 1 0 2.9 3.8l6.2 2.9A3 3 0 1 0 16 17a3 3 0 0 0 .9-.1l-6.2-2.9a3.1 3.1 0 0 0 0-1.9l6.2-2.9A3 3 0 1 0 18 8Z' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18 8a3 3 0 0 0-2.9 2.2L8.9 13.1A3 3 0 0 0 6 12a3 3 0 1 0 2.9 3.8l6.2 2.9A3 3 0 1 0 16 17a3 3 0 0 0 .9-.1l-6.2-2.9a3.1 3.1 0 0 0 0-1.9l6.2-2.9A3 3 0 1 0 18 8Z' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/*<==______ Иконки ______*/
+
+/*______ Всплывающее уведомление ______ ==>*/
+.gh-toast, .gd-vote-toast {
+  position: fixed;
+  left: 50%;
+  top: 90px;
+  transform: translateX(-50%) translateY(20px);
+  background: #bdbecb;
+  color: rgba(16, 16, 18, 1);
+  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+  z-index: 9999;
+}
+
+.gh-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/*<==______ Toast-уведомление ______*/
+
+/* <========= (блок gd-topbar навигация) ========= */
+
+
+
+.gd-title{
+  margin: 0 0 10px;
+  color: #f3f4f6;
+  text-align: center;
+}
+
+/* ========= (блок gd-nav навигация) =========> */
+
+.gd-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+  margin: 20px 0;
+}
+
+/*__ Правая часть навигации gd-nav  __*/
+.gd-nav-group {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.gd-nav-label {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bdbecb;
+  font-weight: bold;
+}
+
+.gd-nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gd-nav-left,
+.gd-nav-right{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* <========= (блок gd-nav навигация) ========= */
+
+/* ========= (КНОПКИ) =========> */
+.gd-view_content{
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  width: auto;
+  height: auto;
+  text-decoration: none;
+
+}
+
+.gd-add_content{
+  color:#bd59ffe8;
+  padding: 7px;
+}
+
+/* <========= (КНОПКИ) ========= */
+
+/* ========= (блок gd-main основное текстовое описание карточки игры) =========> */
+
+.gd-main{
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.gd-left{
+  width: 450px;         
+  flex: 0 0 450px;
+}
+
+.gd-right{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+
+.gd-cover{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.12);
+}
+
+
+
+.gd-meta-card{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.12);
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.gd-meta-row{
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+}
+
+.gd-meta-label{ color: #9ca3af; }
+.gd-meta-value{ color: #bdbecb; font-weight: bold; }
+
+/*==== (блок gd-text внутри блока gd-main карточка игры) ====> */
+
+.gd-text{
+  color: #bdbecb;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  text-align: justify;
+  text-indent: 2em;
+}
+.gd-text p{
+  margin: 0;
+  margin-bottom: 5px;
+  
+}
+
+/* <==== (блок gd-text внутри блока gd-main карточка игры) ==== */
+
+/* <========= (блок gd-main основное текстовое описание карточки игры) ========= */
+
+/* ========= (блок gd-gallery is-js галлерея карточки игры) =========> */
+
+.gd-gallery{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.gd-carousel-viewport{
+  overflow: hidden;
+  flex: 1 1 auto;
+}
+
+.gd-carousel-track{
+  display: flex;
+  gap: 5px;
+}
+
+.gd-carousel{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0 auto;
+  
+}
+
+/* Прячем все превью по умолчанию */
+.gd-carousel-track .gd-thumb{ display:none; }
+
+/* Fallback (ТОЛЬКО если JS не включился) — показываем первые 5 */
+.gd-gallery:not(.is-js) .gd-carousel-track .gd-thumb:nth-child(-n+5){
+  display: grid;
+}
+
+/* Когда JS работает — показываем только те, кому выставили .is-visible */
+.gd-gallery.is-js .gd-carousel-track .gd-thumb.is-visible{
+  display: grid;
+}
+
+/* __ Кнопка навигации по галлерее __==> */
+.gd-carousel-btn{
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.45);
+  color: #e5e7eb;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.gd-carousel-btn:hover{ background: rgba(0,0,0,.65); }
+.gd-carousel-btn:disabled{ opacity: .35; cursor: default; }
+
+.gd-thumb{
+  flex: 0 0 auto;
+  width: 215px;
+  height: 140px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  place-items: center;
+  text-decoration: none;
+}
+
+.gd-thumb img{
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain; /* НЕ режем */
+  display: block;
+}
+
+.is-hidden{ display:none !important; }
+
+/* <==__ Кнопка навигации по галлерее __*/
+
+/* <========= (блок gd-gallery is-js галлерея карточки игры) ========= */
+
+/* === Заголовки медиа-части ===> */
+
+.gd-section-title{
+  margin: 10px 0 ;
+  color: #f3f4f6;
+  text-align: center;
+}
+
+/* <=== Заголовки медиа-части === */
+
+/* === Сообщения неавторизованным пользователям ===> */
+.gd-hint {
+  font-size: 16px;
+  color: #bdbecb;
+  padding:0;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.auth-link{
+  padding: 5px;
+  background: #bdbecb;
+  color:rgba(16, 16, 18, 1);
+  font-weight: bold;
+
+}
+
+/* <=== Сообщения неавторизованным пользователям === */
+
+/* ========= (блок gd-block ФРЕЙМ для видео карточки игры) =========> */
+
+.gd-video{
+  
+  max-width: 900px;
+  margin: 10px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.25);
+
+  /* 16:9 */
+  aspect-ratio: 16 / 9;
+}
+
+.gd-video iframe{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* <========= (блок gd-block фрейм для видео карточки игры) ========= */
+
+/* ========= (блок gd-vote  карточки игры) =========> */
+.gd-vote{
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  
+}
+.gd-vote-row{
+  margin: 0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content: space-evenly;
+  
+}
+
+/*______ Иконки ______==>*/
+
+.gd-vote-dislike {
+  color: #9aa0a6;
+}
+
+.gd-ico-sad .face {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.gd-ico-sad .features {
+  stroke: currentColor;
+}
+
+.gd-vote-btn{
+  display:inline-flex;
+  flex-wrap: wrap;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border:1px solid #e6e6e6;
+  border-radius:12px;
+  background:#fff;
+  cursor:pointer;
+ 
+}
+
+.gd-vote-btn:active{ transform:scale(0.98); }
+
+.gd-vote-icon{
+  display:inline-flex;
+  flex-wrap: wrap;
+  line-height:0;
+}
+
+.gd-vote-btn .gd-vote-icon svg{
+  display:block;
+  color: inherit;
+}
+
+/* БАЗОВЫЕ цвета */
+.gd-vote-btn.gd-vote-like{ color:#9aa0a6; }
+.gd-vote-btn.gd-vote-dislike{ color:#9aa0a6; }
+
+.gd-ico-heart{
+  stroke-width: 2;
+}
+
+/* АКТИВНЫЕ (сильнее по специфичности + !important чтобы не перебивали глобальные стили) */
+
+.gd-vote-btn.gd-vote-like.is-active{
+  color:#b30b3dce !important;
+  stroke: #f1f1f3;
+  
+
+}
+
+.gd-ico-sad .features{ fill: currentColor; }
+.gd-ico-sad .mouth{ stroke: currentColor; }
+
+.gd-vote-dislike.is-active{ color:#f1ca1cea; }
+
+.gd-vote-dislike.is-active .gd-ico-sad .face{
+  fill: currentColor;
+  stroke: #f1f1f3;;
+}
+
+.gd-vote-dislike.is-active .gd-ico-sad .features{ fill:rgba(209, 234, 238, 0.856); }
+.gd-vote-dislike.is-active .gd-ico-sad .mouth{ stroke:#752b2b; }
+.gd-ico-sad .sparkle{ fill:rgba(71, 45, 11, 0.87); }
+
+/*__ Кнопка голосования __*/
+.gd-vote-btn{
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .12);
+  padding: 7px;
+  box-sizing: border-box;
+}
+
+/*__ Всплывающие уведомления __==> */
+
+.gd-vote-toast.is-show{
+  display: block;
+  opacity: 1; transform: translateX(-50%) translateY(0); }
+.gd-vote-toast.is-ok{
+  background: #bdbecb;
+  color: rgba(16, 16, 18, 1);
+  font-weight: bold;
+  padding: 6px;
+  border-radius: 12px;
+  font-size: 14px;
+  width: 210px;
+  margin: 10px auto;
+
+
+ }
+.gd-vote-toast.is-err{ border-color: rgba(255,80,80,.45); }
+
+/* <==__ Всплывающие уведомления __*/
+
+/* <========= (блок gd-vote  карточки игры) ========= */
+
+/* ========= (блок gd-comment-box создание комментария карточки игры) =========> */
+
+.gd-comment-form{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#comment-text{
+  width: 85%;
+  height: 120px;          
+  max-height: 220px;
+  overflow: auto;
+  resize: none;
+  background: #bdbecb;
+  color: rgba(16, 16, 18, 1);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+#comment-text:focus{
+  border-color: rgba(0, 198, 248, 0.55);
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
+}
+
+.gd-comment-create{
+    text-align: center;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 14px;
+}
+
+.gd-textarea{
+  width: 300px;
+  max-width: 100%;
+  height: 120px;
+  resize: none;           /* запрет растягивания */
+  overflow: auto;         /* скролл при переполнении */
+  box-sizing: border-box;
+  background: #bdbecb;
+  color: #0c192a;
+  border: 1px solid rgba(0,0,0,.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.gd-textarea:focus{
+  box-shadow: 0 0 0 2px rgba(249,115,22,.35);
+}
+
+.gd-comment-controls{
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.gd-comment-counter{
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.btn[disabled]{
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.gd-carousel{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+  
+}
+
+/* <========= (блок gd-comment-box создание комментария карточки игры) ========= */
+
+/* ========= (блок gd-comments блок комментариев карточки игры) =========> */
+
+.gd-comments {
+  margin-top: 24px;
+}
+
+.gd-comments p{
+  text-align: center;
+}
+
+.gd-comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gd-comment {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+/*__ Прокрутка списка комментариев __==> */
+.gd-comment-list--scroll{
+  width: 85%;
+  margin: 0 auto;
+  max-height: 590px;          /* ~8 комментариев */
+  overflow-y: auto;
+  padding-right: 10px;        /* чтобы текст не упирался в скролл */
+  scrollbar-gutter: stable;   /* чтобы верстка не прыгала при появлении скролла */
+}
+
+/*__ Параметры скроллбара __==>*/
+.gd-comment-list--scroll::-webkit-scrollbar{
+  width: 15px;
+}
+.gd-comment-list--scroll::-webkit-scrollbar-thumb{
+  background: #bdbecb;
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+}
+.gd-comment-list--scroll::-webkit-scrollbar-track{
+  background: rgba(236, 234, 234, 0.04);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.gd-comment-list--scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #f3f4f6;
+  cursor: pointer;
+}
+/* <==__ Параметры скроллбара __ */
+/* <==__ Прокрутка списка комментариев__ */
+
+/*====== Комментарий ======>*/
+
+.gd-comment-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.gd-comment-left {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gd-comment-date {
+  font-size: 13px;
+  color: #f3f4f6;
+  
+}
+
+.gd-comment-user {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.gd-comment-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 28px;
+  display: block;
+}
+
+
+.gd-comment-author {
+  font-size: 16px;
+  color: #87ceeb;
+  text-decoration: none;
+  font-weight: bold;
+  
+}
+
+.gd-comment-author:hover {
+  color: #d278e9ef;
+  text-decoration: none;
+
+}
+
+
+.gd-comment-body {
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #e5e7eb;
+  
+}
+
+.gd-comment-body p, .gd-text p{
+  margin: 0;
+  color: #bdbecb;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  text-align: justify;
+}
+
+/*_____ Действия к комментарию _____==>*/
+.gd-comment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gd-comment-action .gd-ico{
+  width: 16px !important;
+  height: 16px !important;
+  display: block;
+}
+
+.gd-comment-action{
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+
+  padding: 0;        /* важно для button */
+  line-height: 0;    /* убирает «лишнюю высоту» текста/строки */
+
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.15);
+
+  color: #f3f4f6;
+  cursor: pointer;
+  text-decoration: none;
+
+  transition: background .2s ease, color .2s ease;
+}
+
+button.gd-comment-action{
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+}
+
+.gd-comment-edit:hover {
+  color: #2dd835f1;
+  background: transparent;
+}
+
+.gd-comment-delete:hover {
+  color: #db0909;
+  background: transparent;
+}
+
+/* <==_____ Действия к комментарию _____*/
+
+/* <====== Комментарий ====== */
+
+/* <========= (блок gd-comments блок комментариев карточки игры) ========= */
+
+/* ======================= (game_detail.html) end ======================= */
+
+
+/* ======================= (games/comment_edit.html) start =======================> */
+
+.ce-wrap{
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+.ce-card{
+  margin-top: 50px;
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ce-top{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+  
+}
+
+.ce-back{
+  font-weight: 700; 
+}
+
+.ce-form{ margin-top: 6px; }
+
+.ce-field textarea{
+  width: 100%;
+  min-height: 140px;
+  max-height: 280px;
+  resize: none;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: #bdbecb;
+  outline: none;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  text-align: justify;
+}
+
+.ce-field textarea:focus{
+  border-color: rgba(0, 198, 248, 0.55);
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
+}
+
+.ce-error{
+  margin-top: 8px;
+  font-size: 13px;
+  color: #f87171;
+}
+
+.ce-actions{
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.save:hover{
+  color:#2dd835f1;
+}
+
+.cancel:hover{
+  color: #db0909;
+}
+/* ======================= (games/comment_edit.html) end =======================> */
+
+/* ========================================================== GAMES APP end========================================================== */
+
+

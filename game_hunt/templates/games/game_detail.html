@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block title %}GameHunt — {{ game.title }}{% endblock %}
-
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/games.css' %}">
+{% endblock %}
 {% block content %}
 <section class="gd">
 
@@ -99,7 +101,7 @@
         </aside>
 
         <div class="gd-right">
-            <div class="gd-text">{{ game.description|linebreaks }}</div>
+            <div class="gd-text">{{ game.description }}</div>
         </div>
 
     </div>
@@ -149,10 +151,11 @@
     {% endif %}
     <!-- Оценить контент -->
     <section class="gd-block">
-        <h4 class="gd-section-title">Пожалуйста, оцените контент</h4>
+
 
         <div class="gd-vote">
             {% if user.is_authenticated %}
+            <h4 class="gd-section-title">Пожалуйста, оцените контент</h4>
             <form method="post" action="{% url 'game_vote' game.slug %}" class="gd-vote-row">
                 {% csrf_token %}
 
@@ -225,7 +228,7 @@
 {# --- Блок “Оставить комментарий” --- #}
 {% if user.is_authenticated %}
   <section class="gd-comment-box">
-  <h2 class="gd-section-title center">Оставить комментарий</h2>
+  <h3 class="gd-section-title center">Оставить комментарий</h3>
 
 
     <form id="comment-form"
@@ -253,16 +256,23 @@
 
 </section>
 {% else %}
-  <p class="gd-hint"><a href="{% url 'account_login' %}">Войдите</a>, чтобы писать комментарии.</p>
+      <section class="gd-comments">
+
+  <p class="gd-hint">Чтобы оставить комментарий, нужно <a class="btn gd-view_content auth-link" href="{% url 'account_login' %}">войти</a></p>
+          </section>
 {% endif %}
     <!-- Комментарии: сначала список -->
     <section class="gd-comments">
-        <h2 class="gd-section-title">Комментарии</h2>
+        <h3 class="gd-section-title">Комментарии пользователей</h3>
 
-<div id="comment-list" class="gd-comment-list">
+<div id="comment-list" class="gd-comment-list {% if comments|length > 8 %}gd-comment-list--scroll{% endif %}">
+    {% if comments %}
   {% for comment in comments %}
     {% include "games/partials/game_comment.html" %}
   {% endfor %}
+    {% else %}
+    <p class="gd-hint">Будьте первым, кто оставит комментарий.</p>
+    {% endif %}
 </div>
 
     </section>

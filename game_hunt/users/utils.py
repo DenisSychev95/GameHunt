@@ -28,7 +28,7 @@ def decrypt_text(token):
 # Показываем маску телефона вместо полного значения(в админке).
 def mask_phone(number):
     if not number:
-        return '-'
+        return 'не указан'
     phone = str(number).strip()
     # телефон хранится в виде '79991234567'
     # в админке видно 7999*******
@@ -39,12 +39,19 @@ def mask_phone(number):
 def mask_email(email):
     # Mail видно в формате ***@mail.ru
     if not email:
-        return '-'
+        return 'не указан'
     email = email.strip()
     if '@' not in email:
         return '***'
     local, domain = email.split('@', 1)
     return f'***@{domain}'
+
+
+# Используем этот метод для замены "-" в админке на произвольный текст
+def view_email(email):
+    if not email:
+        return 'не указан'
+    return email
 
 
 # Метод преобразует телефон к виду 79999871234

@@ -169,7 +169,7 @@ def game_add_comment(request, slug):
 
     # ✔️ ВОЗВРАЩАЕМ HTML КОММЕНТАРИЯ
     html = render_to_string(
-        "games/partials/game_comment.html",
+        "reviews/partials/review_comment.html",
         {"comment": comment, "user": request.user},
         request=request
     )
@@ -183,27 +183,26 @@ def game_add_comment(request, slug):
 # Удаление комментариев со страницы игры
 @login_required(login_url='account_login')
 def game_comment_delete(request, pk):
-    # Получаем доступ к нужному комментарию
     comment = get_object_or_404(GameComment, id=pk)
-    game = comment.game  # получаем доступ к игре, связанной с комментарием,
-    # чтобы потом перенаправить на страницу с этой же игрой
+    game = comment.game
 
-    # Проверяем права:
-    # Кто может удалить комментарий - суперпользователь может удалить любой комментарий,
-    # автор комментария - может удалять только свои комментарии
     if not (request.user.is_superuser or request.user == comment.user):
-        messages.error(request, 'Вы не можете удалить этот комментарий.')
-        return redirect('game_detail', slug=game.slug)
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"ok": False, "error": "Нет прав на удаление"}, status=403)
+        messages.error(request, "Вы не можете удалить этот комментарий.")
+        return redirect("game_detail", slug=game.slug)
 
-    if request.method == 'POST':
-        comment.is_deleted = True  # меняем флаг комментария, и он перестает отображаться на странице с игрой,
-        # но не удаляется из БД
-        # сохраняем изменения в модель
-        comment.save()
-        messages.success(request, 'Комментарий удалён.')
+    if request.method != "POST":
+        return redirect("game_detail", slug=game.slug)
 
-    # Перенаправляем на страницу с этой же игрой
-    return redirect('game_detail', slug=game.slug)
+    comment.is_deleted = True
+    comment.save(update_fields=["is_deleted"])
+
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return JsonResponse({"ok": True, "comment_id": pk})
+
+    messages.success(request, "Комментарий удалён.")
+    return redirect("game_detail", slug=game.slug)
 
 
 @login_required(login_url='account_login')
@@ -222,7 +221,9 @@ def game_comment_edit(request, pk):
     if request.method == 'POST':
         form = GameCommentForm(request.POST, instance=comment)
         if form.is_valid():
-            form.save()
+            comment = form.save(commit=False)
+            comment.is_edited = True
+            comment.save()
             messages.success(request, 'Комментарий обновлён.')
             return redirect('game_detail', slug=game.slug)
     else:

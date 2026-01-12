@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('games/', include('games.urls')),
     path('reviews/', include('reviews.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('walkthroughs/', include('walkthroughs.urls')),
     path('cheats/', include('cheats.urls')),
 ]

@@ -4,126 +4,64 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}GameHunt{% endblock %}</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="{% static 'images/favicon.ico' %}">
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/glightbox/glightbox.min.css' %}">
+
+    {% block extra_css %}{% endblock %}
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Подключим базовые стили позже, пока просто фон -->
-    <style>
-        body {
-            height: 100%;
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: -webkit-linear-gradient(90deg, #054c76,#0c192a,#471c3a);
-            background: linear-gradient(90deg, #054c76,#0c192a,#471c3a);
-            color: #f3f4f6;
-        }
-        .page-wrapper {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .page-content {
-            flex: 1;
-        }
-
-        main {
-            min-height: 70vh;
-            padding: 40px 20px;
-        }
-        a {
-            color: #f97316;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 
 <body>
 <div class="page-wrapper">
 
-    <!-- Шапка -->
     {% include 'navbar.html' %}
+
     {% if messages %}
-    <div style="max-width: 900px; margin: 10px auto 0; padding: 0 16px;">
+      <div class="gh-messages">
         {% for message in messages %}
-            {# уникальный id для каждого сообщения #}
-            <div
-                id="gh-message-{{ forloop.counter }}"
-                style="
-                    position: relative;
-                    margin-bottom: 8px;
-                    padding: 10px 14px;
-                    border-radius: 6px;
-                    background: #111827;
-                    border: 1px solid
-                        {% if message.tags == 'success' %}
-                            #10b981
-                        {% elif message.tags == 'error' %}
-                            #ef4444
-                        {% elif message.tags == 'warning' %}
-                            #f97316
-                        {% else %}
-                            #4b5563
-                        {% endif %};
-                    color: #e5e7eb;
-                    box-shadow: 0 0 10px rgba(0,0,0,0.6);
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 14px;
-                "
+          <div
+            id="gh-message-{{ forloop.counter }}"
+            class="gh-message gh-message-{{ message.tags|default:'info' }}"
+          >
+            <span class="gh-message-icon">
+              {% if message.tags == 'success' %}✅
+              {% elif message.tags == 'error' %}❌
+              {% elif message.tags == 'warning' %}⚠️
+              {% else %}💬{% endif %}
+            </span>
+
+            <span class="gh-message-text">{{ message }}</span>
+
+            <button
+              type="button"
+              class="gh-message-close"
+              aria-label="Закрыть сообщение"
             >
-                <span style="font-size: 16px;">
-                    {% if message.tags == 'success' %}
-                        ✅
-                    {% elif message.tags == 'error' %}
-                        ❌
-                    {% elif message.tags == 'warning' %}
-                        ⚠️
-                    {% else %}
-                        💬
-                    {% endif %}
-                </span>
-
-                <span style="flex: 1;">{{ message }}</span>
-
-                {# Крестик, который удаляет div по ID #}
-                <button
-                    type="button"
-                    style="
-                        background: transparent;
-                        border: none;
-                        color: #9ca3af;
-                        cursor: pointer;
-                        font-size: 16px;
-                        padding: 0 4px;
-                    "
-                    onclick="document.getElementById('gh-message-{{ forloop.counter }}').remove();"
-                >
-                    ✕
-                </button>
-            </div>
+              ✕
+            </button>
+          </div>
         {% endfor %}
-    </div>
-{% endif %}
-    <!-- Контент -->
+      </div>
+    {% endif %}
 
     <main class="page-content">
-        {% block content %}
-        {% endblock %}
+        <div class="site-container">
+        {% block content %}{% endblock %}
+        </div>
     </main>
 
-    <!-- Футер -->
     {% include 'footer.html' %}
+
 </div>
 
+<!-- JS Для фотогалереи -->
 <script src="{% static 'vendor/glightbox/glightbox.min.js' %}"></script>
-
+<!-- JS Для закрытия всплывающего сообщения -->
+<script src="{% static 'js/base.js' %}"></script>
+<!-- JS Для приложений -->
 {% block page_js %}{% endblock %}
-
 </body>
 </html>

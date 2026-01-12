@@ -1,0 +1,40 @@
+.gd-review-form { width: 85%; }
+
+.gd-field-control{
+  width: 85%;
+  margin: 10px auto;
+  display: block;
+
+  overflow: auto;
+  resize: none;
+
+  background: #bdbecb;
+  color: rgba(16,16,18,1);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.gd-field-control:focus{
+  border-color: rgba(0, 198, 248, 0.55);
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
+}
+
+/* textarea: только вертикаль */
+.gd-textarea{
+  overflow-x: hidden;
+  overflow-y: auto;
+  resize: none; /* если хочешь вертикальный ресайз — поменяй на resize: vertical; */
+}
+
+/* scroll только для summary/pros/cons/conclusion (text = CKEditor) */
+.gd-review-scroll{
+  max-height: 700px;
+  overflow-y: auto;
+  padding-right: 10px;
+}

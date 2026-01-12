@@ -1,7 +1,8 @@
+<!-- Универсальная пагинация -->
 {% if queryset.has_other_pages %}
   <nav class="pager center" aria-label="Пагинация">
 
-    {# ЛЕВО: показываем только если есть previous #}
+    <!-- Левый блок кнопок -->
     {% if queryset.has_previous %}
       <a class="pager-btn"
          href="?page=1{% if extra_query %}&{{ extra_query }}{% endif %}"
@@ -16,7 +17,7 @@
       </a>
     {% endif %}
 
-    {# ЦИФРЫ #}
+    <!-- Отображение страниц по условиям -->
     {% for page in custom_range %}
       {% if page == queryset.number %}
         <span class="pager-current" aria-current="page">{{ page }}</span>
@@ -28,7 +29,7 @@
       {% endif %}
     {% endfor %}
 
-    {# ПРАВО: показываем только если есть next #}
+    <!-- Правый блок кнопок -->
     {% if queryset.has_next %}
       <a class="pager-btn"
          href="?page={{ queryset.next_page_number }}{% if extra_query %}&{{ extra_query }}{% endif %}"

@@ -1,58 +1,110 @@
 {% extends "base.html" %}
-{% block title %}
-    {% if current_game %}
-        GameHunt — {{ current_game.title }} — Обзоры
-    {% else %}
-        GameHunt — Обзоры
-    {% endif %}
+{% load static %}
+{% block title %}GameHunt — Обзоры{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
 {% endblock %}
-
 {% block content %}
-<section style="max-width: 1000px; margin: 0 auto;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">
-        {% if current_game %}
-            Обзоры: {{ current_game.title }}
-        {% else %}
-            Обзоры игр
-        {% endif %}
-    </h2>
-    <form method="get" class="search-form">
-  <select class="select" name="sort">
-    <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
-    <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
-    <option value="rating" {% if current_sort == "rating" %}selected{% endif %}>По рейтингу</option>
-  </select>
-  <button class="btn" type="submit">Применить</button>
-</form>
-    {% if reviews %}
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            {% for review in reviews %}
-                <article style="border: 1px solid #374151; border-radius: 8px; padding: 10px;">
-                    <h3 style="margin-bottom: 4px;">
-                        <a href="{% url 'review_detail' review.pk %}"
-                           style="color: #f97316; text-decoration: none;">
-                            {{ review.title }}
-                        </a>
-                    </h3>
-                    <p style="font-size: 14px; color: #9ca3af; margin-bottom: 4px;">
-                        Игра:
-                        <a href="{% url 'game_detail' slug=review.game.slug %}">
-                            {{ review.game.title }}
-                        </a>
-                        · Автор: {{ review.author.username }}
-                        · Оценка: {{ review.rating }}/10
-                    </p>
-                    <p style="font-size: 14px; color: #e5e7eb;">
-                        {{ review.text|truncatechars:200 }}
-                    </p>
-                </article>
-            {% endfor %}
-        </div>
+<section class="container">
 
-{% include 'pagination.html' with queryset=reviews %}
+  <h1 class="page-title center">Обзоры</h1>
 
-    {% else %}
-        <p>Пока обзоров нет.</p>
+
+
+  {# Панель: слева поиск по названию игры, рядом сортировка #}
+  <form method="get" class="search-form">
+    <input class="input"
+           type="text"
+           name="game_search"
+           placeholder="Поиск по названию"
+           value="{{ game_search|default:'' }}">
+
+    <select class="select" name="sort">
+      <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
+      <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
+      <option value="rating" {% if current_sort == "rating" %}selected{% endif %}>По оценке</option>
+    </select>
+
+    <button class="btn" type="submit">Найти</button>
+
+    {% if game_search or current_sort != "new" %}
+      <a class="link-muted" href="{% url 'review_list' %}">Сброс</a>
     {% endif %}
+  </form>
+
+  {% if reviews %}
+    <div class="game-grid">
+      {% for review in reviews %}
+        {% if review.is_published %}
+        <article class="game-card">
+
+          <div class="game-head">
+            <h3 class="game-title">
+              <a href="{% url 'review_detail' review.pk %}">{{ review.title }}</a>
+            </h3>
+
+            <div class="game-views" title="Просмотры">
+              <span class="ui-meta">
+                <span class="ui-icon ui-icon-eye"></span>
+                {{ review.views_count }}
+              </span>
+            </div>
+          </div>
+
+          {# Обложка = обложка игры #}
+          <a href="{% url 'review_detail' review.pk %}" class="game-cover-link">
+            {% if review.game.cover_image %}
+              <img class="game-cover" src="{{ review.game.cover_image.url }}" alt="{{ review.title }}">
+            {% else %}
+              <div class="game-cover-placeholder">Нет обложки</div>
+            {% endif %}
+          </a>
+
+          {# Название игры — ссылка (без слова "Игра") #}
+          <div class="game-meta">
+            <a class="genre-link"  href="{% url 'game_detail' slug=review.game.slug %}">{{ review.game.title }}</a>
+          </div>
+
+          {# Понравилось% + оценка обзора #}
+          <div class="game-stats">
+            <div class="like-love" title="Понравилось пользователям">
+              <svg class="icon-love" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-7.5-4.35-10.5-9C-0.7 8.1 1.6 4 5.5 4
+                         c2.2 0 4.1 1.2 5 3 0.9-1.8 2.8-3 5-3
+                         3.9 0 6.2 4.1 4 8-3 4.65-10.5 9-10.5 9z"/>
+              </svg>
+              <span class="like-value">{{ review.liked_percent }}%</span>
+            </div>
+
+            <div class="rating-badge" title="Оценка обзора">
+              <svg class="icon-star" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 17.3L18.2 21l-1.6-7L22 9.2l-7.2-.6L12 2
+                         9.2 8.6 2 9.2 7.4 14 5.8 21z"/>
+              </svg>
+              <span class="rating-text">{{ review.rating }}/10</span>
+            </div>
+          </div>
+
+          {# Автор + обновлено #}
+          <div class="game-meta">
+            <span class="gd-meta-label">Автор:</span>
+            <a class="gd-comment-author" href="{% url 'profile-view' review.author.id %}">
+              {{ review.author.profile.nickname|default:review.author.username }}
+            </a>
+            <div> <span class="gd-meta-label">Обновлено:</span> <span class="gd-meta-value">{{ review.updated_at|date:"d.m.Y" }}</span></div>
+          </div>
+
+          <div class="game-footer">
+            <a class="btn btn-secondary" href="{% url 'review_detail' review.pk %}">Подробнее</a>
+          </div>
+
+        </article>
+      {% endif %}
+      {% endfor %}
+    </div>{% include 'pagination.html' with queryset=reviews %}
+  {% else %}
+    <p class="center muted">Обзоры не найдены.</p>
+  {% endif %}
+
 </section>
 {% endblock %}

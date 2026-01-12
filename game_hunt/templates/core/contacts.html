@@ -3,51 +3,47 @@
 {% block title %}GameHunt — Контакты{% endblock %}
 
 {% block content %}
-<section style="max-width: 800px; margin: 0 auto;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Контакты</h2>
+<section class="about-page">
+    <h1 class="page-title center">Контакты</h1>
 
-    <p style="margin-bottom: 12px;">
-        Проект <strong>GameHunt</strong> разработан в учебных целях как дипломная работа по
-        веб-разработке на Django.
+    <p class="gd-text center-text">
+        Проект <span class="span-bright">GameHunt</span> разработан в учебных целях как дипломная работа по
+        веб-разработке на <span class="span-bright">Django</span>.
     </p>
 
-    <h3 style="margin-top: 20px; margin-bottom: 8px;">Автор</h3>
-    <p style="margin-bottom: 12px;">
-        Меня зовут Денис и я начинающий разработчик, изучающий Python и Django в свободное от работы время.
+    <h3 class="page-title center">Автор</h3>
+    <p class="gd-text center-text">
+        Меня зовут Денис и я начинающий разработчик, изучающий <span class="span-bright">Python</span> и <span class="span-bright">Django</span> в свободное от работы время.
         GameHunt — попытка объединить интерес к играм и программированию.
     </p>
 
-    <h3 style="margin-top: 20px; margin-bottom: 8px;">Связаться</h3>
-    <ul style="margin-bottom: 16px; list-style-type: none; padding: 20px 0;">
-        <li>
-            <div style="display: flex; align-items:center;">
-            <img style="margin-right: 15px;" src="{% static 'images/github.png' %}" alt="Github-image">
-            <a href="https://github.com/DenisSychev95" target="_blank">
+    <h3 class="contacts-subtitle">Связаться</h3>
+
+    <ul class="about-list contacts-ul">
+        <li class="about-list li contacts-flex-li">
+            <a href="https://github.com/DenisSychev95" target="_blank"><img class="contact-icon" src="{% static 'images/github.png' %}" alt="GitHub"></a>
+            <a class="contact-links" href="https://github.com/DenisSychev95" target="_blank">
                 github.com/DenisSychev95
             </a>
-            </div>
         </li>
-                <li>
-            <div style="display: flex; align-items:center;">
-            <img style="margin-right: 15px;" src="{% static 'images/telegram.png' %}" alt="Github-image">
-            <a href="https://t.me/DenyBeny95" target="_blank">
+
+        <li class="about-list li contacts-flex-li">
+            <a href="https://t.me/DenyBeny95" target="_blank"><img class="contact-icon" src="{% static 'images/telegram.png' %}" alt="Telegram"></a>
+            <a class="contact-links" href="" target="_blank">
                 @DenyBeny95
             </a>
-            </div>
         </li>
-        <li>
-            <div style="display: flex; align-items:center;">
-            <img style="margin-right: 15px;" src="{% static 'images/vk.png' %}" alt="Github-image">
-            <a href="https://vk.com/sychev_denis" target="_blank">
+
+        <li class="about-list li contacts-flex-li">
+            <a href="https://vk.com/sychev_denis" target="_blank"><img class="contact-icon" src="{% static 'images/vk.png' %}" alt="VK"></a>
+            <a class="contact-links" href="https://vk.com/sychev_denis" target="_blank">
                 sychev_denis
             </a>
-            </div>
         </li>
-
     </ul>
 
-    <p style="font-size: 14px; color: #9ca3af;">
-        Контакты указаны для связи по вопросам, связанным с дипломным проектом GameHunt.
+    <p class="gd-text center-text">
+        Контакты указаны для связи по вопросам, связанным с дипломным проектом <span class="span-bright">GameHunt</span>.
     </p>
 </section>
 {% endblock %}

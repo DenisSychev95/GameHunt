@@ -1,121 +1,304 @@
 {% extends "base.html" %}
-{% block title %}GameHunt — {{ review.title }} — Обзор{% endblock %}
+{% load static %}
 
+{% block title %}GameHunt — {{ review.title }}{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
 {% block content %}
-<section style="max-width: 900px; margin: 0 auto;">
+<section class="gd">
 
-  <!-- Навигация -->
-  <p style="margin-bottom: 10px;">
-    <a href="{% url 'review_list' %}" style="color: #9ca3af;">← Все обзоры</a>
-    ·
-    <a href="{% url 'game_detail' slug=review.game.slug %}" style="color: #9ca3af;">
-      {{ review.game.title }}
+<!-- Topbar (только для review_detail) -->
+<div class="gd-topbar">
+
+  <!-- LEFT: 2 ссылки -->
+  <div class="gd-topbar-left">
+    <a class="gd-back" href="{% url 'game_detail' slug=review.game.slug %}" title="Перейти к игре">
+      <span class="ui-icon ui-icon-arrow-double-left" aria-hidden="true"></span>
+      <span>{{ review.game.title }}</span>
     </a>
-  </p>
 
-  <!-- Заголовок + кнопки автора -->
-  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-    <div>
-      <h2 style="color:#f97316; margin: 0 0 6px;">{{ review.title }}</h2>
+    <a class="gd-back" href="{% url 'review_list' %}" title="Перейти к обзорам">
+      <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+      <span>Все обзоры</span>
+    </a>
+  </div>
 
-      <p style="font-size:14px; color:#9ca3af; margin: 0;">
-        Автор: {{ review.author.username }}
-        · Оценка: <strong style="color:#e5e7eb;">{{ review.rating }}/10</strong>
-        · {{ review.created_at|date:"d.m.Y H:i" }}
-      </p>
-    </div>
+  <!-- RIGHT: share + edit/delete -->
+  <div class="gd-topbar-right">
+    <button class="gd-share" type="button" data-share title="Скопировать ссылку">
+      <span class="ui-icon ui-icon-share" aria-hidden="true"></span>
+      <span>Поделиться</span>
+    </button>
 
-    {% if user.is_authenticated and user == review.author %}
-      <div style="display:flex; gap:10px; margin-top: 2px;">
-        <a href="{% url 'review_edit' review.pk %}" style="color:#facc15; text-decoration:none;">
-          ✏️ Редактировать
-        </a>
-        <a href="{% url 'review_delete' review.pk %}" style="color:#ef4444; text-decoration:none;">
-          🗑 Удалить
-        </a>
-      </div>
+    {% if user.is_authenticated and user == review.author or user.is_authenticated and user.is_staff or user.is_authenticated and user.is_superuser %}
+      <a class="gd-share" href="{% url 'review_edit' review.pk %}" title="Редактировать обзор">
+        <svg class="gd-ico gd-ico-edit" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor"
+      d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+         a1 1 0 0 0 0-1.41l-1.59-1.59
+         a1 1 0 0 0-1.41 0l-1.83 1.83
+         3.75 3.75L21 5.75z"/>
+  </svg>
+      </a>
+
+      <form method="post" action="{% url 'review_delete' review.pk %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="gd-share" title="Удалить обзор">
+          <svg class="gd-ico gd-ico-trash" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-3h6l1 2H8l1-2z"/>
+          </svg>
+        </button>
+      </form>
     {% endif %}
   </div>
 
-  <!-- TL;DR -->
-  {% if review.summary %}
-    <div style="margin-top: 16px; padding: 12px; border: 1px solid #374151; border-radius: 10px;">
-      <h3 style="margin:0 0 8px; color:#e5e7eb;">TL;DR</h3>
-      <div style="color:#e5e7eb; line-height:1.6;">
-        {{ review.summary|linebreaks }}
+</div>
+
+  <!-- Title -->
+  <header class="gd-header">
+    <h1 class="gd-title center">{{ review.title }}</h1>
+
+    {# Обложка обзора: если добавишь поле cover_image в Review — подхватит его, иначе обложка игры #}
+    <div class="center-image">
+      {% if review.cover_image %}
+        <img class="gd-cover review" src="{{ review.cover_image.url }}" alt="{{ review.title }}">
+      {% elif review.game.cover_image %}
+        <img class="gd-cover review" src="{{ review.game.cover_image.url }}" alt="{{ review.game.title }}">
+      {% endif %}
+    </div>
+
+    <p class="gd-hint center">
+      <span class="gd-meta-value">Обновлено:</span> {{ review.updated_at|date:"d.m.Y H:i" }}
+    </p>
+
+    <div class="gd-nav review-nav">
+      <div class="gd-nav-left">
+        <span class="gd-meta-value">Автор:</span>
+        <a class="gd-comment-author" href="{% url 'profile-view' review.author.id %}">
+          {{ review.author.profile.nickname|default:review.author.username }}
+        </a>
+      </div>
+
+      <div class="gd-nav-right">
+        <span class="gd-meta-value">Оценка:</span>
+        <span class="rating-text review-rating">{{ review.rating }}/10</span>
       </div>
     </div>
+  </header>
+
+  <!-- Введение -->
+  {% if review.summary %}
+    <section class="gd-block">
+      <h2 class="gd-section-title center">Описание</h2>
+      <div class="gd-text">{{ review.summary }}</div>
+    </section>
   {% endif %}
 
-  <!-- Галерея -->
-  {% if review.images.all %}
-    <h3 style="margin-top: 18px; margin-bottom: 10px; color:#e5e7eb;">Скриншоты</h3>
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px;">
-      {% for img in review.images.all %}
-        <figure style="border:1px solid #374151; border-radius:10px; padding:10px; margin:0;">
-          <img src="{{ img.image.url }}"
-               alt=""
-               style="width:100%; height:160px; object-fit:cover; border-radius:8px;">
-          {% if img.caption %}
-            <figcaption style="margin-top:6px; color:#9ca3af; font-size:13px;">
-              {{ img.caption }}
-            </figcaption>
-          {% endif %}
-        </figure>
-      {% endfor %}
-    </div>
-  {% endif %}
+{% if review.images.all %}
+<section class="gd-gallery" data-gallery-root data-page-size="5">
+  <h2 class="gd-section-title">Галерея</h2>
 
-  <!-- Основной текст -->
-  <div style="margin-top: 18px;">
-    <h3 style="margin:0 0 10px; color:#e5e7eb;">Обзор</h3>
-    <div style="font-size:15px; line-height:1.7; color:#e5e7eb;">
-      {{ review.text|linebreaks }}
+  <div class="gd-carousel">
+    <button class="gd-carousel-btn is-hidden" type="button" data-prev aria-label="Назад">‹</button>
+
+    <div class="gd-carousel-viewport">
+      <div class="gd-carousel-track">
+        {% for img in review.images.all %}
+          <a href="{{ img.image.url }}"
+             class="gd-thumb glightbox"
+             data-gallery="review-{{ review.id }}"
+             data-title="{{ img.caption|default:'' }}"
+             data-index="{{ forloop.counter0 }}">
+            <img src="{{ img.image.url }}" alt="{{ img.caption|default:review.title }}">
+          </a>
+        {% endfor %}
+      </div>
     </div>
+
+    <button class="gd-carousel-btn is-hidden" type="button" data-next aria-label="Вперёд">›</button>
   </div>
+
+  <p class="gd-hint" data-counter></p>
+</section>
+{% endif %}
+
+  <!-- Содержание (скролл-блок) -->
+  <section class="gd-block">
+
+
+    <div class="gd-review-scroll">
+      {# Если CKEditor — нужно safe #}
+      <div class="gd-text">{{ review.text|safe }}</div>
+    </div>
+  </section>
 
   <!-- Плюсы / Минусы -->
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px;">
-    {% if review.pros %}
-      <div style="border:1px solid #374151; border-radius:10px; padding:12px;">
-        <h3 style="margin:0 0 8px; color:#22c55e;">Плюсы</h3>
-        <div style="color:#e5e7eb; line-height:1.6;">
-          {{ review.pros|linebreaks }}
-        </div>
+  <section class="gd-block">
+    <div class="gd-procons">
+      <div class="gd-pros">
+        <h2 class="gd-subtitle center">Плюсы</h2>
+        <div class="gd-text indent">{{ review.pros|linebreaks }}</div>
       </div>
-    {% endif %}
-
-    {% if review.cons %}
-      <div style="border:1px solid #374151; border-radius:10px; padding:12px;">
-        <h3 style="margin:0 0 8px; color:#ef4444;">Минусы</h3>
-        <div style="color:#e5e7eb; line-height:1.6;">
-          {{ review.cons|linebreaks }}
-        </div>
-      </div>
-    {% endif %}
-  </div>
-
-  <!-- Итог -->
-  {% if review.conclusion %}
-    <div style="margin-top: 18px; padding: 12px; border: 1px solid #374151; border-radius: 10px;">
-      <h3 style="margin:0 0 8px; color:#e5e7eb;">Итог</h3>
-      <div style="color:#e5e7eb; line-height:1.6;">
-        {{ review.conclusion|linebreaks }}
+      <div class="gd-cons">
+        <h2 class="gd-subtitle center">Минусы</h2>
+        <div class="gd-text indent">{{ review.cons|linebreaks }}</div>
       </div>
     </div>
-  {% endif %}
 
-  <!-- Видео -->
-  {% if review.video_url %}
-    <div style="margin-top: 18px; padding: 12px; border: 1px solid #374151; border-radius: 10px;">
-      <h3 style="margin:0 0 8px; color:#e5e7eb;">Видео</h3>
-      <p style="margin:0;">
-        <a href="{{ review.video_url }}" target="_blank" rel="noopener" style="color:#f97316;">
-          Открыть видео-обзор
-        </a>
-      </p>
-    </div>
+    {% if review.conclusion %}
+      <div class="gd-conclusion">
+        <h2 class="gd-subtitle center">Выводы</h2>
+        <div class="gd-text">{{ review.conclusion }}</div>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Видео (как в game_detail: iframe, если ты прокидываешь trailer_embed) -->
+  {% if trailer_embed %}
+    <section class="gd-block">
+      <h2 class="gd-section-title center">Видео-обзор</h2>
+      <div class="gd-video">
+        <iframe
+          src="{{ trailer_embed }}"
+          title="Видео"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
   {% endif %}
+<section class="gd-block">
+
+
+        <div class="gd-vote">
+            {% if user.is_authenticated %}
+            <h4 class="gd-section-title">Пожалуйста, оцените контент</h4>
+            <form method="post" action="{% url 'review_vote' review.pk %}" class="gd-vote-row">
+                {% csrf_token %}
+
+                {% with v=user_vote.value|default_if_none:0 %}
+                <button
+                        class="gd-vote-btn gd-vote-like {% if v == 1 %}is-active{% endif %}"
+                        name="value" value="1" type="submit"
+                        aria-pressed="{% if v == 1 %}true{% else %}false{% endif %}"
+                >
+            <span class="gd-vote-icon" aria-hidden="true">
+              <!-- Heart -->
+              <svg class="gd-ico gd-ico-heart"
+     viewBox="0 0 24 24"
+     width="24"
+     height="24"
+     aria-hidden="true"
+     focusable="false">
+  <path fill="currentColor"
+        d="M12 20
+           C12 20, 4 14.5, 4 9.5
+           C4 7, 6 5.5, 8.5 5.5
+           C10 5.5, 11.5 6.5, 12 7.8
+           C12.5 6.5, 14 5.5, 15.5 5.5
+           C18 5.5, 20 7, 20 9.5
+           C20 14.5, 12 20, 12 20
+           Z"/>
+</svg>
+            </span>
+
+                </button>
+
+                <button
+                        class="gd-vote-btn gd-vote-dislike {% if v == -1 %}is-active{% endif %}"
+                        name="value" value="-1" type="submit"
+                        aria-pressed="{% if v == -1 %}true{% else %}false{% endif %}"
+                >
+            <span class="gd-vote-icon" aria-hidden="true">
+              <!-- Emotional sad face -->
+              <svg class="gd-ico-sad" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+  <circle class="face" cx="12" cy="12" r="9"/>
+
+  <!-- глаза -->
+  <circle class="features" cx="9.4" cy="11.1" r="3"/>
+  <circle class="features" cx="14.6" cy="11.1" r="3"/>
+
+  <!-- блики (всегда белые, выглядят мило) -->
+  <circle class="sparkle" cx="8.9" cy="10.6" r="1.1"/>
+  <circle class="sparkle" cx="14.1" cy="10.6" r="1.1"/>
+
+  <!-- рот -->
+  <path class="mouth" d="M9.4 16.1c.85-.55 1.7-.8 2.6-.8s1.75.25 2.6.8"
+        fill="none" stroke-width="2" stroke-linecap="round"/>
+</svg>
+            </span>
+
+                </button>
+                {% endwith %}
+            </form>
+
+            {% if not user_vote %}
+            <p class="gd-hint">Учитывается только одно мнение пользователя, но его можно изменить.</p>
+            {% endif %}
+
+            {% else %}
+            <p class="gd-hint">Для оценки контента нужно <a class="btn gd-view_content auth-link" href="{% url 'account_login' %}">войти</a></p>
+            {% endif %}
+            <div class="gd-vote-toast" role="status" aria-live="polite"></div>
+        </div>
+    </section>
+
+
+  <!-- Комментарии (скролл списка как в game_detail) -->
+  <section class="gd-comments">
+    {% if user.is_authenticated %}
+      <section class="gd-comment-box">
+        <h2 class="gd-section-title center">Оставить комментарий</h2>
+
+        <form id="comment-form"
+              class="gd-comment-form"
+              action="{% url 'review_add_comment' review.pk %}"
+              method="post">
+          {% csrf_token %}
+
+          <textarea id="comment-text"
+                    name="text"
+                    maxlength="500"
+                    placeholder="Ваш комментарий..."
+                    required></textarea>
+
+          <div class="gd-comment-footer">
+            <button id="comment-submit"
+                    class="btn gd-view_content"
+                    type="submit"
+                    disabled>
+              Отправить</button>
+          </div>
+        </form>
+      </section>
+    {% else %}
+      <p class="gd-hint center">Чтобы оставить комментарий, нужно <a class="btn gd-view_content auth-link" href="{% url 'account_login' %}">войти</a></p>
+    {% endif %}
+    <h2 class="gd-section-title center">Комментарии</h2>
+
+    <div id="comment-list" class="gd-comment-list {% if comments|length > 6 %}gd-comment-list--scroll{% endif %}">
+      {% for comment in comments %}
+        {% include "reviews/partials/review_comment.html" with comment=comment %}
+      {% empty %}
+        <p class="gd-hint">Будьте первым, кто оставит комментарий.</p>
+      {% endfor %}
+    </div>
+
+
+  </section>
 
 </section>
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block page_js %}
+  <script src="{% static 'js/review_detail.js' %}"></script>
 {% endblock %}
