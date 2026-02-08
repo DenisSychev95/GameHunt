@@ -12,31 +12,41 @@ from datetime import timedelta
 from .utils import trailer_embed_url
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-COMMENT_COOLDOWN_SECONDS = 60
+from reviews.utils import can_view_adult
 
 
 def game_list(request):
-    # ---------- Поиск ----------
-    # Весь поиск сжимаем в одну строку, все остальное в utils
-    games, search_query, genres, platforms,  sort, genre_id, platform_id, min_rating = search_games(request)
+    # 1) Получаем все результаты по фильтрам, но БЕЗ среза 16+
+    all_games, search_query, genres, platforms, sort, genre_id, platform_id, min_rating = search_games(
+        request,
+        ignore_adult=True
+    )
 
-    # Если в фильтр поиска приходит id жанра или платформы, преобразуем к числу или возвращаем None
+    total_found = all_games.count()
+
+    # 2) Теперь формируем то, что реально можно показать
+    adult_allowed = get_adult(request)
+
+    games = all_games
+    if not adult_allowed:
+        games = games.exclude(is_adult_only=True)
+
+    visible_total = games.count()
+
+    adult_blocked_only = (not adult_allowed) and (total_found > 0) and (visible_total == 0)
+    has_more_adult = (not adult_allowed) and (total_found > visible_total)
+
+    # 3) дальше твой код без изменений
     genre = int(genre_id) if genre_id else None
     platform = int(platform_id) if platform_id else None
 
-    # ---------- Пагинация ----------
     count = 3
-    # Возвращаем games(объект Page)- итерируемый объект по которому можно пройтись в цикле и получить игры и
-    # кастомный диапазон пагинации
-    # Не стоит дублировать код и писать page_games= games.object_list(тут уже page_games- массив игр)
     games, custom_range = paginate_games(request, games, count)
 
-    # ---- Формируем в адресной строке строку из query-параметров ----
     params = request.GET.copy()
     if 'page' in params:
         del params['page']
-        # Формируем extra_query
-    extra_query = params.urlencode()  # например: "search=шутер&genre=1&sort=new"
+    extra_query = params.urlencode()
 
     rating_choices = list(range(1, 11))
 
@@ -52,6 +62,8 @@ def game_list(request):
         'current_sort': sort,
         'extra_query': extra_query,
         'rating_choices': rating_choices,
+        'adult_blocked_only': adult_blocked_only,
+        'has_more_adult': has_more_adult,
     }
     return render(request, 'games/game_list.html', context)
 
@@ -65,7 +77,6 @@ def game_detail(request, slug):
     if game.is_adult_only and not is_adult:
         messages.error(request, 'Эта игра доступна только пользователям 16+.')
         return redirect('game_list')
-
 
 
     # +1 просмотр за сессию
@@ -169,7 +180,7 @@ def game_add_comment(request, slug):
 
     # ✔️ ВОЗВРАЩАЕМ HTML КОММЕНТАРИЯ
     html = render_to_string(
-        "reviews/partials/review_comment.html",
+        "games/partials/game_comment.html",
         {"comment": comment, "user": request.user},
         request=request
     )

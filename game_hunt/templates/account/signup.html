@@ -1,70 +1,125 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}GameHunt — Регистрация{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
 {% block content %}
-<section style="max-width: 480px; margin: 0 auto;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Регистрация</h2>
+<section class="ce-wrap">
+    <div class="ce-top">
+            <a class="gd-back" href="{% url 'homepage' %}">
+                <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+                <span>На главную</span>
+            </a>
+        </div>
+    <div class="ce-card">
 
-    <form method="post" action="{% url 'account_signup' %}">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
 
-        {% for field in form %}
-            <div style="margin-bottom: 10px;">
 
-                {{ field.label_tag }}<br>
+        <h2 class="gd-section-title center">Регистрация</h2>
 
-                {# --- Добавляем id="id_phone" только для поля phone --- #}
-                {% if field.name == "phone" %}
-                    <input type="text"
-                           id="id_phone"
-                           name="phone"
-                           placeholder="+7(_ _ _)_ _ _-_ _-_ _"
-                           value="{{ field.value|default:'' }}"
-                           style="padding:6px;">
-                {% else %}
+{% if form.errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+    </div>
+  {% endif %}
+
+        <form method="post" action="{% url 'account_signup' %}" class="ce-form" novalidate>
+            {% csrf_token %}
+
+            <div class="gd-formset-grid">
+                {% for field in form %}
+                <div class="gd-field{% if field.name == 'password1' or field.name == 'password2' %} gd-pass{% endif %}">
+                    {{ field.label_tag }}
+
+                    {# кастомный input только для phone, чтобы гарантировать id и placeholder #}
+                    {% if field.name == "password1" %}
+
+
+                    <div class="gd-pass-wrap">
+                        {{ field }}
+                        <button type="button" class="gd-pass-toggle" aria-label="Показать пароль" data-toggle-pass>
+                            <span class="gd-eye gd-eye-open" aria-hidden="true"></span>
+                            <span class="gd-eye gd-eye-off" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    {% elif field.name == "password2" %}
+
+
+                    <div class="gd-pass-wrap">
+                        {{ field }}
+                        <button type="button" class="gd-pass-toggle" aria-label="Показать пароль" data-toggle-pass>
+                            <span class="gd-eye gd-eye-open" aria-hidden="true"></span>
+                            <span class="gd-eye gd-eye-off" aria-hidden="true"></span>
+                        </button>
+                    </div>
+
+
+                    {% elif field.name == "birth_date" %}
+                    <input
+                            type="text"
+                            name="{{ field.name }}"
+                            id="id_birth_date"
+                            value="{{ field.value|default:'' }}"
+                            class="gd-field-control gd-wide"
+                            placeholder="дд.мм.гггг"
+                            inputmode="numeric"
+                            autocomplete="bday"
+                    >
+                    {% elif field.name == "phone" %}
+                    <input
+                            type="text"
+                            name="{{ field.name }}"
+                            id="{{ field.id_for_label }}"
+                            value="{{ field.value|default:'' }}"
+                            class="gd-field-control gd-wide"
+                            placeholder="7(999)-999-99-99"
+
+                    >
+
+                    {% else %}
                     {{ field }}
-                {% endif %}
+                    {% endif %}
 
-                {% if field.help_text %}
-                    <div style="font-size: 12px; color: #9ca3af;">
-                        {{ field.help_text }}
-                    </div>
-                {% endif %}
+                    {% if field.help_text %}
+                    <div class="gd-field-help">{{ field.help_text }}</div>
+                    {% endif %}
 
-                {% if field.errors %}
-                    <div style="color: #f87171; font-size: 13px;">
-                        {{ field.errors|striptags }}
-                    </div>
-                {% endif %}
+                    {% if field.errors %}
+                    <div class="gd-field-error">{{ field.errors.0|striptags }}</div>
+                    {% else %}
+                    <div class="gd-field-error"></div>
+                    {% endif %}
+                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
 
-        <button type="submit"
-                style="margin-top: 12px; padding: 8px 16px; border: none;
-                       background-color: #f97316; color: #fff; border-radius: 4px; cursor: pointer;">
-            Зарегистрироваться
-        </button>
-    </form>
+            <div class="ce-actions">
+                <button type="submit" class="gd-back save mini-button">Зарегистрироваться</button>
+            </div>
 
-    <p style="margin-top: 12px;">
-        Уже есть аккаунт?
-        <a href="{% url 'account_login' %}" style="color: #f97316;">Войти</a>
-    </p>
+            <div class="auth-split">
+                <div class="auth-split-left">
+                    <div class="auth-hint">Уже есть аккаунт?</div>
+                    <a class="gd-back small" href="{% url 'account_login' %}">Войти</a>
+                </div>
+
+                <div class="auth-split-right">
+                    <div class="auth-hint">Нужна помощь?</div>
+                    <a class="gd-back small" href="{% url 'contacts' %}">Контакты</a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
 </section>
+{% endblock %}
 
-{# ==== Подключение маски IMask ==== #}
+{% block page_js %}
 <script src="https://unpkg.com/imask"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    var phoneInput = document.getElementById("id_phone");
-    if (phoneInput) {
-        IMask(phoneInput, {
-            mask: '+{7} (000) 000-00-00'
-        });
-    }
-});
-</script>
+<script src="{% static 'js/signup.js' %}"></script>
 {% endblock %}

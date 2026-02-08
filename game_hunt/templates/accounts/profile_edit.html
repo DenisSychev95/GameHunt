@@ -1,48 +1,117 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Редактирование профиля — GameHunt{% endblock %}
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
+{% endblock %}
 
 {% block content %}
-<section style="max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Редактирование профиля</h2>
+<section class="profile-edit-container">
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
+  <p class="gd-review-topline">
+    <a class="gd-back" href="{% url 'profile' %}">
+      <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+      <span>Назад в профиль</span>
+    </a>
+  </p>
 
-        {% for field in form %}
-            <div style="margin-bottom: 12px;">
-                {{ field.label_tag }}
+  <h2 class="gd-review-title">Редактирование профиля</h2>
 
-                <div>
-                    {{ field }}
-                </div>
+  {% if form.errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+    </div>
+  {% endif %}
 
-                {% if field.help_text %}
-                    <div style="font-size: 12px; color: #9ca3af;">
-                        {{ field.help_text }}
-                    </div>
-                {% endif %}
+  <form method="post" enctype="multipart/form-data" class="gd-review-form" novalidate>
+    {% csrf_token %}
 
-                {% if field.errors %}
-                    <div style="color: #f87171; font-size: 13px;">
-                        {{ field.errors|striptags }}
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+    <div class="gd-card">
+      <div class="gd-fields">
 
-        <button type="submit"
-                style="margin-top: 12px; padding: 8px 16px; border: none;
-                       background-color: #f97316; color: #fff;
-                       border-radius: 4px; cursor: pointer;">
-            Сохранить изменения
-        </button>
+        <div class="gd-field gd-field--w-nt">
+          <label for="{{ form.nickname.id_for_label }}">{{ form.nickname.label }}</label>
+          {{ form.nickname }}
+          <div class="gd-field-error">{{ form.nickname.errors.0 }}</div>
 
-        <a href="{% url 'profile' %}"
-           style="margin-left: 12px; color: #9ca3af; font-size: 14px;">
-            Отмена
-        </a>
-    </form>
+        </div>
+
+        <div class="gd-grid-2 gd-grid-2--name">
+          <div class="gd-field gd-field--w-name">
+            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+            {{ form.first_name }}
+            <div class="gd-field-error">{{ form.first_name.errors }}</div>
+          </div>
+
+          <div class="gd-field gd-field--w-name">
+            <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+            {{ form.last_name }}
+            <div class="gd-field-error">{{ form.last_name.errors }}</div>
+          </div>
+        </div>
+
+        <div class="gd-field">
+  <label>{{ form.profile_image.label }}</label>
+
+  <div class="gd-preview">
+    <img id="profile-image-preview"
+         src="{{ form.instance.profile_image.url }}"
+         alt=""
+         class="gd-preview-img">
+  </div>
+
+  <div class="gd-file-pick">
+    {{ form.profile_image }}
+
+  </div>
+
+  <div class="gd-field-error">{{ form.profile_image.errors }}</div>
+</div>
+
+        <div class="gd-field gd-field--w-genres">
+          <label for="{{ form.favorite_genres.id_for_label }}">{{ form.favorite_genres.label }}</label>
+          <div class="gd-field-help">Выберите один или несколько жанров</div>
+          {{ form.favorite_genres }}
+          <div class="gd-field-error">{{ form.favorite_genres.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.bio.id_for_label }}">{{ form.bio.label }}</label>
+          {{ form.bio }}
+          <div class="gd-field-error">{{ form.bio.errors }}</div>
+        </div>
+
+        <div class="gd-field gd-field--w-nt">
+          <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+
+          {# телефон рисуем как на регистрации (чтобы был placeholder и маска) #}
+          <input
+            type="text"
+            name="{{ form.phone.name }}"
+            id="id_phone"
+            value="{{ form.phone.value|default:'' }}"
+            class="gd-field-control gd-wide"
+            placeholder="+7(999)-999-99-99"
+          >
+          <div class="gd-field-help">Ввод номера телефона без +7 или +8</div>
+          <div class="gd-field-error">{{ form.phone.errors|striptags }}</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ce-actions"><button type="submit" class="gd-back save">Сохранить</button>
+      <a href="{% url 'profile' %}" class="gd-back cancel">Отменить</a>
+    </div>
+
+  </form>
 </section>
+{% endblock %}
+
+{% block page_js %}
+  <script src="https://unpkg.com/imask"></script>
+  <script src="{% static 'js/profile_edit.js' %}"></script>
+  <script src="{% static 'js/lightbox_single_image.js' %}"></script>
 {% endblock %}

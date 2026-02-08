@@ -1,0 +1,557 @@
+.ce-wrap{
+  max-width: 40%;
+  margin: 0 auto;
+  padding: 0 12px;
+  text-align: center;
+
+}
+
+.ce-card{
+  margin-top: 50px;
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ce-top{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+  
+}
+
+.ce-back{
+  font-weight: 700; 
+}
+
+
+
+.ce-error{
+  margin-top: 8px;
+  font-size: 14px;
+  color: #f87171;
+}
+
+.ce-actions{
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.save:hover{
+  color:#2dd835f1;
+}
+
+.cancel:hover{
+  color: #db0909;
+}
+
+/* =========================
+   Review form (style like ce-card)
+   ========================= */
+
+/* Контейнер страницы формы */
+.gd-review-container{
+  max-width: 85%;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+/* Верхняя ссылка назад */
+.gd-review-topline{
+  margin: 0;
+  margin-top: 50px;
+  margin-bottom: 8px;
+}
+
+.gd-back-link{
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Заголовок формы */
+.gd-review-title{
+  text-align: center;
+  margin: 0 0 12px;
+}
+
+/* Ошибки формы */
+.gd-form-errors{
+  margin: 10px auto 16px;
+  width: 85%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.gd-form-errors-title{
+  margin: 0 0 6px;
+  text-align: center;
+}
+
+/* Общая форма */
+.gd-review-form{
+  margin-top: 6px;
+}
+
+/* Карточки как ce-card */
+.gd-card{
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gd-card-spaced{
+  margin-top: 18px;
+}
+
+.gd-card-title{
+  text-align: center;
+  margin: 0 0 10px;
+}
+
+/* Блок с полями: центрируем */
+.gd-fields{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Каждое поле: ширина 85% от контейнера */
+.gd-field{
+  width: 85%;
+}
+
+/* SELECT (оценка) */
+.gd-field select {
+  background-color: rgba(0, 0, 0, 0.45);
+  color: #f3f4f6;
+}
+
+/* Выпадающий список */
+.gd-field select option {
+  background-color: #0c192a; /* тёмный фон */
+  color: #f3f4f6;            /* светлый текст */
+}
+
+/* Наведение (работает не во всех браузерах, но ок) */
+.gd-field select option:hover,
+.gd-field select option:checked {
+  background-color: #10243b;
+  color: #ffffff;
+}
+
+/* Лейбл над полем по центру */
+.gd-field label{
+  display: block;
+  text-align: center;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Хелпы/ошибки */
+.gd-field-help{
+  margin-top: 5px;
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.gd-field-error{
+  margin-top: 4px;
+  font-size: 10px;
+  color: #f87171;
+  text-align: center;
+
+}
+
+
+
+
+
+.gd-back{
+  display:inline-flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  text-decoration:none;
+  cursor:pointer;
+  font-weight: 700;
+  font-size: 16px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color:#e5e7eb;
+  
+  transition: all 0.3s ease-in-out;
+
+}
+
+.small{
+    font-size: 14px;
+}
+
+.save{
+    padding: 10px 20px;
+    font-size: 18px;
+    background-image: linear-gradient(135deg, #00c6f8bd 0%, #0b5c8f 100%);
+    box-shadow: 0 1px 30px -6px rgba(97, 182, 238, 0.856);
+}
+
+
+.gd-back:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(3px);
+  text-decoration: none;
+}
+
+.save:hover{
+    background-image: linear-gradient(135deg, #00c6f8bd 0%, #0b5c8f 100%);
+    transform: translateY(3px);
+    box-shadow: none;
+    color:#e5e7eb;
+
+}
+
+
+.ui-icon{
+  width: 18px;
+  height: 18px;
+  display:inline-block;
+  background-color:#9ca3af;
+
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:contain;
+
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:contain;
+}
+
+/*__ Стрелка назад __*/
+.ui-icon-arrow-left{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.ce-actions{
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+/* ===== Login page layout fixes (точечно для auth) ===== */
+
+/* чтобы gd-field внутри формы не липли влево */
+.ce-form .gd-formset-grid{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+/* сами поля по центру */
+.ce-form .gd-field{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* label / help / error по центру */
+.ce-form .gd-field label{
+  text-align: center;
+  margin-bottom: 6px;
+  color: #87ceeb;
+}
+
+
+.ce-form .gd-field-help,
+.ce-form .gd-field-error{
+  text-align: center;
+}
+
+.ce-form input[type="password"]::placeholder, .ce-form input[type="text"]::placeholder{
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+/* инпуты login/password одинаковые и не на всю ширину */
+.ce-form input[type="text"],
+.ce-form input[type="email"],
+.ce-form input[type="password"]{
+    width: 40%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(0, 0, 0, 0.25) !important;
+    color: #e5e7eb;;
+    outline: none;
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    font-weight: bold;
+}
+
+.ce-form input::placeholder{
+  font-size: 14px;   /* если хочешь меньше */
+  color: #9ca3af;
+}
+
+#id_phone{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#id_phone:focus{
+    font-weight: bold;
+}
+
+#id_phone::placeholder{
+    font-size: 12px !important;
+    font-weight: bold;
+    color: #9ca3af !important;
+}
+
+/* autofill (Chrome / Edge / Safari) */
+.ce-form input:-webkit-autofill,
+.ce-form input:-webkit-autofill:hover,
+.ce-form input:-webkit-autofill:focus,
+.ce-form input:-webkit-autofill:active{
+  -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.25) inset !important;
+  -webkit-text-fill-color: #bdbecb !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* фокус как в остальных формах */
+.ce-form input[type="text"]:focus,
+.ce-form input[type="email"]:focus,
+.ce-form input[type="password"]:focus{
+  border-color: rgba(0, 198, 248, 0.55);
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
+  font-weight: bold;
+}
+
+/* забыли пароль — под кнопкой */
+.ce-links{
+  margin-top: 10px;
+  text-align: center;
+}
+.ce-link{
+  color: #9ca3af;
+  text-decoration: none;
+}
+.ce-link:hover{
+  text-decoration: underline;
+}
+
+/* блок регистрации: текст + кнопка */
+.ce-signup{
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.ce-signup-text{
+  color: #9ca3af;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ===== Login: split under submit ===== */
+
+.auth-split{
+  margin-top: 14px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 18px;
+}
+
+.auth-split-left,
+.auth-split-right{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  
+}
+
+/* Левая часть: ссылка */
+.auth-forgot{
+  color: #f97316;
+  text-decoration: none;
+  font-weight: 600;
+}
+.auth-forgot:hover{
+  text-decoration: underline;
+}
+
+/* Правая часть: текст + кнопка */
+.auth-split-right, .auth-split-left{
+  flex-direction: column;
+  gap: 5px;
+}
+
+.auth-hint{
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* чтобы кнопка регистрации не была огромной */
+.auth-signup{
+    font-size: 14px;
+    justify-content: center;
+}
+
+/* для полей, которым надо шире */
+.gd-wide{
+  width: 70%;
+  max-width: 420px;
+  margin: 0 auto;
+  display: block;
+}
+
+.ce-form input[type="date"]{
+  background: rgba(0, 0, 0, 0.25);
+  color: #bdbecb;
+  border: 1px solid rgba(255,255,255,.14);
+  text-align: center;
+  padding: 5px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* иконка календаря (Chrome/Edge) */
+.ce-form input[type="date"]::-webkit-calendar-picker-indicator{
+  filter: invert(1);
+  opacity: .8;
+  cursor: pointer;
+  
+}
+
+.ce-form input[type="date"]:focus{
+  border-color: rgba(0, 198, 248, 0.55);
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
+  outline: none;
+  
+}
+
+.gd-pass-wrap{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+}
+
+.gd-pass-wrap input{
+  padding-right: 44px; /* место под глаз */
+}
+
+/* кнопка-глаз */
+.gd-pass-toggle{
+    
+  position: absolute;
+  right: 90px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+/* две иконки: показываем/прячем */
+.gd-eye{
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background-color: #9ca3af;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+/* open-eye */
+.gd-eye-open{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+/* eye-off (перечёркнутый) */
+.gd-eye-off{
+  display: none;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M3 3l18 18'/%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M10.6 10.6a3 3 0 0 0 4.24 4.24'/%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M6.5 6.5C4 8.5 2 12 2 12s3.5 7 10 7c2 0 3.7-.6 5.1-1.4'/%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M9.9 5.1C10.6 5 11.3 5 12 5c6.5 0 10 7 10 7s-1.3 2.6-3.8 4.7'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M3 3l18 18'/%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M10.6 10.6a3 3 0 0 0 4.24 4.24'/%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M6.5 6.5C4 8.5 2 12 2 12s3.5 7 10 7c2 0 3.7-.6 5.1-1.4'/%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M9.9 5.1C10.6 5 11.3 5 12 5c6.5 0 10 7 10 7s-1.3 2.6-3.8 4.7'/%3E%3C/svg%3E");
+}
+
+/* hover */
+.gd-pass-toggle:hover{
+  border-color: rgba(0, 198, 248, 0.55);
+}
+
+.email-form{
+  margin-bottom: 5px;
+}
+.email-add{
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.my-mail{
+  text-align: center;
+  margin-bottom: 6px;
+  color: #87ceeb;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.mail-form-footer{
+  margin-top: 10px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 12px;
+  padding: 10px;
+}
+.email-verification{
+  margin-top: 8px;
+}
+
+.mini-button{
+  font-size: 14px;
+  
+}
+
+.ce-done{
+  margin-top: 8px;
+  font-size: 14px;
+  color: #2dd835f1;
+}

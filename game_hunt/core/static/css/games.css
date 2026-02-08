@@ -58,6 +58,27 @@
   box-sizing: border-box;
 }
 
+.input:focus, .select:focus{
+  border-color: rgba(0, 198, 248, 0.55);
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
+}
+
+/* Убираем "желтый/синий" фон автозаполнения в Chrome/Edge */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active{
+  -webkit-text-fill-color: #bdbecb;                /* цвет текста */
+  -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,.25) inset !important; /* фон как у твоих полей */
+  box-shadow: 0 0 0 1000px rgba(0,0,0,.25) inset !important;
+  caret-color: #bdbecb;
+  transition: background-color 9999s ease-out 0s;  /* чтобы браузер не мигал */
+}
+
+.input:-webkit-autofill{
+  -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,.25) inset !important;
+}
+
 .select {
   background-color: #16171d;
   color:  #bdbecb;
@@ -140,7 +161,6 @@
 .game-card {
  margin-right: 30px;
  width: 230px;
- height: 400px;
  background: rgb(40,40,55);
  background: linear-gradient(344deg, rgba(40,40,55,1) 0%, rgba(16,16,18,1) 50%);
  box-shadow: 4px 6px 14px #00000036;
@@ -166,12 +186,13 @@
 
 .game-title{
   margin: 0;
-  line-height: 1.25;
   flex: 1;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: calc(1.25em * 2);
+  line-height: 1.25;
+  font-size: 16px;
 }
 
 .game-title a{
@@ -252,6 +273,12 @@
   display: block;
 }
 
+.game-cover.mini{
+  width:300px !important;
+  height:169px !important;
+  margin:5px 15px !important; 
+}
+
 .game-cover-placeholder{
   width:100%;
   height:180px;
@@ -295,7 +322,7 @@
 
 /*______ Ссылки на поиск по жанрам ______ ==>*/
 .genre-link, .genre-muted{
-  font-size:13px;
+  font-size:12px;
   padding:1px 8px;
   border:1px solid #374151;
   border-radius:999px;
@@ -386,7 +413,7 @@
   margin-bottom: 14px;
 }
 
-gd-topbar
+
 /* ========= (блок gd-topbar навигация) =========> */
 .gd-topbar-left, .gd-topbar-right{
   display: flex;
@@ -626,7 +653,6 @@ gd-topbar
   letter-spacing: 0.01em;
   font-weight: 500;
   text-align: justify;
-  text-indent: 2em;
 }
 .gd-text p{
   margin: 0;
@@ -972,9 +998,9 @@ gd-topbar
 
 .gd-carousel{
   display: flex;
-  flex-wrap: wrap;
+  
   align-items: center;
-  gap: 10px;
+  
   margin: 0 auto;
   
 }
@@ -1175,9 +1201,10 @@ button.gd-comment-action{
 /* ======================= (games/comment_edit.html) start =======================> */
 
 .ce-wrap{
-  max-width: 760px;
+  max-width: 70%;
   margin: 0 auto;
   padding: 0 12px;
+
 }
 
 .ce-card{

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Изменить картинку профиля{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-edit-container">
+
+  <p class="gd-review-topline">
+    <a class="gd-back" href="{% url 'profile' %}">
+      <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+      <span>Назад в профиль</span>
+    </a>
+  </p>
+
+  <h2 class="gd-review-title">Изменить изображение профиля</h2>
+
+  {% if form.errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="gd-review-form" novalidate>
+    {% csrf_token %}
+
+    <div class="gd-card">
+      <div class="gd-fields">
+
+        <div class="gd-field">
+          <label>{{ form.profile_image.label }}</label>
+
+          <div class="gd-preview">
+            {% if form.instance.profile_image %}
+              <img id="profile-image-preview"
+                   src="{{ form.instance.profile_image.url }}"
+                   alt=""
+                   class="gd-preview-img">
+            {% else %}
+              <img id="profile-image-preview" alt="" class="gd-preview-img " style="display:none;">
+            {% endif %}
+          </div>
+
+          <div class="gd-file-pick">
+            {{ form.profile_image }}
+
+          </div>
+
+          <div class="gd-field-error">{{ form.profile_image.errors }}</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ce-actions">
+      <button type="submit" class="gd-back save">Сохранить</button>
+      <a href="{% url 'profile' %}" class="gd-back cancel">Отменить</a>
+    </div>
+
+  </form>
+</section>
+{% endblock %}
+
+{% block page_js %}
+
+  <script src="{% static 'js/lightbox_single_image.js' %}"></script>
+{% endblock %}

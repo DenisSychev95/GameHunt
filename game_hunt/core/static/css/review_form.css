@@ -1,40 +1,555 @@
-.gd-review-form { width: 85%; }
+/* =========================
+   Review form (style like ce-card)
+   ========================= */
 
-.gd-field-control{
-  width: 85%;
-  margin: 10px auto;
-  display: block;
-
-  overflow: auto;
-  resize: none;
-
-  background: #bdbecb;
-  color: rgba(16,16,18,1);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 12px;
-  padding: 10px 12px;
-  box-sizing: border-box;
-  outline: none;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.45;
+/* Контейнер страницы формы */
+.gd-review-container{
+  max-width: 85%;
+  margin: 0 auto;
+  padding: 0 12px;
 }
 
-.gd-field-control:focus{
+/* Верхняя ссылка назад */
+.gd-review-topline{
+  margin: 0;
+  margin-top: 50px;
+  margin-bottom: 8px;
+}
+
+.gd-back-link{
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Заголовок формы */
+.gd-review-title{
+  text-align: center;
+  margin: 0 0 12px;
+}
+
+/* Ошибки формы */
+.gd-form-errors{
+  margin: 10px auto 16px;
+  width: 85%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.gd-form-errors-title{
+  margin: 0 0 6px;
+  text-align: center;
+}
+
+/* Общая форма */
+.gd-review-form{
+  margin-top: 6px;
+}
+
+/* Карточки как ce-card */
+.gd-card{
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gd-card-spaced{
+  margin-top: 18px;
+}
+
+.gd-card-title{
+  text-align: center;
+  margin: 0 0 10px;
+}
+
+/* Блок с полями: центрируем */
+.gd-fields{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Каждое поле: ширина 85% от контейнера */
+.gd-field{
+  width: 85%;
+}
+
+/* SELECT (оценка) */
+.gd-field select {
+  background-color: rgba(0, 0, 0, 0.45);
+  color: #f3f4f6;
+}
+
+/* Выпадающий список */
+.gd-field select option {
+  background-color: #0c192a; /* тёмный фон */
+  color: #f3f4f6;            /* светлый текст */
+}
+
+/* Наведение (работает не во всех браузерах, но ок) */
+.gd-field select option:hover,
+.gd-field select option:checked {
+  background-color: #10243b;
+  color: #ffffff;
+}
+
+/* Лейбл над полем по центру */
+.gd-field label{
+  display: block;
+  text-align: center;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Хелпы/ошибки */
+.gd-field-help{
+  margin: 6px 0;
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.gd-field-error{
+  margin-top: 8px;
+  font-size: 13px;
+  color: #f87171;
+  text-align: center;
+}
+
+/* Две колонки (Плюсы/Минусы, Оценка/Видео) */
+.gd-grid-2{
+  width: 85%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.gd-grid-2 .gd-field{
+  width: 100%;
+}
+
+/* Контролы формы (включая те, что ты навешиваешь классом gd-field-control) */
+.gd-field-control,
+.gd-field input[type="text"],
+.gd-field input[type="url"],
+.gd-field input[type="number"],
+.gd-field select,
+.gd-field textarea{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: #bdbecb;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
+/* Твои textarea */
+.gd-textarea{
+  resize: none;
+}
+
+/* Фокус как в ce */
+.gd-field-control:focus,
+.gd-field input:focus,
+.gd-field select:focus,
+.gd-field textarea:focus{
   border-color: rgba(0, 198, 248, 0.55);
   box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
+  background: rgba(0, 0, 0, 0.25);;
 }
 
-/* textarea: только вертикаль */
-.gd-textarea{
-  overflow-x: hidden;
-  overflow-y: auto;
-  resize: none; /* если хочешь вертикальный ресайз — поменяй на resize: vertical; */
-}
-
-/* scroll только для summary/pros/cons/conclusion (text = CKEditor) */
+/* Scroll wrappers (ты оборачиваешь summary/text/conclusion в div.gd-review-scroll) */
 .gd-review-scroll{
-  max-height: 700px;
+  width: 100%;
+}
+
+/* =============================================================================================== Мое =============================================================================================== */
+
+.gd-review-scroll::-webkit-scrollbar, .gd-card.gd-card-spaced::-webkit-scrollbar{
+  width: 15px;
+}
+
+.gd-review-scroll::-webkit-scrollbar-thumb, .gd-card.gd-card-spaced::-webkit-scrollbar-thumb{
+  background: #bdbecb;
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+}
+
+.gd-review-scroll::-webkit-scrollbar-track, .gd-card.gd-card-spaced::-webkit-scrollbar-track{
+  background: rgba(236, 234, 234, 0.04);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+
+.gd-review-scroll::-webkit-scrollbar-thumb:hover, .gd-card.gd-card-spaced::-webkit-scrollbar-thumb:hover{
+  background-color: #f3f4f6;
+  cursor: pointer;
+}
+
+/* =============================================================================================== Мое =============================================================================================== */
+/* Текст подсказки в карточке */
+.gd-muted{
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  margin: 0 0 14px;
+}
+
+/* =========================
+   Formset: картинки (центровка + 400px)
+   ========================= */
+
+/* Все элементы formset внутри блока картинок по центру */
+.gd-card.gd-card-spaced{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Ограничиваем ширину полей formset */
+.gd-card.gd-card-spaced input[type="file"],
+.gd-card.gd-card-spaced input[type="text"],
+.gd-card.gd-card-spaced input[type="number"],
+.gd-card.gd-card-spaced textarea,
+.gd-card.gd-card-spaced select{
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Лейблы в formset по центру */
+.gd-card.gd-card-spaced label{
+  text-align: center;
+}
+
+/* Если formset рендерится списком/таблицей — на всякий случай */
+.gd-card.gd-card-spaced table{
+  width: 100%;
+  max-width: 600px;
+}
+
+.gd-card.gd-card-spaced td,
+.gd-card.gd-card-spaced th{
+  vertical-align: top;
+}
+
+/* =========================
+   CKEditor в форме обзора
+   фикс высоты + один скролл
+   ========================= */
+
+/* чтобы редактор не вываливался за ширину поля */
+
+
+/* убираем “растягивание” редактора мышкой */
+.gd-field .cke_resizer {
+  display: none;
+}
+
+
+.django-ckeditor-widget{
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px;
+}
+
+/* Ограничение высоты блока с картинками */
+.gd-card.gd-card-spaced {
+  max-height: 800px;
   overflow-y: auto;
-  padding-right: 10px;
+}
+
+/* чтобы скролл не ломал ширину и выглядел аккуратно */
+.gd-card.gd-card-spaced {
+  scrollbar-gutter: stable;
+}
+
+/* Formset items spacing */
+
+
+
+.gd-formset{
+  width: 85%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.gd-formset-item{
+  width: 85%;
+  margin: 0 auto;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ===== Formset: нормальная ширина полей внутри сетки ===== */
+
+/* сами колонки грида растягиваем */
+.gd-formset-item .gd-formset-grid > div{
+  width: 100%;
+}
+
+/* внутри formset поля НЕ должны быть width:85% как в основной форме */
+.gd-formset-item .gd-field{
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.gd-formset-item .gd-delete{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.gd-formset-item .gd-formset-grid{
+  
+  justify-items: center;
+  align-items: start;
+}
+
+
+
+.gd-preview{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.gd-preview-img{
+  width: 400px;
+  border-radius: 12px;
+  
+  display: block;
+}
+
+
+
+/* ===== File input (ReviewImage formset) ===== */
+
+/* "Выбранное изображение: ссылка" по центру */
+.gd-file-current{
+  text-align: center;
+  margin-bottom: 10px;
+}
+.gd-file-current-label{
+  color: #9ca3af;
+  margin-right: 6px;
+}
+.gd-file-current-link{
+  color: #87ceeb;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.gd-file-current-link:hover{
+  color: #d278e9ef;
+  text-decoration: none;
+}
+
+
+/* Ряд выбора файла */
+.gd-file-pick{
+  display: flex;
+  flex-direction: column;   /* кнопка сверху, имя файла ниже */
+  align-items: center;
+  gap: 5px;
+}
+
+.gd-file-pick input[type="file"]{
+  display: block;
+  margin: 0 auto;
+  color:transparent
+}
+
+/* Кнопка внутри file input */
+.gd-file-pick input[type="file"]::file-selector-button{
+  display: block;
+  margin: 0 auto;          /* ключевое */
+  min-width: 210px;
+  height: 42px;
+  line-height: 42px;       /* ровно по центру по вертикали */
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.25);
+  color: #f3f4f6;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* FIX: file input не должен наследовать padding/фон от .gd-field-control */
+.gd-file-pick input[type="file"].gd-field-control{
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.gd-file-pick input[type="file"]::file-selector-button{
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .12);
+  color: #e5e7eb;
+}
+
+/* Hover-подсветка кнопки "Выберите файл" */
+.gd-file-pick input[type="file"]::file-selector-button:hover, .gd-view_content:hover{
+  border-color: rgba(0, 198, 248, 0.75);          /* неоново-голубая */
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.25);  /* мягкое свечение */
+}  
+
+.gd-formset .gd-file-pick input[type="file"]{
+  width: auto;
+  max-width: none;
+  height: 50px;
+}
+
+/* чтобы “Изображение не выбрано” не уезжало */
+.gd-file-name{
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #bdbecb;
+}
+
+.gd-mt-12{
+  display: flex;
+  justify-content: center;
+}
+
+.gd-view_content{
+  display: block;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .06);
+  color: #f3f4f6;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+  
+}
+
+.gd-view_content:hover{
+  transform: translateY(3px);
+}
+
+
+.gd-back{
+  display:inline-flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  text-decoration:none;
+  cursor:pointer;
+  font-weight: 700;
+  font-size: 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color:#e5e7eb;
+  
+  transition: all 0.3s ease-in-out;
+
+}
+
+.gd-back:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(3px);
+  text-decoration: none;
+}
+
+
+.ui-icon{
+  width: 18px;
+  height: 18px;
+  display:inline-block;
+  background-color:#9ca3af;
+
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:contain;
+
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:contain;
+}
+
+/*__ Стрелка назад __*/
+.ui-icon-arrow-left{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.ce-actions{
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.save:hover{
+  color:#2dd835f1;
+}
+
+.cancel:hover{
+  color: #db0909;
+}
+
+/* чтобы textarea не тянулось мышью */
+.gd-field textarea{
+  resize: none;
+}
+
+/* СКРОЛЛБАР ДЛЯ textarea + select[multiple] */
+.gd-field textarea::-webkit-scrollbar,
+.gd-field select[multiple]::-webkit-scrollbar{
+  width: 15px;
+}
+
+.gd-field textarea::-webkit-scrollbar-thumb,
+.gd-field select[multiple]::-webkit-scrollbar-thumb{
+  background: #bdbecb;
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+}
+
+.gd-field textarea::-webkit-scrollbar-track,
+.gd-field select[multiple]::-webkit-scrollbar-track{
+  background: rgba(236, 234, 234, 0.04);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.gd-field textarea::-webkit-scrollbar-thumb:hover,
+.gd-field select[multiple]::-webkit-scrollbar-thumb:hover{
+  background-color: #f3f4f6;
+  cursor: pointer;
 }

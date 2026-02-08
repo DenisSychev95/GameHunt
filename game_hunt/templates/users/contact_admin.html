@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Сообщение администрации{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-edit-container">
+
+  <h2 class="gd-review-title">Сообщение для администрации</h2>
+
+  {% if form.errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="gd-review-form" novalidate>
+    {% csrf_token %}
+
+    <div class="gd-card">
+      <div class="gd-fields">
+
+        {% for field in form %}
+        {% if field.name == "image" %}
+  <div class="gd-field gd-field--w-genres">
+    <label>{{ field.label }}</label>
+
+    <div class="gd-file-current" id="contact-image-current" style="display:none;">
+      <span class="gd-file-current-label">Выбрано:</span>
+      <span class="gd-file-current-link" id="contact-image-name"></span>
+    </div>
+
+    <div class="gd-preview">
+      <a id="contact-image-preview-link"
+         class="js-contact-image-preview-lightbox"
+         href="#"
+         data-glightbox="type: image"
+         style="display:none;">
+        <img id="contact-image-preview" alt="" class="gd-preview-img" style="display:none;">
+      </a>
+    </div>
+
+    <div class="gd-file-pick">
+      {{ field }}
+    </div>
+
+    <div class="gd-field-error">{{ field.errors|striptags }}</div>
+  </div>
+{% else %}
+  {# как было для остальных полей #}
+  <div class="gd-field gd-field--w-genres">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    <div class="gd-field-error">{{ field.errors|striptags }}</div>
+  </div>
+{% endif %}
+
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <div class="ce-actions">
+      <button type="submit" class="gd-back save">Отправить</button>
+      <a href="{% url 'homepage' %}" class="gd-back cancel">Отменить</a>
+    </div>
+
+  </form>
+</section>
+{% endblock %}
+{% block page_js %}
+    <script src="{% static 'js/message_form_preview.js' %}"></script>
+{% endblock %}

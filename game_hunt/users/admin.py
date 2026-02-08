@@ -1,19 +1,124 @@
 from django.contrib import admin
-from .models import Profile
+from .models import Profile, AdminMessages, UserMessages
 from .forms import ProfileAdminForm
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from allauth.account.models import EmailAddress
 # Во избежание многократного дублирования кода импортируем методы из utils
 from .utils import mask_phone, mask_email, view_email
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django import forms
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+
+class UserNickChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        nick = ""
+        try:
+            nick = (obj.profile.nickname or "").strip()
+        except Exception:
+            pass
+
+        # ✅ ник первым, username для различения
+        if nick and nick != obj.username:
+            return f"{nick} ({obj.username})"
+        return obj.username
+
+
+class AdminMessagesAdminForm(forms.ModelForm):
+    user = UserNickChoiceField(
+        queryset=User.objects.select_related("profile").all().order_by("profile__nickname", "username"),
+        label='Отправитель',
+    )
+
+    class Meta:
+        model = UserMessages
+        fields = "__all__"
+
+
+@admin.register(AdminMessages)
+class AdminMessagesAdmin(admin.ModelAdmin):
+    form = AdminMessagesAdminForm
+    list_display = ("user_nick", "guest_name_display", "guest_email_display",
+                    "created_at", "is_read_status", "topic")
+    list_filter = ("is_read", "topic", "created_at")
+    search_fields = ("message", "guest_name", "guest_email", "topic_custom",
+                     "user__username", "user__profile__nickname")
+    ordering = ("is_read", "-created_at")
+
+    def user_nick(self, obj):
+        # если отправитель зарегистрирован
+        if obj.user_id:
+            return obj.user.profile.nickname or obj.user.username
+        return "не зарегистрирован"
+
+    user_nick.short_description = "Пользователь(ник)"
+    user_nick.admin_order_field = "user__username"
+
+    def guest_name_display(self, obj):
+        return (obj.guest_name or "").strip() or "не указано"
+
+    guest_name_display.short_description = "Имя (гость)"
+
+    def guest_email_display(self, obj):
+        return (obj.guest_email or "").strip() or "не указан"
+
+    guest_email_display.short_description = "Email (гость)"
+
+    def is_read_status(self, obj):
+        if obj.is_read:
+            return 'Да ✅'
+
+        return 'Нет ⛔️'
+
+    is_read_status.short_description = 'Прочитано'
+
+
+class UserMessagesAdminForm(forms.ModelForm):
+    user = UserNickChoiceField(
+        queryset=User.objects.select_related("profile").all().order_by("profile__nickname", "username"),
+        label='Получатель',
+    )
+
+    class Meta:
+        model = UserMessages
+        fields = "__all__"
+
+
+@admin.register(UserMessages)
+class UserMessagesAdmin(admin.ModelAdmin):
+    form = UserMessagesAdminForm
+    list_display = ("user_nick", "created_at",  "is_read_status",  "topic", "title", "sender")
+    list_filter = ("is_read", "topic", "created_at")
+    search_fields = ("title", "text", "user__username", "sender")
+    ordering = ("is_read", "-created_at")
+
+    def user_nick(self, obj):
+        # ник у тебя всегда есть, но fallback на username оставим
+        return obj.user.profile.nickname or obj.user.username
+
+    user_nick.short_description = "Получатель(ник)"
+    user_nick.admin_order_field = "user__username"
+
+    def is_read_status(self, obj):
+        if obj.is_read:
+            return 'Да ✅️'
+
+        return 'Нет ⛔'
+
+    is_read_status.short_description = 'Прочитано'
 
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
+
     # Какую форму берем за основу
     form = ProfileAdminForm
     # что показываем в списке профилей
-    list_display = ('user', 'show_email', 'created', 'ban_status', 'site_status', 'age_group', 'masked_phone', )
+    list_display = ('user_nick', 'show_email', 'created', 'ban_status', 'site_status', 'age_group', 'masked_phone', )
     readonly_fields = ('created', 'last_seen',)
     # какие поля не видны и не редактируются из админки
     exclude = ('phone', 'first_name', 'last_name', 'email', 'bio', 'profile_image')
@@ -51,6 +156,13 @@ class ProfileAdmin(admin.ModelAdmin):
         return '16+' if obj.is_adult else '0-16'
     age_group.short_description = 'Возраст'
 
+    def user_nick(self, obj):
+        # ник у тебя всегда есть, но fallback на username оставим
+        return obj.user.profile.nickname or obj.user.username
+
+    user_nick.short_description = "Пользователь(ник)"
+    user_nick.admin_order_field = "user__username"
+
 
 # Защищенная админка для User без прямого доступа к персональным данным
 class SafeUserAdmin(BaseUserAdmin):
@@ -58,6 +170,7 @@ class SafeUserAdmin(BaseUserAdmin):
     # Что видит админ
     list_display = (
         'username',
+        'user_nick',
         'show_email',
         'staff_status',
         'active_status',
@@ -98,7 +211,7 @@ class SafeUserAdmin(BaseUserAdmin):
     )
 
     # Оставляем поиск по username и email (поиск идёт по БД, не по отображению)
-    search_fields = ('username', 'email')
+    search_fields = ('username', 'email', )
 
     def show_email(self, obj):
         return view_email(obj.email)
@@ -131,11 +244,29 @@ class SafeUserAdmin(BaseUserAdmin):
         return name[:1] + '***'
     masked_last_name.short_description = 'Фамилия'
     """
+    def user_nick(self, obj):
+        # ник у тебя всегда есть, но fallback на username оставим
+        return obj.profile.nickname or obj.username
+
+    user_nick.short_description = "Пользователь(ник)"
+    user_nick.admin_order_field = "user__username"
+
+class SafeEmailAddressAdminForm(forms.ModelForm):
+    user = UserNickChoiceField(
+        queryset=User.objects.select_related("profile").all().order_by("profile__nickname", "username"),
+        label='Пользователь',
+    )
+
+    class Meta:
+        model = EmailAddress
+        fields = "__all__"
 
 
 class SafeEmailAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'email', 'verified_status', 'primary_email_status',)
+    form = SafeEmailAddressAdminForm
+    list_display = ('user_nick', 'email', 'verified_status', 'primary_email_status',)
     search_fields = ('email',)
+    list_display_links = ('user_nick',)
 
     def verified_status(self, obj):
         if obj.verified:
@@ -152,6 +283,15 @@ class SafeEmailAddressAdmin(admin.ModelAdmin):
         return 'Нет ⛔️'
 
     primary_email_status.short_description = 'Текущая почта является основной'
+
+    def user_nick(self, obj):
+        # ник у тебя всегда есть, но fallback на username оставим
+        return obj.user.profile.nickname or obj.user.username
+
+    user_nick.short_description = "Пользователь(ник)"
+    user_nick.admin_order_field = "user__username"
+
+
 
     # # Не используем этот метод
     # def masked_email(self, obj):

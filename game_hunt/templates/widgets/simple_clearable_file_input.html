@@ -1,0 +1,20 @@
+<div class="gd-file">
+  {% if widget.value %}
+    <div class="gd-file-current">
+      <span class="gd-file-current-label">Текущее:</span>
+      <a class="gd-file-current-link js-file-lightbox"
+   href="{{ widget.value.url }}"
+   data-gallery="file-{{ widget.attrs.id|default:widget.name }}"
+   target="_self" rel="noopener">
+  {{ widget.value.name }}
+</a>
+    </div>
+  {% endif %}
+
+  <div class="gd-file-pick">
+    <input type="{{ widget.type }}" name="{{ widget.name }}"
+           {% include "django/forms/widgets/attrs.html" %}>
+    <span class="gd-file-name" data-file-name>Другое изображение не выбрано</span>
+  </div>
+</div>
+

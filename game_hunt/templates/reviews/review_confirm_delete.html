@@ -1,33 +1,47 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}Удаление обзора — GameHunt{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
+
 {% block content %}
-<section style="max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #ef4444; margin-bottom: 12px;">
-        Удалить обзор?
-    </h2>
+<section class="ce-wrap">
 
-    <p>
-        Вы уверены, что хотите удалить обзор:
-        <strong>«{{ review.title }}»</strong>?
+  <div class="ce-card">
+
+    <div class="ce-top">
+      <a class="gd-back" href="javascript:history.back()">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад</span>
+      </a>
+    </div>
+
+    <h4 class="gd-section-title center">
+      Удаление обзора «{{ review.title }}»
+    </h4>
+
+    <p class="gd-text center-text">
+      Вы уверены, что хотите удалить этот обзор?
     </p>
 
-    <p style="color: #9ca3af; font-size: 14px;">
-        Это действие нельзя отменить.
-    </p>
 
-    <form method="post" style="margin-top: 16px;">
-        {% csrf_token %}
-        <button type="submit"
-                style="background-color: #ef4444; color: #fff;
-                       border: none; padding: 6px 12px; border-radius: 4px;">
-            Да, удалить
-        </button>
+    <form method="post" class="ce-actions">
+      {% csrf_token %}
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+      <button type="submit" class="gd-back delete">
+        Удалить
+      </button>
 
-        <a href="{% url 'review_detail' review.pk %}"
-           style="margin-left: 12px; color: #9ca3af;">
-            Отмена
-        </a>
+      <a class="gd-back save" href="javascript:history.back()">
+        Отмена
+      </a>
     </form>
+
+  </div>
 </section>
 {% endblock %}

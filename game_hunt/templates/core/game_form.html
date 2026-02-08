@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {% if game %}Редактировать игру{% else %}GameHunt — Новая игра{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/review_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="gd-review-container">
+
+  <p class="gd-review-topline">
+    <a class="gd-back" href="javascript:history.back()">
+      <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+      <span>Назад</span>
+    </a>
+  </p>
+
+  <h2 class="gd-review-title">
+    {% if game %}Редактировать игру{% else %}Новая игра{% endif %}
+    {% if game %}: {{ game.title }}{% endif %}
+  </h2>
+
+  {% if form.errors or formset.non_form_errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+      {{ form.non_field_errors }}
+      {{ formset.non_form_errors }}
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="gd-review-form" novalidate>
+    {% csrf_token %}
+    {% if next %}
+      <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
+    {{ form.media }}
+    {{ formset.media }}
+
+    <div class="gd-card">
+      <div class="gd-fields">
+
+        <div class="gd-field">
+          <label for="{{ form.title.id_for_label }}">Название</label>
+          {{ form.title }}
+          <div class="gd-field-error">{{ form.title.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.description.id_for_label }}">Описание</label>
+          <div class="gd-review-scroll">
+            {{ form.description }}
+          </div>
+          <div class="gd-field-error">{{ form.description.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.release_date.id_for_label }}">Дата релиза</label>
+          {{ form.release_date }}
+          <div class="gd-field-error">{{ form.release_date.errors }}</div>
+        </div>
+
+        {# === Обложка игры === #}
+        <div class="gd-field">
+          <label for="{{ form.cover_image.id_for_label }}">Обложка</label>
+
+          <div class="gd-preview">
+            {% if form.instance.pk and form.instance.cover_image %}
+              <img id="cover-image-preview"
+                   src="{{ form.instance.cover_image.url }}"
+                   alt=""
+                   class="gd-preview-img">
+            {% else %}
+              <img id="cover-image-preview" alt="" class="gd-preview-img" style="display:none;">
+            {% endif %}
+          </div>
+
+          <div class="gd-file-pick">
+            {{ form.cover_image }}
+          </div>
+
+          <div class="gd-field-error">{{ form.cover_image.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.genres.id_for_label }}">Жанры</label>
+          {{ form.genres }}
+          <div class="gd-field-error">{{ form.genres.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.platforms.id_for_label }}">Платформы</label>
+          {{ form.platforms }}
+          <div class="gd-field-error">{{ form.platforms.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.developer.id_for_label }}">Разработчик</label>
+          {{ form.developer }}
+          <div class="gd-field-error">{{ form.developer.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.publisher.id_for_label }}">Издатель</label>
+          {{ form.publisher }}
+          <div class="gd-field-error">{{ form.publisher.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.trailer_url.id_for_label }}">Трейлер (URL)</label>
+          {{ form.trailer_url }}
+          <div class="gd-field-error">{{ form.trailer_url.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.is_adult_only.id_for_label }}">Контент 16+</label>
+          {{ form.is_adult_only }}
+          <div class="gd-field-error">{{ form.is_adult_only.errors }}</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="gd-card gd-card-spaced">
+      <h3 class="gd-card-title">Картинки к игре</h3>
+      <p class="gd-muted">Добавьте несколько изображений на своё усмотрение</p>
+
+      <div class="gd-formset" data-formset>
+        {{ formset.management_form }}
+
+        <div data-forms>
+          {% for f in formset %}
+            <div class="gd-formset-item" data-form>
+              {{ f.non_field_errors }}
+              {{ f.id }}
+
+              <div class="gd-formset-grid">
+                <div class="gd-field"><label>Изображение</label>
+                  {{ f.image }}
+                  <div class="gd-field-error">{{ f.image.errors }}</div>
+
+                  {% if f.instance.pk and f.instance.image %}
+                    <div class="gd-preview">
+                      <img src="{{ f.instance.image.url }}" alt="" class="gd-preview-img">
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div>
+                  <div class="gd-field">
+                    <label>Описание</label>
+                    {{ f.caption }}
+                    <div class="gd-field-error">{{ f.caption.errors }}</div>
+                  </div>
+
+                  <div class="gd-field gd-mt-10">
+                    <label>Номер картинки</label>
+                    {{ f.position }}
+                    <div class="gd-field-error">{{ f.position.errors }}</div>
+                  </div>
+
+                  {% if f.instance.pk %}
+                    <div class="gd-delete gd-mt-12">
+                      {{ f.DELETE }}
+                      <label for="{{ f.DELETE.id_for_label }}" class="gd-delete-label">
+                        Удалить картинку
+                      </label>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <template data-empty-form>
+          <div class="gd-formset-item" data-form>
+            {{ formset.empty_form.non_field_errors }}
+            {{ formset.empty_form.id }}
+
+            <div class="gd-formset-grid">
+              <div class="gd-field">
+                <label>Изображение</label>
+                {{ formset.empty_form.image }}
+                <div class="gd-field-error">{{ formset.empty_form.image.errors }}</div>
+              </div>
+
+              <div>
+                <div class="gd-field">
+                  <label>Описание</label>
+                  {{ formset.empty_form.caption }}
+                  <div class="gd-field-error">{{ formset.empty_form.caption.errors }}</div>
+                </div>
+
+                <div class="gd-field gd-mt-10">
+                  <label>Номер картинки</label>
+                  {{ formset.empty_form.position }}
+                  <div class="gd-field-error">{{ formset.empty_form.position.errors }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <div class="gd-mt-12">
+          <button type="button" class="btn gd-view_content" data-add-form>
+            + Добавить картинку
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ce-actions">
+      <button type="submit" class="gd-back save">Сохранить</button>
+      <a href="javascript:history.back()" class="gd-back cancel">Отменить</a>
+    </div>
+
+  </form>
+</section>
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/review_form.js' %}"></script>
+  <script src="{% static 'js/lightbox_single_image.js' %}"></script>
+{% endblock %}

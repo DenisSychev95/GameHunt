@@ -20,7 +20,7 @@
 
     <h4 class="gd-section-title center">Редактировать комментарий к «{{ review.title }}»</h4>
 
-    <form method="post" class="ce-form">
+    <form method="post" class="ce-form" novalidate>
       {% csrf_token %}
       {{ form.non_field_errors }}
 

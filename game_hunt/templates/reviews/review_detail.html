@@ -32,7 +32,7 @@
     </button>
 
     {% if user.is_authenticated and user == review.author or user.is_authenticated and user.is_staff or user.is_authenticated and user.is_superuser %}
-      <a class="gd-share" href="{% url 'review_edit' review.pk %}" title="Редактировать обзор">
+      <a class="gd-share" href="{% url 'review_edit' review.pk %}?next={{ request.path }}" title="Редактировать обзор">
         <svg class="gd-ico gd-ico-edit" viewBox="0 0 24 24" aria-hidden="true">
     <path fill="currentColor"
       d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
@@ -42,14 +42,14 @@
   </svg>
       </a>
 
-      <form method="post" action="{% url 'review_delete' review.pk %}" style="margin:0;">
-        {% csrf_token %}
-        <button type="submit" class="gd-share" title="Удалить обзор">
-          <svg class="gd-ico gd-ico-trash" viewBox="0 0 24 24" aria-hidden="true">
-            <path fill="currentColor" d="M6 7h12l-1 13H7L6 7zm3-3h6l1 2H8l1-2z"/>
-          </svg>
-        </button>
-      </form>
+      <a class="gd-share"
+   href="{% url 'review_delete' review.pk %}?next={{ request.path }}"
+   title="Удалить обзор">
+  <svg class="gd-ico gd-ico-trash" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor"
+          d="M6 7h12l-1 13H7L6 7zm3-3h6l1 2H8l1-2z"/>
+  </svg>
+</a>
     {% endif %}
   </div>
 
@@ -59,7 +59,7 @@
   <header class="gd-header">
     <h1 class="gd-title center">{{ review.title }}</h1>
 
-    {# Обложка обзора: если добавишь поле cover_image в Review — подхватит его, иначе обложка игры #}
+    {# Обложка обзора: если есть cover_image в Review — подхватит его, иначе обложка игры #}
     <div class="center-image">
       {% if review.cover_image %}
         <img class="gd-cover review" src="{{ review.cover_image.url }}" alt="{{ review.title }}">
@@ -69,7 +69,7 @@
     </div>
 
     <p class="gd-hint center">
-      <span class="gd-meta-value">Обновлено:</span> {{ review.updated_at|date:"d.m.Y H:i" }}
+      <span class="gd-meta-value">Обновлено:</span> {{ review.updated_at|date:"d.m.Y" }}
     </p>
 
     <div class="gd-nav review-nav">
@@ -154,7 +154,7 @@
     {% endif %}
   </section>
 
-  <!-- Видео (как в game_detail: iframe, если ты прокидываешь trailer_embed) -->
+  <!-- Видео (как в game_detail: iframe,  trailer_embed) -->
   {% if trailer_embed %}
     <section class="gd-block">
       <h2 class="gd-section-title center">Видео-обзор</h2>
@@ -220,7 +220,7 @@
   <circle class="features" cx="9.4" cy="11.1" r="3"/>
   <circle class="features" cx="14.6" cy="11.1" r="3"/>
 
-  <!-- блики (всегда белые, выглядят мило) -->
+  <!-- блики (всегда белые) -->
   <circle class="sparkle" cx="8.9" cy="10.6" r="1.1"/>
   <circle class="sparkle" cx="14.1" cy="10.6" r="1.1"/>
 

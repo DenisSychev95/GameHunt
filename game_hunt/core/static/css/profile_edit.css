@@ -1,0 +1,377 @@
+/* Контейнер страницы формы */
+.profile-edit-container{
+  max-width: 65%;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+/* Верхняя ссылка назад */
+.gd-review-topline{
+  margin: 0;
+  margin-top: 50px;
+  margin-bottom: 8px;
+}
+
+/* Заголовок формы */
+.gd-review-title{
+  text-align: center;
+  margin: 0 0 12px;
+}
+
+/* Ошибки формы */
+.gd-form-errors{
+  margin: 10px auto 16px;
+  width: 85%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+.gd-form-errors-title{ 
+    margin: 0 0 6px; 
+    text-align: center;}
+
+/* Общая форма */
+.gd-review-form{ margin-top: 6px; }
+
+/* Карточки */
+.gd-card{
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Блок с полями */
+.gd-fields{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.gd-field{ width: 85%; }
+
+/* Лейбл */
+.gd-field label{
+  display: block;
+  text-align: center;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Хелпы/ошибки */
+.gd-field-help{
+  margin: 6px 0;
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: center;
+}
+.gd-field-error{
+  margin-top: 8px;
+  font-size: 13px;
+  color: #f87171;
+  text-align: center;
+}
+
+/* Две колонки */
+.gd-grid-2{
+  width: 85%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.gd-grid-2 .gd-field{ width: 100%; }
+
+/* Контролы формы */
+.gd-field-control,
+.gd-field input[type="text"],
+.gd-field input[type="url"],
+.gd-field input[type="number"],
+.gd-field select,
+.gd-field textarea{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: #bdbecb;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Убираем "желтый/синий" фон автозаполнения в Chrome/Edge */
+.gd-field-control:-webkit-autofill,
+.gd-field-control:-webkit-autofill:hover,
+.gd-field-control:-webkit-autofill:focus,
+.gd-field-control:-webkit-autofill:active{
+  -webkit-text-fill-color: #bdbecb;                /* цвет текста */
+  -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,.25) inset !important; /* фон как у твоих полей */
+  box-shadow: 0 0 0 1000px rgba(0,0,0,.25) inset !important;
+  caret-color: #bdbecb;
+  transition: background-color 9999s ease-out 0s;  /* чтобы браузер не мигал */
+}
+
+select.gd-field-control:-webkit-autofill{
+  -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,.25) inset !important;
+}
+
+.gd-field textarea{
+    text-align: justify;
+}
+
+.gd-textarea{ resize: none; }
+
+/* Фокус */
+.gd-field-control:focus,
+.gd-field input:focus,
+.gd-field select:focus,
+.gd-field textarea:focus{
+  border-color: rgba(0, 198, 248, 0.55);
+  box-shadow: 0 0 0 1px rgba(0, 198, 248, 0.55);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Кнопки/ссылка назад */
+.gd-back{
+  display:inline-flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  text-decoration:none;
+  cursor:pointer;
+  font-weight: 700;
+  font-size: 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color:#e5e7eb;
+  transition: all 0.3s ease-in-out;
+}
+.gd-back:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(3px);
+  text-decoration: none;
+}
+
+/* Иконка стрелки */
+.ui-icon{
+  width: 18px;
+  height: 18px;
+  display:inline-block;
+  background-color:#9ca3af;
+
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:contain;
+
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:contain;
+}
+.ui-icon-arrow-left{
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 5l-7 7 7 7' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M8 12h12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Действия */
+.ce-actions{
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+.save:hover{ color:#2dd835f1; }
+.cancel:hover{ color: #db0909; }
+
+/* "Выбрано: ссылка" */
+.gd-file-current{
+  text-align: center;
+  margin-bottom: 10px;
+}
+.gd-file-current-label{
+  color: #9ca3af;
+  margin-right: 6px;
+}
+.gd-file-current-link{
+  color: #87ceeb;
+  text-decoration: none;
+  font-weight: bold;
+}
+.gd-file-current-link:hover{
+  color: #d278e9ef;
+  text-decoration: none;
+}
+
+/* превью */
+.gd-preview{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.gd-preview-img{
+  width: 300px;      /* можно 400px как в обзорах */
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+/* выбор файла + подпись */
+.gd-file-pick{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.gd-file-pick input[type="file"]{
+  display: block;
+  margin: 0 auto;
+  color: transparent; /* чтобы "C:\fakepath" не мозолил */
+  height: 50px;
+}
+
+/* кнопка file input */
+.gd-file-pick input[type="file"]::file-selector-button{
+  display: block;
+  margin: 0 auto;
+  min-width: 210px;
+  height: 42px;
+  line-height: 42px;
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255, 255, 255, .06);
+  color: #e5e7eb;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+}
+
+/* FIX: file input не должен наследовать padding/фон от .gd-field-control */
+.gd-file-pick input[type="file"].gd-field-control{
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* hover как в обзоре */
+.gd-file-pick input[type="file"]::file-selector-button:hover{
+  border-color: rgba(0, 198, 248, 0.75);
+  box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.25);
+}
+
+.gd-file-name{
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #bdbecb;
+}
+
+.gd-field select[multiple]{
+  min-height: 160px;
+}
+
+/* Три “целевых” ширины блоков */
+.gd-field--w-nt{        /* никнейм + телефон */
+  width: 35% !important;
+  max-width: 520px;
+}
+
+.gd-field--w-name{      /* имя + фамилия */
+  width: 100% !important; /* внутри сетки пусть занимает свою колонку */
+}
+
+.gd-grid-2--name{
+  width: 60%;            /* общая ширина сетки для имени/фамилии */
+  max-width: 720px;
+}
+
+.gd-field--w-genres{    /* любимые жанры */
+  width: 50% !important;
+  max-width: 800px;
+}
+
+.gd-field select option:active{
+    background: #db0909;
+}
+
+
+.gd-field select::-webkit-scrollbar, .gd-card.gd-card-spaced::-webkit-scrollbar{
+  width: 15px;
+}
+
+.gd-field select::-webkit-scrollbar-thumb, .gd-card.gd-card-spaced::-webkit-scrollbar-thumb{
+  background: #bdbecb;
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+}
+
+.gd-field select::-webkit-scrollbar-track, .gd-card.gd-card-spaced::-webkit-scrollbar-track{
+  background: rgba(236, 234, 234, 0.04);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+
+.gd-field select::-webkit-scrollbar-thumb:hover, .gd-card.gd-card-spaced::-webkit-scrollbar-thumb:hover{
+  background-color: #f3f4f6;
+  cursor: pointer;
+}
+
+/* select в твоей тёмной теме */
+.gd-field select.gd-field-control{
+  background: rgba(0,0,0,.25);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,.14);
+}
+
+/* чтобы выпадающий список был читаемым (насколько браузер даст) */
+.gd-field select.gd-field-control option{
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+.gd-msg-text{
+  resize: none;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.gd-msg-text::-webkit-scrollbar{
+  width: 15px;
+}
+
+.gd-msg-text::-webkit-scrollbar-thumb{
+  background: #bdbecb;
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+}
+
+.gd-msg-text::-webkit-scrollbar-track{
+  background: rgba(236, 234, 234, 0.04);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+
+.gd-msg-text::-webkit-scrollbar-thumb:hover{
+  background-color: #f3f4f6;
+  cursor: pointer;
+}

@@ -1,16 +1,42 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}Админ-панель — Удаление игры{% endblock %}
+{% block title %}Удаление игры — GameHunt{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Удалить игру "{{ game.title }}"?</h1>
+<section class="ce-wrap">
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit"
-            style="margin-top: 10px; padding: 8px 14px; border-radius: 6px; border: 1px solid #ef4444; color: #ef4444;">
-        Да, удалить
-    </button>
-    <a href="{% url 'admin_dashboard' %}" style="margin-left: 10px;">Отмена</a>
-</form>
+  <div class="ce-card">
+
+    <div class="ce-top">
+      <a class="gd-back" href="javascript:history.back()">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад</span>
+      </a>
+    </div>
+
+    <h4 class="gd-section-title center">
+      Удаление игры «{{ game.title }}»
+    </h4>
+
+    <p class="gd-text center-text">
+      Вы уверены, что хотите удалить эту игру?
+    </p>
+
+    <form method="post" class="ce-actions">
+      {% csrf_token %}
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+      <button type="submit" class="gd-back delete">Удалить</button>
+
+      <a class="gd-back save" href="javascript:history.back()">Отмена</a>
+    </form>
+
+  </div>
+</section>
 {% endblock %}

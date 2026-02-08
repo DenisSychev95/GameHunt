@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
    document.documentElement.classList.add('js');
-  // 🔥 Инициализация ОДИН раз
+  //  Инициализация
   const lightbox = GLightbox({
     selector: '.glightbox',
     closeButton: true,
@@ -75,6 +75,7 @@ function render() {
 
   render();
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const shareBtn = document.querySelector('[data-share]');

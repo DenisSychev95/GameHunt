@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Аккаунт заблокирован{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="ce-wrap">
+  <div class="ce-top">
+    <a class="gd-back" href="javascript:history.back()">
+      <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+      <span>Назад</span>
+    </a>
+  </div>
+
+  <div class="ce-card">
+    <h2 class="gd-section-title center">Аккаунт заблокирован</h2>
+
+    <p class="auth-hint center">
+      Ваш аккаунт временно заблокирован в связи с нарушением правил пользования сайта.
+    </p>
+
+    <h3 class="contacts-subtitle">Подробнее:</h3>
+
+    <ul class="about-list contacts-ul">
+      <li class="about-list li contacts-flex-li">
+        <a href="{% url 'contact_admin' %}" title="Написать администратору">
+          <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor"
+              d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+                 a1 1 0 0 0 0-1.41l-1.59-1.59
+                 a1 1 0 0 0-1.41 0l-1.83 1.83
+                 3.75 3.75L21 5.75z"/>
+          </svg>
+        </a>
+
+        <a class="contact-links" href="{% url 'contact_admin' %}" title="Написать администратору">
+          Обратная связь
+        </a>
+      </li>
+
+      <li class="about-list li contacts-flex-li">
+        {# ВАЖНО: замени 'rules' на реальное имя url для страницы правил #}
+        <a href="{% url 'rules' %}" title="Правила пользования сайтом">
+          <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+  <g transform="translate(24 0) scale(-1 1)"
+     fill="none" stroke="currentColor" stroke-width="3"
+     stroke-linecap="round" stroke-linejoin="round">
+
+    <circle cx="11" cy="11" r="6.5"></circle>
+    <circle cx="11" cy="11" r="6"></circle>
+
+    <!-- ручка длиннее (после зеркала уйдёт влево-вниз) -->
+    <line x1="15.6" y1="15.6" x2="22.2" y2="22.2"></line>
+  </g>
+</svg>
+        </a>
+
+        <a class="contact-links" href="{% url 'rules' %}" title="Правила пользования сайтом">
+          Правила
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

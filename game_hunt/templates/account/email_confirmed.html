@@ -1,15 +1,30 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}GameHunt — email подтверждён{% endblock %}
+{% block title %}Email подтверждён{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
 
 {% block content %}
-<section style="max-width: 500px; margin: 0 auto; text-align: center;">
-    <h2 style="color: #10b981;">Ваш email успешно подтверждён!</h2>
+<section class="ce-wrap">
+  <div class="ce-card">
 
-    <p style="color: #d1d5db; margin: 16px 0;">
-        Спасибо! Ваш адрес электронной почты был подтверждён.
-    </p>
 
-    <a href="{% url 'profile' %}" style="color: #f97316;">Перейти в профиль</a>
+
+    <h2 class="gd-section-title center">Email подтверждён</h2>
+
+    <div class="auth-hint center email-form">
+      Ваш адрес электронной почты успешно подтверждён.
+    </div>
+
+    <div class="ce-actions">
+      <a href="{% url 'profile' %}" class="gd-back save mini-button">
+        Перейти в профиль
+      </a>
+    </div>
+
+  </div>
 </section>
 {% endblock %}

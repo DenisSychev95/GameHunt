@@ -1,9 +1,146 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {% if cheat %}GameHunt — Редактировать чит{% else %}GameHunt — Добавить чит{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/review_form.css' %}">
+{% endblock %}
+
 {% block content %}
-<h2>Добавить чит: {{ game.title }}</h2>
-<form method="post">
+<section class="gd-review-container">
+
+  <p class="gd-review-topline">
+    {% if game %}
+      <a class="gd-back" href="javascript:history.back()">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад</span>
+      </a>
+    {% else %}
+      <a class="gd-back" href="javascript:history.back()">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад</span>
+      </a>
+    {% endif %}
+  </p>
+
+  <h2 class="gd-review-title">
+  {% if cheat %}Редактировать чит{% else %}Новый чит{% endif %}
+  {% if game %}
+    : {{ game.title }}
+  {% elif form.game %}
+    : выберите игру
+  {% endif %}
+</h2>
+
+  {% if form.errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="gd-review-form" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-</form>
+    {{ form.media }}
+
+    <div class="gd-card">
+      <div class="gd-fields">
+
+        {# Если это админское создание и поле game есть в форме — покажем селект #}
+        {% if form.game %}
+  <div class="gd-field">
+    <label for="{{ form.game.id_for_label }}">Игра</label>
+    {{ form.game }}
+    <div class="gd-field-error">{{ form.game.errors }}</div>
+  </div>
+{% endif %}
+
+        <div class="gd-field">
+          <label for="{{ form.title.id_for_label }}">Название</label>
+          {{ form.title }}
+          <div class="gd-field-error">{{ form.title.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.cover_image.id_for_label }}">Обложка</label>
+
+          <div class="gd-preview">
+            {% if form.instance.pk and form.instance.cover_image %}
+              <img id="cover-image-preview" src="{{ form.instance.cover_image.url }}" alt="" class="gd-preview-img">
+            {% else %}
+              <img id="cover-image-preview" alt="" class="gd-preview-img" style="display:none;">
+            {% endif %}
+          </div>
+
+          <div class="gd-file-pick">
+            {{ form.cover_image }}
+          </div>
+          <div class="gd-field-error">{{ form.cover_image.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.platform.id_for_label }}">Платформа</label>
+          {{ form.platform }}
+          <div class="gd-field-error">{{ form.platform.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.functionality.id_for_label }}">Функционал</label>
+          <div class="gd-field-help">Возможности и особенности</div>
+          {{ form.functionality }}
+          <div class="gd-field-error">{{ form.functionality.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.instruction.id_for_label }}">Инструкция</label>
+          <div class="gd-field-help">Установка и запуск</div>
+          {{ form.instruction }}
+          <div class="gd-field-error">{{ form.instruction.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.notes.id_for_label }}">Важная информация</label>
+          {{ form.notes }}
+          <div class="gd-field-error">{{ form.notes.errors }}</div>
+        </div>
+
+        <div class="gd-field">
+          <label for="{{ form.cheat_file.id_for_label }}">Файл</label>
+          <div class="gd-file-pick">
+            {{ form.cheat_file }}</div>
+          <div class="gd-field-error">{{ form.cheat_file.errors }}</div>
+        </div>
+
+        {# Если где-то всё-таки используешь is_published — покажем #}
+        {% if form.is_published %}
+          <div class="gd-field">
+            <label for="{{ form.is_published.id_for_label }}">Опубликовать</label>
+            {{ form.is_published }}
+            <div class="gd-field-error">{{ form.is_published.errors }}</div>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="ce-actions">
+      <button type="submit" class="gd-back save">
+        {% if cheat %}Сохранить{% else %}Сохранить{% endif %}
+      </button>
+
+      {% if game %}
+        <a href="{% url 'game_detail' slug=game.slug %}" class="gd-back cancel">Отменить</a>
+      {% else %}
+        <a href="{% url 'cheat_list' %}" class="gd-back cancel">Отменить</a>
+      {% endif %}
+    </div>
+
+  </form>
+</section>
+{% endblock %}
+
+{% block page_js %}
+<script src="{% static 'js/lightbox_single_image.js' %}"></script>
 {% endblock %}

@@ -49,7 +49,9 @@
                         <a class="pager-link gd-add_content" href="{% url 'review_create' game.slug %}">Обзор</a>
                         <a class="pager-link gd-add_content"
                            href="{% url 'walkthrough_create' game.slug %}">Прохождение</a>
-                        <a class="pager-link gd-add_content" href="{% url 'cheat_create' game.slug %}">Чит</a>
+                        {% if user.is_staff or user.is_superuser %}
+                            <a class="pager-link gd-add_content" href="{% url 'cheat_create_for_game' game.slug %}">Чит</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% else %}
@@ -201,7 +203,7 @@
   <circle class="features" cx="9.4" cy="11.1" r="3"/>
   <circle class="features" cx="14.6" cy="11.1" r="3"/>
 
-  <!-- блики (всегда белые, выглядят мило) -->
+  <!-- блики глаз -->
   <circle class="sparkle" cx="8.9" cy="10.6" r="1.1"/>
   <circle class="sparkle" cx="14.1" cy="10.6" r="1.1"/>
 
@@ -225,7 +227,7 @@
             <div class="gd-vote-toast" role="status" aria-live="polite"></div>
         </div>
     </section>
-{# --- Блок “Оставить комментарий” --- #}
+<!-- Блок оставить комментарий -->
 {% if user.is_authenticated %}
   <section class="gd-comment-box">
   <h3 class="gd-section-title center">Оставить комментарий</h3>

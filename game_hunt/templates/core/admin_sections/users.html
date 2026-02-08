@@ -1,0 +1,46 @@
+<div class="admin-scroll">
+  {% if users %}
+    <table class="admin-table">
+      <thead>
+      <tr>
+        <th>Пользователь</th>
+        <th>Комментарии пользователя</th>
+        <th>На сайте</th>
+        <th>Статус блокировки</th>
+        <th class="admin-actions-col">Действия</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for u in users %}
+        <tr data-user-row="{{ u.id }}">
+          <td>
+            <a class="admin-link" href="{% url 'profile-view' u.profile.id %}" target="_blank">
+              {{ u.profile.nickname|default:u.username }}
+            </a>
+          </td>
+          <td>
+           <a class="gd-back small" href="{% url 'admin_user_comments' u.id %}">Просмотреть</a>
+          </td>
+          <td>
+            {% if u.profile.is_online %}<span class="st-ok">онлайн</span>{% else %}<span class="st-warn">оффлайн</span>{% endif %}
+          </td>
+          <td>
+            {% if u.is_active %}<span class="st-ok" data-ban-label>активен</span>
+            {% else %}<span class="st-warn" data-ban-label>забанен</span>{% endif %}
+          </td>
+          <td class="admin-actions">
+            <button class="gd-back small gd-view_content js-toggle-ban"
+                    type="button"
+                    data-user-id="{{ u.id }}">
+              {% if u.is_active %}Забанить{% else %}Разбанить{% endif %}
+            </button>
+
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="admin-empty">Нет пользователей.</div>
+  {% endif %}
+</div>

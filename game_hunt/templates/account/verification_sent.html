@@ -1,18 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}GameHunt — Письмо отправлено{% endblock %}
+{% block title %}Письмо отправлено{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
 
 {% block content %}
-<section style="max-width: 500px; margin: 0 auto; text-align: center;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Подтвердите e-mail</h2>
+<section class="ce-wrap">
+  <div class="ce-card">
 
-    <p style="color: #d1d5db;">
-        Письмо для подтверждения отправлено на указанный адрес.
-        Проверьте почту и перейдите по ссылке.
-    </p>
+    <h2 class="gd-section-title center">
+      Подтвердите e-mail
+    </h2>
 
-    <p style="margin-top: 20px;">
-        <a href="{% url 'profile' %}" style="color: #9ca3af;">Вернуться в профиль</a>
-    </p>
+    <div class="auth-hint center">
+       Письмо для подтверждения адреса электронной почты отправлено.
+      <br>
+      Проверьте вашу почту и следуйте инструкциям.
+    </div>
+
+      <div class="ce-actions">
+      <a href="{% url 'profile' %}" class="gd-back save mini-button">
+        Перейти в профиль
+      </a>
+    </div>
+  </div>
 </section>
 {% endblock %}

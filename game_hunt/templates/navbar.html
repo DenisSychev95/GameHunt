@@ -14,21 +14,87 @@
       <a href="{% url 'review_list' %}">Обзоры</a>
       <a href="{% url 'walkthrough_list' %}">Прохождения</a>
       <a href="{% url 'cheat_list' %}">Читы</a>
-      <a href="{% url 'about' %}">О проекте</a>
+
     </nav>
 
     <div class="header-auth">
-      {% if user.is_authenticated %}
-        {% if user.is_staff or user.is_superuser %}
-          <a href="{% url 'admin_dashboard' %}">Админка</a>
+  {% if user.is_authenticated %}
+
+    {% if user.is_staff or user.is_superuser %}
+      <a href="{% url 'admin_dashboard' %}">Админка</a>
+    {% endif %}
+
+    {# колокольчик #}
+    <a class="header-bell"
+       href="{% if user.is_staff or user.is_superuser %}{% url 'admin_messages_inbox' %}?mode=all&tab=all{% else %}{% url 'notifications' %}?tab=all{% endif %}"
+       title="Уведомления"
+       aria-label="Уведомления">
+      <svg class="header-bell__ico" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5-6.7V3a2 2 0 1 0-4 0v1.3A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2z"/>
+      </svg>
+
+      {% if user.is_staff or user.is_superuser %}
+        {% if bell_total %}
+          <span class="header-bell__badge">{{ bell_total }}</span>
         {% endif %}
-        <a href="{% url 'profile' %}">Профиль</a>
-        <a href="{% url 'account_logout' %}">Выйти</a>
       {% else %}
-        <a href="{% url 'account_login' %}">Вход</a>
-        <a href="{% url 'account_signup' %}">Регистрация</a>
+        {% if user_unread_count %}
+          <span class="header-bell__badge">{{ user_unread_count }}</span>
+        {% endif %}
       {% endif %}
-    </div>
+    </a>
+
+    {# кнопка-карандаш: админ -> отправить уведомление, пользователь -> написать администрации #}
+    {% if user.is_staff or user.is_superuser %}
+      <a href="{% url 'admin_send_message' %}"
+         class="header-pencil"
+         title="Отправить уведомление"
+         aria-label="Отправить уведомление">
+        <svg class="header-pencil__ico" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor"
+            d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+               a1 1 0 0 0 0-1.41l-1.59-1.59
+               a1 1 0 0 0-1.41 0l-1.83 1.83
+               3.75 3.75L21 5.75z"/>
+        </svg>
+      </a>
+    {% else %}
+      <a href="{% url 'contact_admin' %}"
+         class="header-pencil"
+         title="Написать администратору"
+         aria-label="Написать администратору">
+        <svg class="header-pencil__ico" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor"
+            d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+               a1 1 0 0 0 0-1.41l-1.59-1.59
+               a1 1 0 0 0-1.41 0l-1.83 1.83
+               3.75 3.75L21 5.75z"/>
+        </svg>
+      </a>
+    {% endif %}
+
+    <a href="{% url 'profile' %}">Профиль</a>
+    <a href="{% url 'account_logout' %}">Выйти</a>
+
+  {% else %}
+
+    <a href="{% url 'contact_admin' %}"
+       class="header-pencil"
+       title="Написать администратору"
+       aria-label="Написать администратору">
+      <svg class="header-pencil__ico" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor"
+          d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+             a1 1 0 0 0 0-1.41l-1.59-1.59
+             a1 1 0 0 0-1.41 0l-1.83 1.83
+             3.75 3.75L21 5.75z"/>
+      </svg>
+    </a>
+
+    <a href="{% url 'account_login' %}">Войти</a>
+
+  {% endif %}
+</div>
 
   </div>
 </header>

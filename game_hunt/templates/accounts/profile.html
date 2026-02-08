@@ -1,82 +1,277 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}GameHunt — Профиль{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+
+{% endblock %}
+
 {% block content %}
-<section style="max-width: 800px; margin: 0 auto; display: flex; gap: 24px;">
-    <div>
-        <img src="{{ profile.profile_image.url }}" alt="Аватар"
-             style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
-                    border: 2px solid #f97316;">
+<section class="container">
 
-    </div>
+  <div class="gd-main profile-main">
 
+    <!-- ===== ЛЕВЫЙ БЛОК ===== -->
+    <div class="gd-left">
 
-    <div>
+<div class="profile-cover-wrap">
 
-        <h2 style="color: #f97316; margin-bottom: 8px;">
-            {{ profile.nickname|default:profile.user.username }}
-        </h2>
+  <img
+    src="{{ profile.profile_image.url }}"
+    alt="Аватар"
+    class="profile-cover"
+  >
+    {#  Просмотр (любой зарегистрированный) #}
+  {% if request.user.is_authenticated %}
+    <a
+      href="{{ profile.profile_image.url }}"
+      class="gd-share profile-zoom-photo js-profile-lightbox"
+      title="{{ profile.nickname|default:profile.user.username }}"
+      aria-label="Открыть фото"
+    >
+      <svg class="gd-ico gd-ico-zoom" viewBox="0 0 24 24" aria-hidden="true">
+  <g transform="translate(24 0) scale(-1 1)"
+     fill="none" stroke="currentColor" stroke-width="3"
+     stroke-linecap="round" stroke-linejoin="round">
 
-        <p style="margin: 4px 0;">
-            Логин: <strong>{{ profile.user.username }}</strong>
-        </p>
-        <p style="margin: 4px 0;">
-            Имя: {{ profile.user.first_name|default:"—" }}
-        </p>
-        <p style="margin: 4px 0;">
-            Фамилия: {{ profile.user.last_name|default:"—" }}
-        </p>
-        <p style="margin: 4px 0;">
-            E-mail: {{ profile.user.email|default:"—" }}
-        </p>
+    <circle cx="11" cy="11" r="6.5"></circle>
+    <circle cx="11" cy="11" r="6"></circle>
 
-        <p style="margin: 4px 0;">
-            На сайте с: {{ profile.created|date:"d.m.Y" }}
-        </p>
-        <p style="margin: 4px 0;">
-            Возраст:
-            {% if profile.age %}
-                {{ profile.age }}
-            {% else %}
-                —
-            {% endif %}
-        </p>
-        <p style="margin: 4px 0;">
-            Статус:
-            {% if profile.is_online %}
-                <span style="color: #22c55e;">● онлайн</span>
-            {% else %}
-                <span style="color: #9ca3af;">оффлайн</span>
-            {% endif %}
-        </p>
-
-        <p style="margin-top: 8px;">
-            О себе:<br>
-            {{ profile.bio|default:"Пока ничего не рассказал о себе." }}
-        </p>
-
-        {% if profile.id == request.user.id %}
-            <a href="{% url 'profile_edit' %}"
-   style="display: inline-block; margin-top: 12px; padding: 6px 12px;
-          background-color: #f97316; color: #fff; border-radius: 4px; text-decoration: none;">
-    Редактировать профиль
+    <!-- ручка длиннее (после зеркала уйдёт влево-вниз) -->
+    <line x1="15.6" y1="15.6" x2="22.2" y2="22.2"></line>
+  </g>
+</svg>
     </a>
-        <div style="margin-top: 16px;">
-    <h3 style="color: #f97316; margin-bottom: 8px;">Безопасность</h3>
-    <p style="margin-bottom: 6px;">
-        <a href="{% url 'account_change_password' %}" style="color: #f97316;">
-            Сменить пароль
-        </a>
-    </p>
-    <p style="margin-bottom: 6px;">
-        <a href="{% url 'account_email' %}" style="color: #f97316;">
-            Управление e-mail и подтверждение
-        </a>
-    </p>
+  {% endif %}
+
+  {% if request.user == profile.user %}
+    <a
+      href="{% url 'profile_image_edit' %}"
+      class="gd-share profile-edit-photo"
+      title="Изменить фото профиля"
+    >
+      <svg class="gd-ico gd-ico-edit" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor"
+          d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+             a1 1 0 0 0 0-1.41l-1.59-1.59
+             a1 1 0 0 0-1.41 0l-1.83 1.83
+             3.75 3.75L21 5.75z"/>
+      </svg>
+    </a>
+  {% endif %}
+
 </div>
-        {% endif %}
+              <div class="profile-name-row">
+        <span class="profile-nickname">
+          {{ profile.nickname|default:profile.user.username }}
+        </span>
+
+        {% if profile.is_online %}
+  <span class="profile-status online">
+    <svg class="status-dot" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <!-- внешний контур -->
+      <circle class="status-dot__stroke" cx="12" cy="12" r="9"></circle>
+      <!-- внутренняя заливка -->
+      <circle class="status-dot__fill" cx="12" cy="12" r="6"></circle>
+    </svg>
+      <span class="gd-meta-value span-status">онлайн</span>
+
+  </span>
+{% else %}
+  <span class="profile-status offline">
+    <svg class="status-dot" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle class="status-dot__stroke" cx="12" cy="12" r="9"></circle>
+      <circle class="status-dot__fill" cx="12" cy="12" r="6"></circle>
+    </svg>
+      <span class="gd-meta-value span-status">оффлайн</span>
+  </span>
+{% endif %}
+      </div>
+
+      {% if request.user == profile.user %}
+      <div class="profile-actions-row">
+
+        <a href="{% url 'profile_edit' %}" class="btn-edit-profile">
+          Редактировать профиль
+        </a>
+      </div>
+      {% endif %}
+
+
+      {% if request.user == profile.user %}
+      <div class="profile-security">
+        <div class="profile-section-title left-security">Безопасность</div>
+        <div class="profile-security-links">
+        <a href="{% url 'account_change_password' %}" class="gd-back small">
+          Изменить пароль
+        </a>
+        <a href="{% url 'account_email' %}" class="gd-back small">
+          Управление email
+        </a>
+          </div>
+      </div>
+      {% endif %}
+
     </div>
+
+    <!-- ===== ПРАВЫЙ БЛОК ===== -->
+    <div class="gd-right">
+
+      <h2 class="profile-title center">Профиль пользователя</h2>
+
+      <div class="gd-meta-card">
+
+        <div class="gd-meta-row">
+          <div class="gd-meta-label">На сайте с:</div>
+          <div class="gd-meta-value">
+            {{ profile.created|date:"d.m.Y" }}
+          </div>
+        </div>
+
+        <div class="gd-meta-row">
+          <div class="gd-meta-label">Возраст:</div>
+          <div class="gd-meta-value">
+            {% if profile.age %}{{ profile.age }}{% else %}не указан{% endif %}
+          </div>
+        </div>
+
+        <div class="gd-meta-row">
+  <div class="gd-meta-label">Любимые жанры:</div>
+  <div class="gd-meta-value">
+    {% if profile.favorite_genres.exists %}
+      {% for g in profile.favorite_genres.all %}
+        <a class="genre-link"
+           href="{% url 'game_list' %}?genre={{ g.id }}"
+           title="Показать игры жанра: {{ g.name }}">
+          {{ g.name }}
+        </a>
+      {% endfor %}
+    {% else %}
+      не указаны
+    {% endif %}
+  </div>
+</div>
+
+      </div>
+
+      <h3 class="profile-section-title">Обо мне</h3>
+
+      <div class="gd-text profile-text">
+        {% if profile.bio %}
+          {{ profile.bio }}
+        {% else %}
+          Пользователь пока ничего не рассказал о себе
+        {% endif %}
+      </div>
+    {# ===== Пользовательский контент (обзоры/прохождения) ===== #}
+<div class="profile-content">
+
+  <h3 class="profile-section-title">Контент пользователя</h3>
+
+  <form method="get" class="profile-content__filters">
+    <div class="pc-filters">
+
+      <label class="pc-radio">
+        <input type="radio"
+               name="content"
+               value="reviews"
+               {% if content_tab == "reviews" %}checked{% endif %}
+               onchange="this.form.submit()">
+        <span>Обзоры</span>
+      </label>
+
+      <label class="pc-radio">
+        <input type="radio"
+               name="content"
+               value="walkthroughs"
+               {% if content_tab == "walkthroughs" %}checked{% endif %}
+               onchange="this.form.submit()">
+        <span>Прохождения</span>
+      </label>
+
+    </div>
+  </form>
+
+  <div class="profile-content__list">
+    {% if content_items %}
+      {% for it in content_items %}
+        <article class="pc-item">
+
+  {# 1) Название #}
+  <div class="pc-title">
+    <a class="pc-link" href="{{ it.detail_url }}">{{ it.title }}</a>
+  </div>
+
+  {# 2) Игра #}
+  <div class="pc-line">
+    <span class="pc-label">Игра:</span>
+    <a class="pc-game" href="{{ it.game_url }}">{{ it.game_title }}</a>
+  </div>
+
+  {# 3) Дата обновления #}
+  <div class="pc-line">
+    <span class="pc-label">Дата обновления:</span>
+    <span class="pc-value">{{ it.updated_at|date:"d.m.Y H:i" }}</span>
+  </div>
+
+  {# 4) Статус #}
+  <div class="pc-line">
+    <span class="pc-label">Статус:</span>
+    {% if it.is_published %}
+      <span class="pc-status pc-ok">опубликовано</span>
+    {% else %}
+      <span class="pc-status pc-warn">на модерации</span>
+    {% endif %}
+  </div>
+
+  {# 5) Действия (только для владельца профиля) #}
+  {% if is_owner %}
+    <div class="pc-actions">
+      <span class="pc-label">Действия:</span>
+
+      {% if it.edit_url %}
+        <a class="pc-icon-link" href="{{ it.edit_url }}" title="Редактировать" aria-label="Редактировать">
+          <svg class="gd-ico gd-ico-edit" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor"
+              d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+                 a1 1 0 0 0 0-1.41l-1.59-1.59
+                 a1 1 0 0 0-1.41 0l-1.83 1.83
+                 3.75 3.75L21 5.75z"/>
+          </svg>
+        </a>
+      {% endif %}
+
+      {% if it.unpublish_url %}
+        <a class="pc-icon-link" href="{{ it.unpublish_url }}" title="Снять с публикации" aria-label="Снять с публикации">
+          <svg class="gd-ico gd-ico-trash" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor"
+                  d="M6 7h12l-1 13H7L6 7zm3-3h6l1 2H8l1-2z"/>
+          </svg>
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</article>
+      {% endfor %}
+    {% else %}
+      <div class="pc-empty">
+        Контента нет.
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+    </div>
+
+  </div>
 
 </section>
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/profile.js' %}"></script>
 {% endblock %}

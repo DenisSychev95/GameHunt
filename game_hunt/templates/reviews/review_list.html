@@ -10,13 +10,12 @@
   <h1 class="page-title center">Обзоры</h1>
 
 
-
-  {# Панель: слева поиск по названию игры, рядом сортировка #}
+  <!-- Панель: слева поиск по названию игры, рядом сортировка -->
   <form method="get" class="search-form">
     <input class="input"
            type="text"
            name="game_search"
-           placeholder="Поиск по названию"
+           placeholder="Поиск обзоров"
            value="{{ game_search|default:'' }}">
 
     <select class="select" name="sort">
@@ -40,7 +39,7 @@
 
           <div class="game-head">
             <h3 class="game-title">
-              <a href="{% url 'review_detail' review.pk %}">{{ review.title }}</a>
+              <a href="{% url 'review_detail' review.pk %}">{{ review.title|truncatechars:34 }}</a>
             </h3>
 
             <div class="game-views" title="Просмотры">
@@ -50,7 +49,7 @@
               </span>
             </div>
           </div>
-
+          <!-- Обложка = обложка игры -->
           {# Обложка = обложка игры #}
           <a href="{% url 'review_detail' review.pk %}" class="game-cover-link">
             {% if review.game.cover_image %}
@@ -59,8 +58,7 @@
               <div class="game-cover-placeholder">Нет обложки</div>
             {% endif %}
           </a>
-
-          {# Название игры — ссылка (без слова "Игра") #}
+          <!-- Название игры — ссылка (без слова "Игра") -->
           <div class="game-meta">
             <a class="genre-link"  href="{% url 'game_detail' slug=review.game.slug %}">{{ review.game.title }}</a>
           </div>
@@ -101,10 +99,36 @@
         </article>
       {% endif %}
       {% endfor %}
-    </div>{% include 'pagination.html' with queryset=reviews %}
+
+    </div>
+  {% include 'pagination.html' with queryset=reviews %}
   {% else %}
-    <p class="center muted">Обзоры не найдены.</p>
-  {% endif %}
+  {% if adult_blocked_only %}
+  <div class="center muted">
+    {% if not user.is_authenticated %}
+      Больше контента для зарегистрированных пользователей
+    {% elif not user.profile.is_adult %}
+      Больше контента для пользователей 16+
+    {% else %}
+      Обзоров ещё нет.
+    {% endif %}
+  </div>
+{% else %}
+  <div class="center muted">
+    Обзоров ещё нет.
+  </div>
+{% endif %}
+{% endif %}
+  {% if reviews and has_more_adult %}
+  <div class="center muted">
+    {% if not user.is_authenticated %}
+      Больше контента для зарегистрированных пользователей
+    {% elif not user.profile.is_adult %}
+      Больше контента для пользователей 16+
+    {% endif %}
+  </div>
+
+{% endif %}
 
 </section>
 {% endblock %}

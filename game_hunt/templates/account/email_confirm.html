@@ -1,27 +1,45 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}GameHunt — Подтверждение email{% endblock %}
+{% block title %}Подтверждение email{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
 
 {% block content %}
-<section style="max-width: 500px; margin: 0 auto;">
-    <h2 style="color: #f97316;">Подтверждение email</h2>
+<section class="ce-wrap">
 
-    <p style="color: #d1d5db; margin-bottom: 16px;">
-         Продолжить подтверждение для email:
-      {{request.user.email}} ?
-    </p>
+  <div class="ce-top">
+      <a class="gd-back" href="javascript:history.back()">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад</span>
+      </a>
+    </div>
+  <div class="ce-card">
 
-    <p style="font-size: 18px; color: #fff; margin-bottom: 20px;">
-        <strong>{{ email_address.email }}</strong>
-    </p>
 
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit"
-                style="padding: 10px 18px; background-color: #f97316;
-                       color: #fff; border: none; border-radius: 4px;">
-            Подтвердить
+
+    <h2 class="gd-section-title center">Подтверждение email</h2>
+
+    <div class="auth-hint center">
+      Продолжить подтверждение для email: <span class="my-mail">{{ request.user.email }}</span> ?
+    </div>
+
+    <div class="auth-hint center">
+      {{ email_address.email }}
+    </div>
+
+    <form method="post" class="ce-form" novalidate>
+      {% csrf_token %}
+
+      <div class="ce-actions">
+        <button type="submit" class="gd-back save mini-button">
+          Подтвердить
         </button>
+      </div>
     </form>
+
+  </div>
 </section>
 {% endblock %}

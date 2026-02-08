@@ -210,40 +210,102 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ---------- AJAX ADD COMMENT ----------
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    submitBtn.disabled = true;
+    const csrf = form.querySelector('input[name="csrfmiddlewaretoken"]')?.value || '';
+    const text = textarea.value.trim();
+
+    if (!text) {
+      showToast('Комментарий пустой');
+      return;
+    }
+    if (text.length > 500) {
+      showToast('Слишком длинный комментарий');
+      return;
+    }
 
     try {
-      const response = await fetch(form.action, {
+      const resp = await fetch(form.action, {
         method: 'POST',
         body: new FormData(form),
         headers: {
+          'X-CSRFToken': csrf,
           'X-Requested-With': 'XMLHttpRequest'
-        }
+        },
+        credentials: 'same-origin'
       });
 
-      const data = await response.json();
+      const data = await resp.json();
 
-      if (!response.ok) {
-        showToast(data.error || 'Ошибка отправки');
-        submitBtn.disabled = false;
+      if (!resp.ok || !data.success) {
+        showToast(data?.error || 'Ошибка');
         return;
       }
 
+      // вставляем новый коммент в начало списка
       const list = document.querySelector('.gd-comment-list');
-      list.insertAdjacentHTML('afterbegin', data.html);
+      if (list) list.insertAdjacentHTML('afterbegin', data.html);
 
       textarea.value = '';
-      counter.textContent = '0 / 500';
       submitBtn.disabled = true;
+      counter.textContent = '0 / 500';
 
       showToast('Комментарий добавлен');
-
     } catch (err) {
       showToast('Ошибка сети');
-      submitBtn.disabled = false;
     }
   });
+
+  // ---------- AJAX DELETE (delegation) ----------
+  const list = document.querySelector('.gd-comment-list');
+
+  list?.addEventListener('submit', async (e) => {
+    /* Возможно не потребуется ==> */
+    const delForm = e.target.closest('.gd-comment-delete-form');
+    /* <== Возможно не потребуется == */
+    if (!delForm) return;
+
+    e.preventDefault();
+
+    try {
+  // страховка: если вдруг форма почему-то указывает на reviews
+  let url = delForm.action;
+  if (
+    url.includes('/reviews/comments/') &&
+    window.location.pathname.startsWith('/games/')
+  ) {
+    url = url.replace('/reviews/comments/', '/games/comments/');
+  }
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    body: new FormData(delForm),
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  });
+
+  // ❗️КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
+  const contentType = resp.headers.get('content-type') || '';
+  const data = contentType.includes('application/json')
+    ? await resp.json()
+    : null;
+
+  if (!resp.ok || !data || !data.ok) {
+    showToast(data?.error || 'Не удалось удалить');
+    return;
+  }
+
+  const article = delForm.closest('.gd-comment');
+  if (article) article.remove();
+
+  showToast('Комментарий удалён');
+
+} catch (err) {
+  showToast('Ошибка сети');
+}
+  });
+
 });

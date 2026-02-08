@@ -1,29 +1,41 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}GameHunt — Выход{% endblock %}
 
-{% block content %}
-<section style="max-width: 400px; margin: 0 auto; text-align: center;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Выход из аккаунта</h2>
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
 
-    <p style="margin-bottom: 16px;">
-        Вы действительно хотите выйти из аккаунта?
+{% block content %}
+<section class="ce-wrap">
+  <div class="ce-top">
+      <a class="gd-back" href="javascript:history.back()">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад</span>
+      </a>
+    </div>
+
+  <div class="ce-card">
+
+
+
+    <h2 class="gd-section-title center">Выход из аккаунта</h2>
+
+    <p class="auth-hint center">
+      Вы действительно хотите выйти из аккаунта?
     </p>
 
-    <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        <button type="submit"
-                style="padding: 8px 16px; border: none;
-                       background-color: #f97316; color: #fff;
-                       border-radius: 4px; cursor: pointer;">
-            Выйти
+    <form method="post" action="{% url 'account_logout' %}" class="ce-form">
+      {% csrf_token %}
+
+      <div class="ce-actions">
+        <button type="submit" class="gd-back save mini-button">
+          Выйти
         </button>
+      </div>
     </form>
 
-    <p style="margin-top: 12px;">
-        <a href="{% url 'homepage' %}" style="color: #9ca3af;">
-            Отменить и вернуться на главную
-        </a>
-    </p>
+  </div>
 </section>
 {% endblock %}

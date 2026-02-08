@@ -1,58 +1,92 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}GameHunt — Управление email{% endblock %}
+{% block title %}Управление email{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
 
 {% block content %}
-<section style="max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Управление email</h2>
+<section class="ce-wrap">
 
-    <p style="color: #d1d5db; margin-bottom: 20px;">
-        Здесь вы можете добавить, удалить или подтвердить адрес электронной почты.
-    </p>
+   <div class="ce-top">
+      <a class="gd-back" href="{% url 'profile' %}">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад в профиль</span>
+      </a>
+    </div>
+  <div class="ce-card">
 
-    {% if user.emailaddress_set.all %}
-        <ul style="margin-bottom: 20px; padding-left: 20px;">
-            {% for email in user.emailaddress_set.all %}
-                <li style="margin-bottom: 10px;">
-                    <strong>{{ email.email }}</strong>
-                    {% if email.verified %}
-                        <span style="color: #10b981;">(подтверждён)</span>
-                    {% else %}
-                        <span style="color: #f87171;">(не подтверждён)</span>
-                        <a href="{% url 'account_email' %}" style="color: #f97316;">
-                            выслать письмо подтверждения повторно
-                        </a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
-    <h3 style="color: #f97316; margin-bottom: 8px;">Добавить новый email</h3>
 
-    <form method="post" action="{% url 'account_email' %}">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
+    <h2 class="gd-section-title center">Управление email</h2>
 
-        <div style="margin-bottom: 12px;">
-            {{ form.email.label_tag }}<br>
-            {{ form.email }}
-            {% if form.email.errors %}
-                <div style="color: #f87171; font-size: 13px;">
-                    {{ form.email.errors|striptags }}
-                </div>
-            {% endif %}
+    <div class="auth-hint center email-form">
+      Здесь вы можете добавить или подтвердить адрес электронной почты.
+    </div>
+      {# форма добавления нового email #}
+    {% if form.errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+    </div>
+  {% endif %}
+    <form method="post" action="{% url 'account_email' %}" class="ce-form" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="ce-error">
+          {{ form.non_field_errors|striptags }}
         </div>
+      {% endif %}
 
-        <button type="submit" name="action_add"
-                style="padding: 8px 14px; background-color: #f97316; color: #fff;
-                       border-radius: 4px; border: none; cursor: pointer;">
-            Добавить email
+      <div class="gd-formset-grid">
+        <div class="gd-field">
+          {{ form.email.label_tag }}
+          {{ form.email }}
+          <div class="gd-field-error">{{ form.email.errors.0|default:''|striptags }}</div>
+        </div>
+      </div>
+
+      <div class="ce-actions email-add">
+        <button type="submit" name="action_add" class="gd-back">
+          Добавить email
         </button>
+      </div>
     </form>
 
-    <p style="margin-top: 20px;">
-        <a href="{% url 'profile' %}" style="color: #9ca3af;">Вернуться в профиль</a>
-    </p>
+      <div class="auth-hint center email-form">
+          Мои адреса электронной почты:
+      </div>
+    {# список email’ов пользователя #}
+    {% if user.emailaddress_set.all %}
+      {% for email in user.emailaddress_set.all %}
+        {% if email.verified %}
+          <div class="auth-hint mail-form-footer">
+            <div class="my-mail">{{ email.email }}</div>
+            <div class="ce-done">Подтверждён</div>
+          </div>
+        {% else %}
+          <div class="auth-hint mail-form-footer">
+            <div class="my-mail">{{ email.email }}</div>
+            <div class=" ce-error">Не подтверждён</div>
+
+            <div class="email-verification">
+              <form method="post" action="{% url 'account_email' %}">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ email.email }}">
+                <button type="submit" name="action_send" class="gd-back save mini-button ">
+                  Выслать письмо подтверждения
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+
+
+  </div>
 </section>
 {% endblock %}

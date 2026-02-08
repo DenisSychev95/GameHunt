@@ -7,7 +7,7 @@
 {% block content %}
 <section class="container">
 
-  <h1 class="page-title center">Каталог игр</h1>
+  <h1 class="page-title center">Игры</h1>
 
   <!-- Поиск -->
   <form method="get" class="search-form">
@@ -65,7 +65,7 @@
 
   <div class="game-head">
     <h3 class="game-title">
-      <a href="{% url 'game_detail' slug=game.slug %}">{{ game.title }}</a>
+      <a href="{% url 'game_detail' slug=game.slug %}">{{ game.title|truncatechars:34 }}</a>
     </h3>
 
     <div class="game-views" title="Просмотры"><span class="ui-meta">
@@ -132,8 +132,32 @@
 {% include 'pagination.html' with queryset=games %}
 
   {% else %}
-    <p class="center muted">Игры не найдены.</p>
-  {% endif %}
+  {% if adult_blocked_only %}
+  <div class="center muted">
+    {% if not user.is_authenticated %}
+      Больше контента для зарегистрированных пользователей
+    {% elif not user.profile.is_adult %}
+      Больше контента для пользователей 16+
+    {% else %}
+      Игр ещё нет.
+    {% endif %}
+  </div>
+{% else %}
+  <div class="center muted">
+    Игр ещё нет.
+  </div>
+{% endif %}
+{% endif %}
+  {% if games and has_more_adult %}
+  <div class="center muted">
+    {% if not user.is_authenticated %}
+      Больше контента для зарегистрированных пользователей
+    {% elif not user.profile.is_adult %}
+      Больше контента для пользователей 16+
+    {% endif %}
+  </div>
+
+{% endif %}
 
 </section>
 {% endblock %}

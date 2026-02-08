@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
+import django
 from cryptography.fernet import Fernet
 
 load_dotenv()
@@ -80,21 +80,26 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'game_hunt.urls'
 
+DJANGO_FORMS_TEMPLATES = Path(django.__file__).resolve().parent / 'forms' / 'templates'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # Добавили все шаблоны в корень проекта
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates', DJANGO_FORMS_TEMPLATES],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.bell_counts',
             ],
         },
     },
 ]
+
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 WSGI_APPLICATION = 'game_hunt.wsgi.application'
 
@@ -114,6 +119,10 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "users.validators.MinLengthValidator"},
+    {"NAME": "users.validators.LettersAndDigitsValidator"},
+    {"NAME": "users.validators.UpperAndLowerCaseValidator"},
+
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -126,6 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -195,6 +205,10 @@ ACCOUNT_FORMS = {
     'signup': 'users.forms.GameHuntSignupForm',
     # Используем свою форму авторизации пользователя в forms GameHuntLoginForm
     'login': 'users.forms.GameHuntLoginForm',
+    "reset_password": "users.forms.GameHuntPasswordResetForm",
+    "reset_password_from_key": "users.forms.GameHuntResetPasswordKeyForm",
+    "change_password": "users.forms.GameHuntChangePasswordForm",
+    "add_email": "users.forms.GameHuntAddEmailForm",
 }
 # По умолчанию делаем долговечную сессию(закрыли браузер, вход сохранен)
 ACCOUNT_SESSION_REMEMBER = True
@@ -218,6 +232,7 @@ SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 CKEDITOR_CONFIGS = {
     'default': {
+
         'skin': 'moono',
         # 'skin': 'office2013',
         'toolbar_Basic': [
@@ -278,5 +293,31 @@ CKEDITOR_CONFIGS = {
             'dialogui',
             'elementspath'
         ]),
-    }
+    },
+    "review": {
+        "height": 800,
+        "width": "100%",
+        "removePlugins": "autogrow",
+        "contentsCss": ["/static/css/ckeditor_content.css"],
+        "toolbar": "YourCustomToolbarConfig",
+        "extraPlugins": ",".join([
+            "uploadimage",
+            "div",
+            "autolink",
+            "autoembed",
+            "embedsemantic",
+            "widget",
+            "lineutils",
+            "clipboard",
+            "dialog",
+            "dialogui",
+            "elementspath"
+        ]),
+        # сюда же можешь перенести toolbar_YourCustomToolbarConfig если хочешь
+    },
+
 }
+
+# Телеграм бот+ Чат id
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID", "")

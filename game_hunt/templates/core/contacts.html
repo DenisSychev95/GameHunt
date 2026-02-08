@@ -21,23 +21,39 @@
 
     <ul class="about-list contacts-ul">
         <li class="about-list li contacts-flex-li">
-            <a href="https://github.com/DenisSychev95" target="_blank"><img class="contact-icon" src="{% static 'images/github.png' %}" alt="GitHub"></a>
-            <a class="contact-links" href="https://github.com/DenisSychev95" target="_blank">
-                github.com/DenisSychev95
+    <a href="{% url 'contact_admin' %}" title="Написать администратору">
+      <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor"
+          d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+             a1 1 0 0 0 0-1.41l-1.59-1.59
+             a1 1 0 0 0-1.41 0l-1.83 1.83
+             3.75 3.75L21 5.75z"/>
+      </svg>
+    </a>
+
+    <a class="contact-links" href="{% url 'contact_admin' %}" title="Написать администратору">
+      Обратная связь
+    </a>
+  </li>
+
+        <li class="about-list li contacts-flex-li">
+            <a href="https://t.me/+IKS_JYgDDcE5MDhi" target="_blank"><img class="contact-icon" src="{% static 'images/telegram.png' %}" alt="Telegram" title="Telegram сообщество"></a>
+            <a class="contact-links" href="https://t.me/+IKS_JYgDDcE5MDhi" target="_blank" title="Telegram сообщество">
+                Мы в Telegram
             </a>
         </li>
 
         <li class="about-list li contacts-flex-li">
-            <a href="https://t.me/DenyBeny95" target="_blank"><img class="contact-icon" src="{% static 'images/telegram.png' %}" alt="Telegram"></a>
-            <a class="contact-links" href="" target="_blank">
-                @DenyBeny95
+            <a href="https://github.com/DenisSychev95" target="_blank"><img class="contact-icon" src="{% static 'images/github.png' %}" alt="GitHub"></a>
+            <a class="contact-links" href="https://github.com/DenisSychev95" target="_blank">
+                GitHub разработчика
             </a>
         </li>
 
         <li class="about-list li contacts-flex-li">
             <a href="https://vk.com/sychev_denis" target="_blank"><img class="contact-icon" src="{% static 'images/vk.png' %}" alt="VK"></a>
             <a class="contact-links" href="https://vk.com/sychev_denis" target="_blank">
-                sychev_denis
+                VK разработчика
             </a>
         </li>
     </ul>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ cheat.title }} — Редактировать комментарий{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="ce-wrap">
+
+  <div class="ce-card">
+    <div class="ce-top">
+      <a class="gd-back" href="{% url 'cheat_detail' cheat.slug %}">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад к читу</span>
+      </a>
+    </div>
+
+    <h4 class="gd-section-title center">Редактировать комментарий к «{{ cheat.title }}»</h4>
+
+    <form method="post" class="ce-form" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="ce-field">
+        {{ form.text }}
+        {% if form.text.errors %}
+          <div class="ce-error">{{ form.text.errors|striptags }}</div>
+        {% endif %}
+      </div>
+
+      <div class="ce-actions">
+        <button type="submit" class="gd-back save">Сохранить</button>
+        <a class="gd-back cancel" href="{% url 'cheat_detail' cheat.slug %}">Отменить</a>
+      </div>
+    </form>
+  </div>
+
+</section>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Отправить уведомление{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-edit-container">
+
+    <h2 class="gd-review-title">Отправить уведомление</h2>
+
+    {% if form.errors %}
+    <div class="gd-form-errors">
+        <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="gd-review-form" novalidate>
+        {% csrf_token %}
+
+        <div class="gd-card">
+            <div class="gd-fields">
+
+                <div class="gd-field gd-field--w-genres">
+                    <label for="{{ form.send_to.id_for_label }}">{{ form.send_to.label }}</label>
+                    {{ form.send_to }}
+                    <div class="gd-field-error">{{ form.send_to.errors|striptags }}</div>
+                </div>
+
+                <div class="gd-field gd-field--w-genres" id="wrap-recipient">
+                    <label for="{{ form.recipient.id_for_label }}">{{ form.recipient.label }}</label>
+                    {{ form.recipient }}
+                    <div class="gd-field-error">{{ form.recipient.errors|striptags }}</div>
+                </div>
+
+                <div class="gd-field gd-field--w-genres" id="wrap-recipients">
+                    <label for="{{ form.recipients.id_for_label }}">{{ form.recipients.label }}</label>
+                    {{ form.recipients }}
+                    <div class="gd-field-error">{{ form.recipients.errors|striptags }}</div>
+                </div>
+
+                <div class="gd-field gd-field--w-genres">
+                    <label for="{{ form.topic.id_for_label }}">{{ form.topic.label }}</label>
+                    {{ form.topic }}
+                    <div class="gd-field-error">{{ form.topic.errors|striptags }}</div>
+                </div>
+
+                <div class="gd-field gd-field--w-genres">
+                    <label for="{{ form.topic_custom.id_for_label }}">{{ form.topic_custom.label }}</label>
+                    {{ form.topic_custom }}
+                    <div class="gd-field-error">{{ form.topic_custom.errors|striptags }}</div>
+                </div>
+
+                <div class="gd-field">
+                    <label for="{{ form.text.id_for_label }}">{{ form.text.label }}</label>
+                    {{ form.text }}
+                    <div class="gd-field-error">{{ form.text.errors|striptags }}</div>
+                </div>
+
+                <div class="gd-field gd-field--w-genres">
+                    <label for="{{ form.link.id_for_label }}">{{ form.link.label }}</label>
+                    {{ form.link }}
+                    <div class="gd-field-error">{{ form.link.errors|striptags }}</div>
+                </div>
+
+               <div class="gd-field">
+  <label>{{ form.image.label }}</label>
+
+  {# строка "Выбрано:" НЕ кликабельная #}
+  <div class="gd-file-current" id="msg-image-current" style="display:none;">
+    <span class="gd-file-current-label">Выбрано:</span>
+    <span class="gd-file-current-link" id="msg-image-name"></span>
+  </div>
+
+  {# превью КЛИКАБЕЛЬНОЕ (откроется в lightbox) #}
+  <div class="gd-preview">
+    <a id="msg-image-preview-link"
+       class="js-image-preview-lightbox"
+       href="#"
+       data-glightbox="type: image"
+       style="display:none;">
+      <img id="msg-image-preview" alt="" class="gd-preview-img" style="display:none;">
+    </a>
+  </div>
+
+  <div class="gd-file-pick">
+    {{ form.image }}
+  </div>
+
+  <div class="gd-field-error">{{ form.image.errors|striptags }}</div>
+</div>
+
+            </div>
+        </div>
+
+        <div class="ce-actions">
+            <button type="submit" class="gd-back save">Отправить</button>
+            <a href="{% url 'admin_messages_inbox' %}" class="gd-back cancel">Отменить</a>
+        </div>
+
+    </form>
+</section>
+{% endblock %}
+{% block page_js %}
+    <script src="{% static 'js/admin_send_message.js' %}"></script>
+    <script src="{% static 'js/message_form_preview.js' %}"></script>
+
+{% endblock %}

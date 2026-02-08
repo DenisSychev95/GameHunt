@@ -98,7 +98,7 @@ class ReviewVote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_votes', verbose_name='Пользователь')
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='votes', verbose_name='Обзор')
     # Поле выбора для лайка/дизлайка предлагает 2 варианта на выбор
-    value = models.SmallIntegerField(choices=VOTE_CHOICES)
+    value = models.SmallIntegerField(choices=VOTE_CHOICES, verbose_name='Оценка')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
 
     class Meta:
@@ -121,7 +121,7 @@ class ReviewComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     is_deleted = models.BooleanField(default=False, verbose_name='Удалён')
-    is_edited = models.BooleanField(default=False)
+    is_edited = models.BooleanField(default=False, verbose_name='Изменен')
 
     class Meta:
         verbose_name = 'комментарий к игре'

@@ -1,64 +1,101 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}GameHunt — Вход{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
 {% block content %}
-<section style="max-width: 400px; margin: 0 auto;">
-    <h2 style="color: #f97316; margin-bottom: 16px;">Вход</h2>
+<section class="ce-wrap">
+  <div class="ce-top">
+      <a class="gd-back" href="{% url 'homepage' %}">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>На главную</span>
+      </a>
+    </div>
+  <div class="ce-card">
 
-    {% if form.non_field_errors %}
-        <div style="color: #f87171; margin-bottom: 10px;">
-            {{ form.non_field_errors|striptags }}
-        </div>
-    {% endif %}
 
-    <form method="post" action="{% url 'account_login' %}">
-        {% csrf_token %}
 
-        <div style="margin-bottom: 10px;">
-    <label for="{{ form.login.id_for_label }}">Логин, e-mail или телефон</label><br>
-    {{ form.login }}
-    {% if form.login.errors %}
-        <div style="color: #f87171; font-size: 13px;">
-            {{ form.login.errors|striptags }}
-        </div>
-    {% endif %}
+    <h2 class="gd-section-title center">Вход</h2>
+
+{% if form.errors %}
+    <div class="gd-form-errors">
+      <p class="gd-form-errors-title"><strong>Ошибка заполнения формы</strong></p>
+    </div>
+  {% endif %}
+
+<form method="post" action="{% url 'account_login' %}" class="ce-form" novalidate>
+  {% csrf_token %}
+
+  <div class="gd-formset-grid">
+    <div class="gd-field">
+      <label for="{{ form.login.id_for_label }}">Данные для входа</label>
+
+      {{ form.login }}
+
+      <div class="gd-field-error">{{ form.login.errors|striptags }}</div>
+    </div>
+
+  <div class="gd-field gd-pass">
+  <label for="{{ form.password.id_for_label }}">Пароль</label>
+
+  <div class="gd-pass-wrap">
+    {{ form.password }}
+    <button type="button" class="gd-pass-toggle" aria-label="Показать пароль" data-toggle-pass>
+      <span class="gd-eye gd-eye-open" aria-hidden="true"></span>
+      <span class="gd-eye gd-eye-off" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="gd-field-error">{{ form.password.errors|striptags }}</div>
 </div>
+  </div>
 
-        <div style="margin-bottom: 10px;">
-            {{ form.password.label_tag }}<br>
-            {{ form.password }}
-            {% if form.password.errors %}
-                <div style="color: #f87171; font-size: 13px;">
-                    {{ form.password.errors|striptags }}
-                </div>
-            {% endif %}
-        </div>
+  {% if form.remember %}
+    <div class="gd-field gd-mt-10">
+      <label class="ce-remember-label">
+        {{ form.remember }}
+        <span>Запомнить меня</span>
+      </label>
+    </div>
+  {% endif %}
 
-        {% if form.remember %}
-            <div style="margin-bottom: 10px;">
-                <label>
-                    {{ form.remember }} Запомнить меня
-                </label>
-            </div>
-        {% endif %}
+  {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+  {% endif %}
 
-        <button type="submit"
-                style="margin-top: 12px; padding: 8px 16px; border: none;
-                       background-color: #f97316; color: #fff; border-radius: 4px; cursor: pointer;">
-            Войти
-        </button>
-    </form>
+<div class="ce-actions">
+  <button type="submit" class="gd-back save mini-button">Войти</button>
+</div>
+  {% if form.non_field_errors %}
+      <div class="ce-error">
+        {{ form.non_field_errors|striptags }}
+      </div>
+    {% endif %}
 
-    <p style="margin-top: 12px;">
-        Нет аккаунта?
-        <a href="{% url 'account_signup' %}" style="color: #f97316;">Зарегистрироваться</a>
-    </p>
+<div class="auth-split">
+  <div class="auth-split-left">
+      <div class="auth-hint">Забыли пароль?</div>
+    <a class="gd-back small" href="{% url 'account_reset_password' %}">Восстановить</a>
+  </div>
 
-    <p style="margin-top: 6px;">
-        <a href="{% url 'account_reset_password' %}" style="color: #9ca3af;">
-            Забыли пароль?
-        </a>
+  <div class="auth-split-right">
+    <div class="auth-hint">Ещё нет аккаунта?</div>
+    <a class="gd-back small" href="{% url 'account_signup' %}">
+      Зарегистрироваться
+    </a>
+  </div>
+</div>
+</form>
+
+  </div>
 </section>
+{% endblock %}
 
+{% block page_js %}
+
+<script src="{% static 'js/signup.js' %}"></script>
 {% endblock %}

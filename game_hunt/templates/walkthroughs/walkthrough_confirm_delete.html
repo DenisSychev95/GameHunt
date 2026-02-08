@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Удаление прохождения{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="ce-wrap">
+  <div class="ce-card">
+    <div class="ce-top">
+      <a class="gd-back" href="javascript:history.back()">
+        <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+        <span>Назад</span>
+      </a>
+    </div>
+
+    <h4 class="gd-section-title center">Удаление прохождения «{{ walkthrough.title }}»</h4>
+    <p class="gd-text center-text">Вы уверены, что хотите удалить это прохождение?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+      <div class="ce-actions">
+        <button type="submit" class="gd-back delete">Удалить</button>
+        <a href="{% url 'walkthrough_detail' walkthrough.slug %}" class="gd-back save">Отмена</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

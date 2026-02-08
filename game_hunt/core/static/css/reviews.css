@@ -145,3 +145,38 @@
 /* <========= (блок gd-procons(плюсы/минусы) карточки обзора) ========= */
 
 /* ========================================================== REVIEWS APP specifies ========================================================== */
+
+
+/* ================== Подтверждение удаления обзора(review_confirm_delete.html) start  ================== */
+
+.center-text{
+  text-align: center;
+}
+
+.gd-back.delete:hover{
+  color: #db0909;
+}
+
+.gd-back.save:hover{
+  color:#2dd835f1
+}
+/* ================== Подтверждение удаления обзора(review_confirm_delete.html) end  ================== */
+
+
+/* ========================================================== WALKTHROUGHS APP specifies ========================================================== */
+
+.wt-like-center{
+  justify-content: center;
+  gap: 8px;
+}
+
+.wt-like-label{
+  opacity: .8;
+  font-size: 14px;
+}
+
+.walkthrourgh-stats{
+    margin-top: 10px;
+    font-size: 14px;
+  }
+/* ========================================================== WALKTHROUGHS APP end ========================================================== */

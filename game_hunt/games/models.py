@@ -7,7 +7,7 @@ from django.utils.text import slugify
 # Модель для Разработчика
 class Developer(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name='Разработчик')
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, verbose_name='Слаг')
 
     def __str__(self):
         return self.name
@@ -21,7 +21,7 @@ class Developer(models.Model):
 # Модель для Издателя
 class Publisher(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name='Издатель')
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, verbose_name='Слаг')
 
     def __str__(self):
         return self.name
@@ -35,7 +35,7 @@ class Publisher(models.Model):
 # Модель для жанров
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Жанр')
-    slug = models.SlugField(max_length=120, unique=True, verbose_name='Slug')
+    slug = models.SlugField(max_length=120, unique=True, verbose_name='Слаг')
 
     class Meta:
         verbose_name = 'жанр'
@@ -49,7 +49,7 @@ class Genre(models.Model):
 # Модель для платформ
 class Platform(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Платформа')
-    slug = models.SlugField(max_length=120, unique=True, verbose_name='Slug')
+    slug = models.SlugField(max_length=120, unique=True, verbose_name='Слаг')
 
     class Meta:
         verbose_name = 'платформа'
@@ -63,7 +63,7 @@ class Platform(models.Model):
 # Модель для игр
 class Game(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название игры')
-    slug = models.SlugField(max_length=220, unique=True, verbose_name='Slug')
+    slug = models.SlugField(max_length=220, unique=True, verbose_name='Слаг')
     description = models.TextField(verbose_name='Описание')
     release_date = models.DateField(blank=True, null=True, verbose_name='Дата выхода')
 
@@ -229,7 +229,7 @@ class GameComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлен')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
     is_deleted = models.BooleanField(default=False, verbose_name='Удалён')
-    is_edited = models.BooleanField(default=False)
+    is_edited = models.BooleanField(default=False, verbose_name='Изменен')
 
     class Meta:
         verbose_name = 'комментарий к игре'

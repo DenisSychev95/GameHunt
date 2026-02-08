@@ -9,7 +9,7 @@ YOUTUBE_HOSTS = {"youtube.com", "www.youtube.com", "youtu.be", "m.youtube.com"}
 VIMEO_HOSTS = {"vimeo.com", "www.vimeo.com", "player.vimeo.com"}
 
 
-def search_games(request):
+def search_games(request, ignore_adult=False):
     # Для минимизации числа запросов базовый поиск всех игр с подгрузкой жанров и платформ
     games_sq = Game.objects.all().select_related('developer', 'publisher')
     games = games_sq.prefetch_related('genres', 'platforms')
@@ -22,9 +22,11 @@ def search_games(request):
 
     # Получаем из своего метода сведения о совершеннолетии пользователя
     is_adult = get_adult(request)
-    # Если пользователь несовершеннолетний не выводим контент 18+
-    if is_adult is False:
-        games = games.filter(is_adult_only=False)
+    # Если пользователь несовершеннолетний не выводим контент 16+
+    if not ignore_adult:
+        is_adult = get_adult(request)
+        if is_adult is False:
+            games = games.filter(is_adult_only=False)
 
     # Переходим к поиску
     # В результат поиска кладем value из name 'search', если ничего не пришло кладем пустую строку.

@@ -1,14 +1,253 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}GameHunt — {{ cheat.title }}{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
+
 {% block content %}
-<h2>{{ cheat.title }}</h2>
-<p>Игра: <a href="{% url 'game_detail' slug=cheat.game.slug %}">{{ cheat.game.title }}</a></p>
-<p>Платформа: {{ cheat.get_platform_display }}</p>
+<section class="gd">
 
-<h3>Код</h3>
-<pre>{{ cheat.code }}</pre>
+<!-- Topbar (только для cheat_detail) -->
+<div class="gd-topbar">
 
-{% if cheat.description %}
-    <h3>Описание</h3>
-    <p>{{ cheat.description|linebreaks }}</p>
-{% endif %}
+  <!-- LEFT: 2 ссылки -->
+  <div class="gd-topbar-left">
+    <a class="gd-back" href="{% url 'game_detail' slug=cheat.game.slug %}" title="Перейти к игре">
+      <span class="ui-icon ui-icon-arrow-double-left" aria-hidden="true"></span>
+      <span>{{ cheat.game.title }}</span>
+    </a>
+
+    <a class="gd-back" href="{% url 'cheat_list' %}" title="Перейти к читам">
+      <span class="ui-icon ui-icon-arrow-left" aria-hidden="true"></span>
+      <span>Все читы</span>
+    </a>
+  </div>
+
+  <!-- RIGHT: share + edit/delete -->
+  <div class="gd-topbar-right">
+    <button class="gd-share" type="button" data-share title="Скопировать ссылку">
+      <span class="ui-icon ui-icon-share" aria-hidden="true"></span>
+      <span>Поделиться</span>
+    </button>
+
+    {# ✅ Редактировать: только админ/стафф, который является автором чита #}
+    {% if user.is_staff or user.is_superuser %}
+      {% if user == cheat.author %}
+      <a class="gd-share" href="{% url 'cheat_edit' cheat.slug %}" title="Редактировать чит">
+        <svg class="gd-ico gd-ico-edit" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor"
+            d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25zm18-11.5
+               a1 1 0 0 0 0-1.41l-1.59-1.59
+               a1 1 0 0 0-1.41 0l-1.83 1.83
+               3.75 3.75L21 5.75z"/>
+        </svg>
+      </a>
+      {% endif %}
+    {% endif %}
+
+    {# ✅ Снять с публикации: любой админ/стафф #}
+    {% if user.is_staff or user.is_superuser %}
+      <a class="gd-share"
+         href="{% url 'cheat_delete' cheat.slug %}"
+         title="Снять чит с публикации">
+        <svg class="gd-ico gd-ico-trash" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor"
+                d="M6 7h12l-1 13H7L6 7zm3-3h6l1 2H8l1-2z"/>
+        </svg>
+      </a>
+    {% endif %}
+  </div>
+
+</div>
+
+  <!-- Title -->
+  <header class="gd-header">
+    <h1 class="gd-title center">{{ cheat.title }}</h1>
+
+    {# Обложка: если есть cover_image у Чита — он, иначе обложка игры, иначе дефолт #}
+    <div class="center-image">
+      {% if cheat.cover_image %}
+        <img class="gd-cover review" src="{{ cheat.cover_image.url }}" alt="{{ cheat.title }}">
+      {% elif cheat.game.cover_image %}
+        <img class="gd-cover review" src="{{ cheat.game.cover_image.url }}" alt="{{ cheat.game.title }}">
+      {% else %}
+        <img class="gd-cover review" src="{% static 'images/default_game_cover.jpg' %}" alt="">
+      {% endif %}
+    </div>
+
+    <p class="gd-hint center">
+      <span class="gd-meta-value">Обновлено:</span> {{ cheat.updated_at|date:"d.m.Y" }}
+    </p>
+
+    <div class="gd-nav review-nav">
+      <div class="gd-nav-left">
+        <span class="gd-meta-value">Автор:</span>
+        <a class="gd-comment-author" href="{% url 'profile-view' cheat.author.id %}">
+          {{ cheat.author.profile.nickname|default:cheat.author.username }}
+        </a>
+      </div>
+    </div>
+  </header>
+
+  {# ---- Блок файла чита (имя видно всем, скачать только авторизованным) ---- #}
+  {% if cheat.cheat_file %}
+    <section class="gd-block">
+      <h2 class="gd-section-title center">Файл для загрузки</h2>
+
+      <p class="gd-hint center">
+        <span class="gd-meta-value">Название:</span> {{ cheat_filename }}
+      </p>
+
+      {% if user.is_authenticated %}
+        <p class="center">
+          <a class="btn gd-view_content" href="{% url 'cheat_download' cheat.slug %}">
+            Скачать
+          </a>
+        </p>
+      {% else %}
+        <p class="gd-hint center">
+          Для скачивания нужно
+          <a class="btn gd-view_content auth-link"
+             href="{% url 'account_login' %}?next={{ request.path }}">войти</a>
+        </p>
+      {% endif %}
+    </section>
+  {% endif %}<!-- Описание / контент (по структуре как walkthrough) -->
+  {% if cheat.functionality %}
+    <section class="gd-block">
+      <h2 class="gd-section-title center">Возможности</h2>
+      <div class="gd-text">{{ cheat.functionality|linebreaks }}</div>
+    </section>
+  {% endif %}
+
+  {% if cheat.instruction %}
+    <section class="gd-block">
+      <h2 class="gd-section-title center">Инструкция</h2>
+      <div class="gd-text">{{ cheat.instruction|linebreaks }}</div>
+    </section>
+  {% endif %}
+
+  {% if cheat.notes %}
+    <section class="gd-block">
+      <h2 class="gd-section-title center">Примечания</h2>
+      <div class="gd-text">{{ cheat.notes|linebreaks }}</div>
+    </section>
+  {% endif %}
+
+  {# ---- Оценка (СТРОГО как в walkthrough_detail: те же SVG, те же классы) ---- #}
+  <section class="gd-block">
+    <div class="gd-vote">
+      {% if user.is_authenticated %}
+        <h4 class="gd-section-title">Пожалуйста, оцените контент</h4>
+
+        <form method="post" action="{% url 'cheat_vote' cheat.slug %}" class="gd-vote-row">
+          {% csrf_token %}
+
+          {% with v=user_vote.value|default_if_none:0 %}
+          <button
+            class="gd-vote-btn gd-vote-like {% if v == 1 %}is-active{% endif %}"
+            name="value" value="1" type="submit"
+            aria-pressed="{% if v == 1 %}true{% else %}false{% endif %}">
+            <span class="gd-vote-icon" aria-hidden="true">
+              <svg class="gd-ico gd-ico-heart"
+                   viewBox="0 0 24 24"
+                   width="24"
+                   height="24"
+                   aria-hidden="true"
+                   focusable="false">
+                <path fill="currentColor"
+                      d="M12 20
+                         C12 20, 4 14.5, 4 9.5
+                         C4 7, 6 5.5, 8.5 5.5
+                         C10 5.5, 11.5 6.5, 12 7.8
+                         C12.5 6.5, 14 5.5, 15.5 5.5
+                         C18 5.5, 20 7, 20 9.5
+                         C20 14.5, 12 20, 12 20
+                         Z"/>
+              </svg>
+            </span>
+          </button>
+
+          <button
+            class="gd-vote-btn gd-vote-dislike {% if v == -1 %}is-active{% endif %}"
+            name="value" value="-1" type="submit"
+            aria-pressed="{% if v == -1 %}true{% else %}false{% endif %}">
+            <span class="gd-vote-icon" aria-hidden="true">
+              <svg class="gd-ico-sad" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                <circle class="face" cx="12" cy="12" r="9"/>
+                <circle class="features" cx="9.4" cy="11.1" r="3"/>
+                <circle class="features" cx="14.6" cy="11.1" r="3"/>
+                <circle class="sparkle" cx="8.9" cy="10.6" r="1.1"/>
+                <circle class="sparkle" cx="14.1" cy="10.6" r="1.1"/>
+                <path class="mouth" d="M9.4 16.1c.85-.55 1.7-.8 2.6-.8s1.75.25 2.6.8"
+                      fill="none" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </button>
+          {% endwith %}
+        </form>
+
+        {% if not user_vote %}
+          <p class="gd-hint">Учитывается только одно мнение пользователя, но его можно изменить.</p>
+        {% endif %}
+      {% else %}
+        <p class="gd-hint">Для оценки контента нужно
+          <a class="btn gd-view_content auth-link" href="{% url 'account_login' %}">войти</a>
+        </p>
+      {% endif %}
+
+      <div class="gd-vote-toast" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- Комментарии (строго структура walkthrough_detail) -->
+  <section class="gd-comments">
+    {% if user.is_authenticated %}
+      <section class="gd-comment-box">
+        <h2 class="gd-section-title center">Оставить комментарий</h2>
+
+        <form id="comment-form"
+              class="gd-comment-form"
+              action="{% url 'cheat_add_comment' cheat.slug %}"
+              method="post">
+          {% csrf_token %}
+
+          <textarea id="comment-text"
+                    name="text"
+                    maxlength="500"placeholder="Ваш комментарий..."
+                    required></textarea>
+
+          <div class="gd-comment-footer">
+            <button id="comment-submit"
+                    class="btn gd-view_content"
+                    type="submit"
+                    disabled>
+              Отправить</button>
+          </div>
+        </form>
+      </section>
+    {% else %}
+      <p class="gd-hint center">Чтобы оставить комментарий, нужно
+        <a class="btn gd-view_content auth-link" href="{% url 'account_login' %}">войти</a>
+      </p>
+    {% endif %}
+
+    <h2 class="gd-section-title center">Комментарии</h2>
+
+    <div id="comment-list" class="gd-comment-list {% if comments|length > 6 %}gd-comment-list--scroll{% endif %}">
+      {% for comment in comments %}
+        {% include "cheats/partials/cheat_comment.html" with comment=comment %}
+      {% empty %}
+        <p class="gd-hint">Будьте первым, кто оставит комментарий.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+</section>
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/cheat_detail.js' %}"></script>
 {% endblock %}

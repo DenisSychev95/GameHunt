@@ -1,24 +1,132 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}GameHunt — Прохождения{% endblock %}
+
+{% block extra_css %}
+  {# как в review_list #}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
+
 {% block content %}
-<h2>Прохождения{% if current_game %}: {{ current_game.title }}{% endif %}</h2>
-<form method="get" class="search-form">
-  <select class="select" name="sort">
-    <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
-    <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
-  </select>
-  <button class="btn" type="submit">Применить</button>
-</form>
-{% if walkthroughs %}
-    <ul>
-        {% for wt in walkthroughs %}
-            <li>
-                <a href="{% url 'walkthrough_detail' wt.slug %}">{{ wt.title }}</a>
-                ({{ wt.game.title }})
-            </li>
-        {% endfor %}
-    </ul>
-{% include 'pagination.html' with queryset=walkthroughs %}
-{% else %}
-    <p>Пока нет прохождений.</p>
-{% endif %}
+<section class="container">
+
+  <h1 class="page-title center">Прохождения</h1>
+
+  <form method="get" class="search-form">
+    <input class="input"
+           type="text"
+           name="search"
+           placeholder="Поиск прохождений"
+           value="{{ search_query|default:'' }}">
+
+    <select class="select" name="sort">
+      <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
+      <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
+    </select>
+
+    <button class="btn" type="submit">Найти</button>
+
+    {% if search_query or current_sort != "new" %}
+      <a class="link-muted" href="{% url 'walkthrough_list' %}">Сброс</a>
+    {% endif %}
+  </form>
+
+  {% if walkthroughs %}
+    <div class="game-grid">
+      {% for wt in walkthroughs %}
+        <article class="game-card">
+
+          <div class="game-head">
+            <h3 class="game-title">
+              <a href="{% url 'walkthrough_detail' wt.slug %}">{{ wt.title|truncatechars:34 }}</a>
+            </h3>
+
+            <div class="game-views" title="Просмотры">
+              <span class="ui-meta">
+                <span class="ui-icon ui-icon-eye"></span>
+                {{ wt.views_count }}
+              </span>
+            </div>
+          </div>
+
+          <a href="{% url 'walkthrough_detail' wt.slug %}" class="game-cover-link">
+  {% if wt.cover_image %}
+    <img class="game-cover" src="{{ wt.cover_image.url }}" alt="{{ wt.title }}">
+  {% elif wt.game.cover_image %}
+    <img class="game-cover" src="{{ wt.game.cover_image.url }}" alt="{{ wt.game.title }}">
+  {% else %}
+    <div class="game-cover-placeholder">Нет обложки</div>
+  {% endif %}
+</a>
+
+          <div class="game-meta">
+            <a class="genre-link" href="{% url 'game_detail' slug=wt.game.slug %}">
+              {{ wt.game.title }}
+            </a>
+          </div>
+
+          <div class="walkthrourgh-stats">
+  <div class="like-love wt-like-center" title="Понравилось пользователям">
+    <svg class="icon-love" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 21s-7.5-4.35-10.5-9C-0.7 8.1 1.6 4 5.5 4
+               c2.2 0 4.1 1.2 5 3 0.9-1.8 2.8-3 5-3
+               3.9 0 6.2 4.1 4 8-3 4.65-10.5 9-10.5 9z"/>
+    </svg>
+    <span class="like-value">{{ wt.liked_percent }}%</span>
+    <span class="wt-like-label">пользователей</span>
+  </div>
+</div>
+
+          <div class="game-meta">
+            <span class="gd-meta-label">Автор:</span>
+            <a class="gd-comment-author" href="{% url 'profile-view' wt.author.id %}">
+              {{ wt.author.profile.nickname|default:wt.author.username }}
+            </a>
+            <div>
+              <span class="gd-meta-label">Обновлено:</span>
+              <span class="gd-meta-value">{{ wt.updated_at|date:"d.m.Y" }}</span>
+            </div>
+          </div>
+
+          <div class="game-footer">
+            <a class="btn btn-secondary" href="{% url 'walkthrough_detail' wt.slug %}">Подробнее</a>
+          </div>
+
+        </article>
+      {% endfor %}
+    </div>
+
+    {% include 'pagination.html' with queryset=walkthroughs %}
+
+  {% else %}
+    {% if adult_blocked_only %}
+      <div class="center muted">
+        {% if not user.is_authenticated %}
+          Больше контента для авторизованных пользователей
+        {% elif not user.profile.is_adult %}
+          Больше контента для пользователей 16+
+        {% else %}
+          {% if search_query %}Прохождений не найдено.{% else %}Прохождений ещё нет.{% endif %}
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="center muted">
+        {% if search_query %}Прохождений не найдено.{% else %}Прохождений ещё нет.{% endif %}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if walkthroughs and has_more_adult %}
+  <div class="center muted">
+    {% if not user.is_authenticated %}
+      Больше контента для авторизованных пользователей
+    {% elif not user.profile.is_adult %}
+      Больше контента для пользователей 16+
+    {% endif %}
+  </div>
+
+  {% endif %}
+
+</section>
 {% endblock %}

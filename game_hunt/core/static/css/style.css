@@ -253,7 +253,7 @@ a:hover {
 }
 
 .header-auth {
-  font-size: 15px;
+  font-size: 16px;
   color: #9ca3af;
   font-family: inherit;
   cursor: pointer;
@@ -265,6 +265,99 @@ a:hover {
   transition-duration: 500ms;
   transition-property: color;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+/* колокольчик */
+.header-bell{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #e5e7eb;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  transition: all 0.3s ease-in-out;
+  flex: 0 0 auto;
+}
+
+.header-bell:hover{
+  cursor: pointer;
+  box-shadow: 0 1px 30px -6px #ffffff;
+  text-decoration: none;
+  transform: translateY(3px);
+  background: rgba(255,255,255,.12);
+}
+
+/* иконка */
+.header-bell__ico{
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* карандаш в хедере (как колокольчик) */
+.header-pencil{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #e5e7eb;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  transition: all 0.3s ease-in-out;
+  flex: 0 0 auto;
+}
+
+.header-pencil:hover{
+  cursor: pointer;
+  box-shadow: 0 1px 30px -6px #ffffff;
+  text-decoration: none;
+  transform: translateY(3px);
+  background: rgba(255,255,255,.12);
+}
+
+/* иконка */
+.header-pencil__ico{
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* бейдж со счётчиком */
+.header-bell__badge{
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+
+  color: #111827;
+  background: #f97316;
+  border: 1px solid rgba(255,255,255,.65);
+}
+
+/* если цифр много */
+.header-bell__badge{
+  box-sizing: border-box;
 }
 
 .header-auth a {
@@ -279,6 +372,43 @@ a:hover {
   color: #ffffff;
   text-decoration: none;
   
+}
+
+/* Кнопка-карандаш в хедере */
+.header-admin-send{
+  width: 34px;
+  height: 34px;
+  color: #e5e7eb;
+  border-radius: 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+.header-admin-send:hover{
+  cursor: pointer;
+  box-shadow: 0 1px 30px -6px #ffffff;
+  text-decoration: none;
+  transform: translateY(3px);
+  background: rgba(255,255,255,.12);
+}
+
+.header-admin-send:hover .gd-ico{
+  color: #ffffff;
+}
+
+.header-admin-send .gd-ico{
+  width: 20px !important;
+  height: 20px !important;
+  display: block;
+  color: #e5e7eb;
 }
 
 /* ========================================================== NAVBAR end(navbar.html) ========================================================== */
@@ -477,7 +607,6 @@ a:hover {
   letter-spacing: 0.01em;
   font-weight: 500;
   text-align: justify;
-  text-indent: 1.5em;
 }
 
 .about-text {
@@ -491,7 +620,7 @@ a:hover {
   margin: 0;
   color: #e5e7eb;
   padding: 0;
-  margin-left: 20px;
+  
   
 }
 
@@ -579,3 +708,4 @@ a:hover {
 }
 
 /* ========================================================== CONTACTS end(contacts.html) ========================================================== */
+

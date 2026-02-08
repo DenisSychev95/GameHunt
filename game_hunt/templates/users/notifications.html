@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Уведомления — GameHunt{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/inbox.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="inbox">
+
+  <header class="inbox__notifications">
+    <h1 class="inbox__title">Уведомления</h1>
+
+    <form class="inbox__filters" method="get">
+      <div class="inbox__filter-row" role="group" aria-label="Фильтр">
+        <label class="inbox-radio">
+          <input type="radio" name="tab" value="all"
+                 {% if tab == "all" %}checked{% endif %}
+                 onchange="this.form.submit()">
+          <span>Все</span>
+        </label>
+
+        <label class="inbox-radio">
+          <input type="radio" name="tab" value="unread"
+                 {% if tab == "unread" or not tab %}checked{% endif %}
+                 onchange="this.form.submit()">
+          <span>Непрочитанные</span>
+        </label>
+
+        <label class="inbox-radio">
+          <input type="radio" name="tab" value="read"
+                 {% if tab == "read" %}checked{% endif %}
+                 onchange="this.form.submit()">
+          <span>Прочитанные</span>
+        </label>
+      </div>
+    </form>
+  </header>
+
+  <div class="inbox__list" id="inbox-list">
+    {% if items %}
+      {% for n in items %}
+        <article class="msg {% if not n.is_read %}msg--unread{% endif %}"
+                 data-id="{{ n.pk }}"
+                 data-detail-url="{% url 'notification_detail' n.pk %}"
+                 data-read-url="{% url 'notification_mark_read' n.pk %}">
+          {% if n.is_read %}
+  <button type="button"
+          class="msg__hide"
+          title="Удалить сообщение"
+          aria-label="Удалить сообщение"
+          data-hide-url="{% url 'notification_unpublish' n.pk %}">×</button>
+{% endif %}
+          <div class="msg__meta">
+            <div class="msg__line">
+              <span class="msg__label">Отправлено:</span>
+              <span class="msg__value">{{ n.created_at|date:"d.m.Y H:i" }}</span>
+            </div>
+
+            <div class="msg__line">
+              <span class="msg__label">От кого:</span>
+              <span class="msg__value">{{ n.sender }}</span>
+            </div>
+
+            <div class="msg__line">
+              <span class="msg__label">Тема:</span>
+              <span class="msg__topic">{{ n.get_topic_display }}</span>
+            </div>
+
+            {% if n.title %}
+              <div class="msg__line">
+                <span class="msg__label">Кратко:</span>
+                <span class="msg__value">{{ n.title }}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if n.link %}
+            <div class="msg__link">
+              <span class="msg__label">Ссылка:</span>
+              <a class="msg__link-a" href="{{ n.link }}" target="_blank" rel="noopener">Открыть</a>
+            </div>
+          {% endif %}
+
+          <div class="msg__text">
+            {{ n.text|truncatechars:140 }}
+          </div>
+
+          {% if n.image %}
+            <div class="inbox-attach">
+              <img src="{{ n.image.url }}" alt="" class="inbox-attach__img">
+            </div>
+          {% endif %}
+
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="inbox__empty">Сообщений нет.</div>
+    {% endif %}
+  </div>
+
+  {# Универсальная модалка — как в admin_messages_inbox #}
+  <div class="modal" id="inbox-modal" aria-hidden="true">
+    <div class="modal__overlay" data-close></div>
+
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+      <button class="modal__close" type="button" data-close aria-label="Закрыть">×</button>
+
+      <div class="modal__heading" id="modal-heading"><h2>Сообщение</h2></div>
+
+      <div class="modal__meta" id="modal-meta">
+        <div class="modal__line">
+          <span class="modal__label">Отправлено:</span>
+          <span class="modal__value" id="modal-sent"></span>
+        </div>
+
+        <div class="modal__line">
+          <span class="modal__label">От кого:</span>
+          <span class="modal__value" id="modal-from"></span>
+        </div>
+
+        <div class="modal__line" id="modal-email-row" style="display:none;">
+          <span class="modal__label">Почта:</span>
+          <span class="modal__value" id="modal-email"></span></div>
+
+        <div class="modal__line">
+          <span class="modal__label">Тема:</span>
+          <span class="msg__topic" id="modal-topic"></span>
+        </div>
+
+        <div class="modal__line" id="modal-short-row" style="display:none;">
+          <span class="modal__label">Кратко:</span>
+          <span class="modal__value" id="modal-short"></span>
+        </div>
+      </div>
+
+      <div class="modal__text" id="modal-text"></div>
+
+      <div class="modal__link" id="modal-link-row" style="display:none;">
+        <span class="modal__label">Ссылка:</span>
+        <span class="modal__value"><a id="modal-link" href="#" target="_blank" rel="noopener">Открыть</a></span>
+      </div>
+
+      <div class="modal__image" id="modal-image"></div>
+    </div>
+  </div>
+
+</section>
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/inbox.js' %}"></script>
+{% endblock %}

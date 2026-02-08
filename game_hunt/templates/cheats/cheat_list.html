@@ -1,19 +1,116 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>Читы{% if current_game %}: {{ current_game.title }}{% endif %}</h2>
+{% load static %}
 
-{% if cheats %}
-    <ul>
-        {% for cheat in cheats %}
-            <li>
-                <a href="{% url 'cheat_detail' cheat.pk %}">
-                    [{{ cheat.get_platform_display }}] {{ cheat.title }}
-                </a>
-                ({{ cheat.game.title }})
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Читов пока нет.</p>
-{% endif %}
+{% block title %}GameHunt — Читы{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="container">
+
+  <h1 class="page-title center">Читы</h1>
+
+  {# Панель: поиск + сортировка (как review_list) #}
+  <form method="get" class="search-form">
+    <input class="input"
+           type="text"
+           name="game_search"
+           placeholder="Поиск читов"
+           value="{{ game_search|default:'' }}">
+
+    <select class="select" name="sort">
+      <option value="new" {% if current_sort == "new" %}selected{% endif %}>Сначала новые</option>
+      <option value="popular" {% if current_sort == "popular" %}selected{% endif %}>Популярные</option>
+    </select>
+
+    <button class="btn" type="submit">Найти</button>
+
+    {% if game_search or current_sort != "new" %}
+      <a class="link-muted" href="{% url 'cheat_list' %}">Сброс</a>
+    {% endif %}
+  </form>
+
+  {% if cheats %}
+    <div class="game-grid">
+      {% for cheat in cheats %}
+        <article class="game-card">
+
+          <div class="game-head">
+            <h3 class="game-title">
+              <a href="{% url 'cheat_detail' cheat.slug %}">{{ cheat.title|truncatechars:34 }}</a>
+            </h3>
+
+            <div class="game-views" title="Просмотры">
+              <span class="ui-meta">
+                <span class="ui-icon ui-icon-eye"></span>
+                {{ cheat.views_count }}
+              </span>
+            </div>
+          </div>
+
+          {# Обложка: сперва обложка чита, иначе — обложка игры (можешь оставить только игру, если хочешь 100% как review_list) #}
+          <a href="{% url 'cheat_detail' cheat.slug %}" class="game-cover-link">
+            {% if cheat.cover_image %}
+              <img class="game-cover" src="{{ cheat.cover_image.url }}" alt="{{ cheat.title }}">
+            {% elif cheat.game.cover_image %}
+              <img class="game-cover" src="{{ cheat.game.cover_image.url }}" alt="{{ cheat.title }}">
+            {% else %}
+              <div class="game-cover-placeholder">Нет обложки</div>
+            {% endif %}
+          </a>
+
+          <div class="game-meta">
+            <a class="genre-link" href="{% url 'game_detail' slug=cheat.game.slug %}">{{ cheat.game.title }}</a>
+          </div>
+
+          {# Понравилось% + Загрузки (вместо рейтинга) #}
+          <div class="game-stats">
+            <div class="like-love" title="Понравилось пользователям">
+              <svg class="icon-love" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-7.5-4.35-10.5-9C-0.7 8.1 1.6 4 5.5 4
+                         c2.2 0 4.1 1.2 5 3 0.9-1.8 2.8-3 5-3
+                         3.9 0 6.2 4.1 4 8-3 4.65-10.5 9-10.5 9z"/>
+              </svg>
+              <span class="like-value">{{ cheat.liked_percent }}%</span>
+            </div>
+
+            <div class="rating-badge" title="Загрузки: {{ cheat.downloads_count }}">
+              {# своя иконка download, но по размерам/цвету используем icon-star стили #}
+              <svg class="icon-star icon-download" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v10m0 0l4-4m-4 4l-4-4M5 15v4h14v-4"
+                      fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="rating-text">{{ cheat.downloads_count }}</span>
+            </div>
+          </div>
+
+          {# Автор + обновлено (как review_list) #}
+          <div class="game-meta">
+            <span class="gd-meta-label">Автор:</span>
+            <a class="gd-comment-author" href="{% url 'profile-view' cheat.author.id %}">
+              {{ cheat.author.profile.nickname|default:cheat.author.username }}
+            </a>
+            <div>
+              <span class="gd-meta-label">Обновлено:</span>
+              <span class="gd-meta-value">{{ cheat.updated_at|date:"d.m.Y" }}</span>
+            </div>
+          </div>
+
+          <div class="game-footer"><a class="btn btn-secondary" href="{% url 'cheat_detail' cheat.slug %}">Подробнее</a>
+          </div>
+
+        </article>
+      {% endfor %}
+    </div>
+
+    {% include 'pagination.html' with queryset=cheats %}
+  {% else %}
+    <div class="center muted">
+      Читов ещё нет.
+    </div>
+  {% endif %}
+
+</section>
 {% endblock %}
