@@ -1,4 +1,3 @@
-
 /* ========================================================== BASE STYLES(base.html) start ========================================================== */
 
 body {
@@ -125,11 +124,8 @@ a:hover {
 /* ========================================================== NAVBAR(navbar.html) start ========================================================== */
 
 .site-header{
-  height: 70px;
   box-sizing: border-box;
   background: linear-gradient(90deg, #0b5c8f, #10243b, #5a2047);
-
-  /* padding убираем отсюда, он будет у inner-контейнера */
   padding: 10px 0 5px;
 
   border-bottom-left-radius: 12px;
@@ -145,19 +141,19 @@ a:hover {
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly; /* оставил как у тебя */
+  justify-content: space-evenly;
   align-items: center;
-  padding: 0 30px;               /* вернули твои 30px внутрь */
+  padding: 0 30px;
 }
 
-/* Свечение оставляем тем же, но убираем лишний мусор */
+/* Свечение */
 .site-header:before{
   content: "";
   position: absolute;
   inset: 0;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-  z-index: -1; /* важное: чтобы не перекрывало клики/контент */
+  z-index: -1;
   background: conic-gradient(from 90deg at 40% -20%, #EE14FF, #00c6f8, #00c6f8, #EE14FF);
   filter: blur(11px);
   transform: translate3d(-4px, 5px, -1px);
@@ -169,13 +165,12 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  
 }
 
 .header-logo img {
   width: 75px;
   display: block;
-  border-radius: 12px; /* если хочешь слегка скруглить лого */
+  border-radius: 12px;
 }
 
 .header-nav {
@@ -183,8 +178,8 @@ a:hover {
   flex-wrap: wrap;
   gap: 40px;
   align-items: center;
-  
 }
+
 .header-nav a {
   font-size: 13px;
   color: #bdbecb;
@@ -206,8 +201,7 @@ a:hover {
   transition-duration: 500ms;
   color: #ffffff;
   background: linear-gradient(0, rgb(0, 162, 255), #000 70%, #000 99%);
-  background-clip: text;
-  -webkit-background-clip: text;
+  background-clip: text;-webkit-background-clip: text;
   text-decoration: none;
 }
 
@@ -260,7 +254,7 @@ a:hover {
   position: relative;
   border: none;
   background: none;
-  
+
   transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
   transition-duration: 500ms;
   transition-property: color;
@@ -294,14 +288,13 @@ a:hover {
   background: rgba(255,255,255,.12);
 }
 
-/* иконка */
 .header-bell__ico{
   width: 20px;
   height: 20px;
   display: block;
 }
 
-/* карандаш в хедере (как колокольчик) */
+/* карандаш */
 .header-pencil{
   position: relative;
   display: inline-flex;
@@ -326,14 +319,13 @@ a:hover {
   background: rgba(255,255,255,.12);
 }
 
-/* иконка */
 .header-pencil__ico{
   width: 20px;
   height: 20px;
   display: block;
 }
 
-/* бейдж со счётчиком */
+/* бейдж */
 .header-bell__badge{
   position: absolute;
   top: -6px;
@@ -353,10 +345,6 @@ a:hover {
   color: #111827;
   background: #f97316;
   border: 1px solid rgba(255,255,255,.65);
-}
-
-/* если цифр много */
-.header-bell__badge{
   box-sizing: border-box;
 }
 
@@ -371,10 +359,9 @@ a:hover {
 .header-auth a:hover {
   color: #ffffff;
   text-decoration: none;
-  
 }
 
-/* Кнопка-карандаш в хедере */
+/* Кнопка-карандаш (если где-то используется) */
 .header-admin-send{
   width: 34px;
   height: 34px;
@@ -409,6 +396,53 @@ a:hover {
   height: 20px !important;
   display: block;
   color: #e5e7eb;
+}
+
+/* -------- БУРГЕР: desktop hidden -------- */
+.nav-toggle{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-burger{
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  align-items: center;
+  justify-content: center;gap: 5px;
+  flex-direction: column;
+  cursor: pointer;
+  user-select: none;
+  transition: all .25s ease;
+}
+
+.nav-burger:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(2px);
+}
+
+.nav-burger span{
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  transition: transform .25s ease, opacity .25s ease;
+}
+
+/* Анимация крестика */
+.nav-toggle:checked + .nav-burger span:nth-child(1){
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle:checked + .nav-burger span:nth-child(2){
+  opacity: 0;
+}
+.nav-toggle:checked + .nav-burger span:nth-child(3){
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ========================================================== NAVBAR end(navbar.html) ========================================================== */
@@ -448,8 +482,6 @@ a:hover {
   transform: translateY(3px);
 }
 
-/* ---------- Для текущей страницы ---------- */
-
 .pager-current, .pager-link{
   min-width: 34px;
   text-align: center;
@@ -463,22 +495,17 @@ a:hover {
   font-weight: bold;
 }
 
-/* ---------- Для другой страницы ---------- */
-
 .pager-link{
   background: transparent;
   color: #f3f4f6;
-  background: transparent;
   border: 1px solid rgba(255,255,255,.12);
 }
+
 .pager-link:hover{
   transform: translateY(3px);
   background: rgba(255,255,255,.12);
   text-decoration: none;
-
 }
-
-/* Для иконок */
 
 .icon{
   width: 16px;
@@ -492,28 +519,23 @@ a:hover {
   -webkit-mask-size: contain;
 }
 
-/* < */
 .icon-prev{
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* > */
 .icon-next{
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6l6 6-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6l6 6-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* << */
 .icon-first{
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18 18l-6-6 6-6M12 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18 18l-6-6 6-6M12 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* >> */
 .icon-last{
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l6 6-6 6M12 6l6 6-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l6 6-6 6M12 6l6 6-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l6 6-6 6M12 6l6 6-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l6 6-6 6M12 6l6 6-6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* ========================================================== PAGINATION end(pagination.html) ========================================================== */
@@ -527,25 +549,15 @@ a:hover {
   background: linear-gradient(90deg, #0b5c8f, #10243b, #5a2047);
   color: #9ca3af;
   position: relative;
-  z-index: 5;
+  z-index: 10;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  z-index: 10;
   transform-style: preserve-3d;
 }
 
 .site-footer:before {
   content: "";
-  position: absolute; 
-  padding: 10px 30px 5px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  z-index: 10;
-  content: "";
+  position: absolute;
   inset: 0px;
   background: conic-gradient(from 90deg at 40% -20%, #EE14FF, #00c6f8, #00c6f8, #EE14FF);
   filter: blur(11px);
@@ -556,7 +568,6 @@ a:hover {
 
 .site-footer__inner{
   text-align: center;
-  
 }
 
 .footer-copy{
@@ -581,6 +592,55 @@ a:hover {
 .footer-links a:hover {
   color: #70defaef;
   text-decoration: none;
+}
+
+/* -------- FOOTER бургер (desktop hidden) -------- */
+.footer-toggle{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.footer-burger{
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-direction: column;
+  cursor: pointer;
+  user-select: none;
+  transition: all .25s ease;
+  margin: 8px auto 6px;
+}
+
+.footer-burger:hover{
+  background: rgba(255,255,255,.12);
+  transform: translateY(2px);
+}
+
+.footer-burger span{
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  transition: transform .25s ease, opacity .25s ease;
+}
+
+/* “крестик” в футере */
+.footer-toggle:checked + .footer-burger span:nth-child(1){
+  transform: translateY(7px) rotate(45deg);
+}
+.footer-toggle:checked + .footer-burger span:nth-child(2){
+  opacity: 0;
+}
+.footer-toggle:checked + .footer-burger span:nth-child(3){
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ========================================================== FOOTER end(footer.html) ========================================================== */
@@ -613,15 +673,12 @@ a:hover {
   margin-bottom: 12px;
   line-height: 1.6;
   color: #e5e7eb;
-  
 }
 
 .about-list {
   margin: 0;
   color: #e5e7eb;
   padding: 0;
-  
-  
 }
 
 .about-list li {
@@ -632,7 +689,6 @@ a:hover {
   letter-spacing: 0.01em;
   font-weight: 500;
   text-align: left;
-  
 }
 
 .about-list li::marker{
@@ -645,11 +701,11 @@ a:hover {
 
 /* ========================================================== ABOUT end(about.html) ========================================================== */
 
+
 /* ========================================================== CONTACTS start(contacts.html) ========================================================== */
 
 .contacts-ul{
   list-style: none;
-  
 }
 
 .contacts-flex-li{
@@ -657,7 +713,6 @@ a:hover {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  
 }
 
 .contact-links {
@@ -669,17 +724,15 @@ a:hover {
 }
 
 .contact-links:hover {
-  
   text-decoration: none;
   transform: scale(1.03);
-
 }
 
 .contact-icon {
   width: 32px;
   height: 32px;
   transition: filter .2s ease, transform .2s ease;
-   filter:
+  filter:
     brightness(0)
     saturate(100%)
     invert(96%)
@@ -709,3 +762,225 @@ a:hover {
 
 /* ========================================================== CONTACTS end(contacts.html) ========================================================== */
 
+
+/* ===================== RESPONSIVE + BURGERS ===================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ---------- Планшеты и ниже ---------- */
+@media (max-width: 768px) {
+
+  .site-container { padding: 0 16px; }
+  main { padding: 28px 16px; }
+
+  /* HEADER */
+  .site-header{
+    height: auto;
+    padding: 10px 0 8px;
+  }
+
+  .site-header__inner{
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .header-logo img { width: 60px; }
+
+  /* показываем кнопку-бургер */
+  .nav-burger{
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  /* меню превращаем в “панель” под шапкой */
+  .header-nav,
+  .header-auth{
+    display: none;         /* скрыто по умолчанию */
+    width: 100%;
+  }
+
+  .nav-toggle:checked ~ .header-nav{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 14px 16px 10px;
+    margin-top: 6px;
+
+    background: rgba(12, 25, 42, 0.78);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-toggle:checked ~ .header-auth{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 0 16px 14px;
+
+    background: rgba(12, 25, 42, 0.78);
+    border: 1px solid rgba(255,255,255,.12);
+    border-top: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    backdrop-filter: blur(8px);
+  }
+
+  .header-nav a{
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+  }
+
+  .header-nav a:hover{
+    background: rgba(255,255,255,.10);
+  }
+
+  /* auth-ссылки как кнопки */
+  .header-auth a{
+    margin-right: 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+  }
+  .header-auth a:hover{
+    background: rgba(255,255,255,.10);
+  }
+
+  /* иконки в auth — выравниваем */
+  .header-bell,
+  .header-pencil,
+  .header-admin-send{
+    width: 40px;
+    height: 40px;
+  }
+
+  /* HOME */
+  .home-text { max-width: 100%; }
+  .home-image { width: 100%; max-width: 100%; }
+  .home-page-center-p { text-indent: 0; }
+
+  /* ABOUT/STATIC */
+  .about-page { width: 100%; }
+  .about-list li,
+  .gd-text,
+  .contact-links { font-size: 15px; }
+
+  /* FOOTER: показываем бургер, ссылки скрываем */
+  .footer-burger{ display: inline-flex; }
+  .footer-links{ display: none; }
+
+  .footer-toggle:checked ~ .footer-links{
+    display: block;
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: rgba(12, 25, 42, 0.55);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+  }
+
+  /* PAGINATION */
+  .pager { gap: 8px; }
+  .pager-btn { width: 32px; height: 32px; }
+  .pager-current, .pager-link { min-width: 32px; font-size: 14px; }
+}
+
+/* ---------- Телефоны ---------- */
+@media (max-width: 480px) {
+  .site-container { padding: 0 12px; }
+  main { padding: 22px 12px; }
+
+  .header-logo img { width: 56px; }
+
+  .header-nav a{ font-size: 13px; }
+  .gd-text,
+  .about-list li,
+  .contact-links { font-size: 14px; }
+
+  /* footer links — аккуратные переносы */
+  .footer-links a{
+    display: inline-block;
+    margin: 2px 6px;
+  }
+
+  .pager { gap: 6px; }
+  .pager-btn { width: 30px; height: 30px; }
+  .pager-current, .pager-link { min-width: 30px; font-size: 13px; padding: 6px 0; }
+}
+
+/* ===================== HEADER FIXES (append to end of style.css) ===================== */
+
+/* 1) FIX: на 769–833px не ломаем шапку — ужимаем и даём перенос аккуратно */
+@media (min-width: 769px) and (max-width: 833px){
+
+  .site-header{
+    height: auto;                 /* если вдруг не помещается в 70px */
+    padding: 10px 0 8px;
+  }
+
+  .site-header__inner{
+    justify-content: space-between; /* вместо space-evenly */
+    gap: 12px;                     /* вместо больших расстояний */
+    padding: 0 16px;               /* вместо 0 30px */
+  }
+
+  .header-logo img{
+    width: 62px;                   /* чуть меньше лого */
+  }
+
+  .header-nav{
+    gap: 18px;                     /* вместо 40px */
+  }
+
+  .header-nav a{
+    font-size: 12px;
+  }
+
+  .header-auth a{
+    font-size: 14px;
+    margin-right: 8px;
+  }
+}
+
+/* 2) FIX: до 768px (когда бургер-меню открыто) —
+      bell + pencil в ОДНОЙ строке и по центру */
+@media (max-width: 768px){
+
+  /* Когда меню раскрыто — auth делаем flex-wrap строками:
+     обычные ссылки идут "полной шириной", а иконки — рядом и по центру */
+  .nav-toggle:checked ~ .header-auth{
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* по умолчанию все ссылки — как “пункты меню” на всю ширину */
+  .nav-toggle:checked ~ .header-auth > a{
+    width: 100%;
+  }
+
+  /* а иконки — НЕ на всю ширину, а в одну линию */
+  .nav-toggle:checked ~ .header-auth > a.header-bell,
+  .nav-toggle:checked ~ .header-auth > a.header-pencil{
+    width: auto;
+                     /* чтобы не превращались в большие “плашки” */
+    margin: 6px 8px 0;
+    background: transparent;       /* фон берётся у самой кнопки-иконки */
+  }
+
+  /* иконки по центру блока */
+  .nav-toggle:checked ~ .header-auth > a.header-bell,
+  .nav-toggle:checked ~ .header-auth > a.header-pencil{
+    display: inline-flex;
+  }
+
+}

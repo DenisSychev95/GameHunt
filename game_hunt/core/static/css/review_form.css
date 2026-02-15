@@ -553,3 +553,205 @@
   background-color: #f3f4f6;
   cursor: pointer;
 }
+
+
+/* ===================== REVIEW_FORM RESPONSIVE (append to END) ===================== */
+
+/* <= 1024px */
+@media (max-width: 1024px){
+  /* контейнер формы: не 85%, а резиновый */
+  .gd-review-container{
+    max-width: 100%;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+
+  /* поля/гриды/formset: убираем "85% внутри 85%" */
+  .gd-form-errors,
+  .gd-field,
+  .gd-grid-2,
+  .gd-formset,
+  .gd-formset-item{
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* formset-ограничения 400px — на планшете ещё можно, но даём резиновость */
+  .gd-card.gd-card-spaced input[type="file"],
+  .gd-card.gd-card-spaced input[type="text"],
+  .gd-card.gd-card-spaced input[type="number"],
+  .gd-card.gd-card-spaced textarea,
+  .gd-card.gd-card-spaced select,
+  .gd-formset-item .gd-field{
+    max-width: 100%;
+  }
+
+  .gd-preview-img{
+    width: min(420px, 100%);
+    height: auto;
+  }
+}
+
+/* <= 768px */
+@media (max-width: 768px){
+  .gd-review-topline{
+    margin-top: 24px;
+  }
+
+  .gd-card{
+    padding: 16px 14px 14px;
+    border-radius: 14px;
+  }
+
+  /* 2 колонки -> 1 */
+  .gd-grid-2{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* formset grid -> 1 колонка (чтобы не ломалось на телефонах) */
+  .gd-formset-item .gd-formset-grid{
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* CKEditor/виджеты: не вылезать по ширине */
+  .django-ckeditor-widget{
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* превью и formset поля полностью резиновые */
+  .gd-preview-img{
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* <= 480px */
+@media (max-width: 480px){
+  .gd-review-container{
+    padding: 0 10px;
+  }
+
+  .gd-review-title{
+    font-size: 22px;
+  }
+
+  .gd-card{
+    padding: 14px 12px 12px;
+    border-radius: 12px;
+  }
+
+  /* типографика полей компактнее */
+  .gd-field-control,
+  .gd-field input[type="text"],
+  .gd-field input[type="url"],
+  .gd-field input[type="number"],
+  .gd-field select,
+  .gd-field textarea{
+    font-size: 14px;
+    padding: 9px 10px;
+  }
+
+  .gd-field label{ font-size: 14px; }
+  .gd-field-help, .gd-field-error{ font-size: 12px; }
+
+  /* кнопки (сохранить/отменить) -> колонка, чтобы не "лесенкой" */
+  .ce-actions{
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ce-actions .gd-back{
+    width: 100%;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  /* file input: кнопка не распирает */
+  .gd-file-pick input[type="file"]::file-selector-button{
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* formset item компактнее */
+  .gd-formset-item{
+    padding: 12px;
+  }
+
+  /* ограничение высоты formset блока на телефоне */
+  .gd-card.gd-card-spaced{
+    max-height: 72vh;
+  }
+    .ce-actions .gd-back{
+    width: 180px;
+  }
+}
+
+/* <= 360px */
+@media (max-width: 360px){
+  .gd-review-container{
+    padding: 0 8px;
+  }
+
+  .gd-review-title{
+    font-size: 20px;
+  }
+
+  .gd-card{
+    padding: 13px 11px 11px;
+    border-radius: 12px;
+  }
+
+  .gd-field-control,
+  .gd-field input[type="text"],
+  .gd-field input[type="url"],
+  .gd-field input[type="number"],
+  .gd-field select,
+  .gd-field textarea{
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .gd-back{
+    font-size: 15px;
+    height: 36px;
+    padding: 0 12px;
+  }
+
+  .gd-view_content{
+    font-size: 14px;
+    padding: 9px;
+  }
+  .gd-card{
+    width: 270px;
+  }
+  .ce-actions .gd-back{
+    width: 150px;
+  }
+  .gd-preview-img, .gd-field{
+  width: 200px;
+}
+  .gd-file-pick input[type="file"]::file-selector-button{
+    width: 150px;
+    
+  }
+  .gd-file-current-link{
+    display: inline-block;
+    width: 150px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .gd-file-current{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .gd-file-name{
+    width: 200px;
+  }
+}
+
+/* ===================== /REVIEW_FORM RESPONSIVE ===================== */

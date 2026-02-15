@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 🔥 Инициализация ОДИН раз
+  //  Инициализация ОДИН раз
   const lightbox = GLightbox({
     selector: '.glightbox',
     closeButton: true,
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 🧠 ВАЖНО: при клике открываем нужный индекс
+  //  ВАЖНО: при клике открываем нужный индекс
   thumbs.forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 🔥 Инициализация ОДИН раз
+  //  Инициализация ОДИН раз
   const lightbox = GLightbox({
     selector: '.glightbox',
     closeButton: true,
@@ -49,7 +49,7 @@ function render() {
 }
 }
 
-  // 🧠 ВАЖНО: при клике открываем нужный индекс
+  //  ВАЖНО: при клике открываем нужный индекс
   thumbs.forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ❗️КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
+  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
   const contentType = resp.headers.get('content-type') || '';
   const data = contentType.includes('application/json')
     ? await resp.json()

@@ -409,3 +409,14 @@ justify-content: center; }
 .admin-user-comments-table__col--text{
   width: auto; /* занимает всё остальное */
 }
+
+.admin-actions{
+  height: 64px;
+}
+
+.admin-dash{
+  display: inline-block;
+  padding: 0 6px;
+  color: #db0909;
+  font-weight: 700;
+}

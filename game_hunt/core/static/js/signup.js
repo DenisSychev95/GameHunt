@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   IMask(bd, {
     mask: Date,
     pattern: 'd.`m.`Y',
-    lazy: true,          // placeholder всегда виден
-    autofix: true,        // автоисправление
+    lazy: true,          
+    autofix: true,        
 
     blocks: {
       d: {

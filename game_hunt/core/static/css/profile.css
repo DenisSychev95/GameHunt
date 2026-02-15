@@ -541,3 +541,311 @@
   background-color: #f3f4f6;
   cursor: pointer;
 }
+
+/* ===================== PROFILE RESPONSIVE (tablet + mobile) ===================== */
+
+/* 1) Большие планшеты / небольшие ноуты */
+@media (max-width: 1024px){
+  .profile-main{
+    max-width: 95%;
+    gap: 20px;
+  }
+
+  .gd-left{
+    max-width: 42%;
+  }
+
+  .profile-cover{
+    max-width: 280px;
+  }
+
+  /* жанры не должны распирать строку */
+  .gd-meta-row{
+    flex-wrap: wrap;
+  }
+  .gd-meta-value{
+    flex-wrap: wrap;
+  }
+
+  /* список контента чуть ниже по высоте */
+  .profile-content__list{
+    max-height: 420px;
+  }
+}
+
+/* 2) Планшеты (портрет) и ниже: колонки в одну */
+@media (max-width: 768px){
+  .profile-main{
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+    gap: 18px;
+  }
+
+  .gd-left,
+  .gd-right{
+    width: 100%;
+    max-width: 680px;
+    padding: 8px;
+  }
+
+  .profile-cover{
+    max-width: 320px;
+    width: 100%;
+  }
+
+  .profile-actions-row{
+    padding: 10px 0;
+  }
+
+  .profile-security-links{
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .profile-security-links .gd-back{
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .gd-meta-row{
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .gd-meta-label,
+  .gd-meta-value{
+    width: 100%;
+  }
+
+  .gd-meta-value{
+    justify-content: center;
+    text-align: center;
+  }
+
+  .btn-edit-profile{
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .pc-filters{
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .profile-content__list{
+    max-height: 360px;
+    padding-right: 6px;
+  }
+
+  .pc-actions{
+    justify-content: center;
+  }
+
+}
+
+/* 3) Телефоны */
+@media (max-width: 480px){
+  .profile-main{
+    margin-top: 22px;
+  }
+
+  .gd-left,
+  .gd-right{
+    padding: 6px;
+  }
+
+  .profile-cover{
+    max-width: 280px;
+  }
+
+  .profile-edit-photo,
+  .profile-zoom-photo{
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+  }
+
+  .profile-edit-photo .gd-ico,
+  .profile-zoom-photo .gd-ico{
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .profile-name-row{
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .profile-nickname{
+    font-size: 15px;
+  }
+
+  .gd-text.profile-text{
+    padding: 8px;
+    font-size: 15px;
+  }
+
+  .pc-radio{
+    padding: 8px 8px;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .pc-item{
+    padding: 10px 8px;
+  }
+
+  .pc-line{
+    font-size: 13px;
+  }
+
+  .pc-icon-link{
+    width: 32px;
+    height: 32px;
+  }
+
+  .profile-content__list{
+    max-height: 320px;
+  }
+
+  .btn-edit-profile{
+    width: 225px;
+  }
+
+  .profile-security{
+    width: 250px;
+    margin: 0 auto;
+  }
+  .gd-meta-label{
+    text-align: center;
+  }
+}
+
+/* 4) Очень маленькие экраны */
+@media (max-width: 360px){
+  .profile-cover{
+    max-width: 250px;
+  }
+
+  .btn-edit-profile{
+    font-size: 13px;
+  }
+
+  .gd-back.small{
+    font-size: 13px;
+  }
+
+  .gd-meta-label{
+    text-align: center;
+  }
+  .btn-edit-profile{
+    width: 180px;
+  }
+  .profile-security-links{
+    width: 180px;
+    margin: 0 auto;
+  }
+}
+
+/* ===================== PROFILE: FIX for 481px–768px ===================== */
+@media (min-width: 481px) and (max-width: 768px){
+
+  /* 1) Обложку (profile-cover-wrap) — строго по центру */
+  .profile-cover-wrap{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* если внутри есть сама обложка */
+  .profile-cover{
+    margin: 0 auto;
+  }
+
+  /* 2) Кнопки: сделать значительно уже, не на всю ширину */
+  .btn-edit-profile,
+  .gd-back.small{
+    
+    max-width: 250px !important;
+    min-width: 240px;          /* чтобы не становились “кнопочками” */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* 3) Мета: label и value ровно одно под другим (без “съезда”) */
+  .gd-meta-row{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;  /* чтобы оба начинались с одного края */
+    gap: 4px !important;
+  }
+
+  .gd-meta-label,
+  .gd-meta-value{
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    
+  }
+
+
+.gd-meta-label{
+  text-align: center;
+}
+
+}
+
+/* FIX: avatar wrapper centered on small widths */
+@media (max-width: 480px){
+  .profile-cover-wrap{
+    display: block !important;     /* важно: из inline-block в block */
+    width: fit-content;            /* ширина по содержимому */
+    max-width: 100%;
+    margin: 0 auto !important;     /* и теперь margin:auto реально центрирует */
+  }
+
+  /* на всякий случай центрируем содержимое левой колонки */
+  .gd-left{
+    text-align: center;
+  }
+}
+
+/* FIX: icons stay inside avatar on 481–768 */
+@media (min-width: 481px) and (max-width: 768px){
+
+  /* центрируем блок слева, но саму обёртку делаем "по картинке" */
+  .gd-left{
+    text-align: center;
+  }
+
+  /* обёртка = размер картинки, и она центрируется */
+  .profile-cover-wrap{
+    position: relative !important;
+    display: inline-block !important; /* важно: НЕ flex и НЕ block на 100% */
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  /* картинка блочная, чтобы не было странных отступов */
+  .profile-cover{
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* страховка: кнопки точно "прилипают" к краям картинки */
+  .profile-zoom-photo{
+    left: 10px !important;
+    bottom: 10px !important;
+  }
+
+  .profile-edit-photo{
+    right: 10px !important;
+    bottom: 10px !important;
+  }
+
+}

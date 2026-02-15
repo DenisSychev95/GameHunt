@@ -87,6 +87,7 @@
 
 .gd-review-scroll::-webkit-scrollbar {
   width: 15px;
+  
 }
 
 .gd-review-scroll::-webkit-scrollbar-track {
@@ -180,3 +181,186 @@
     font-size: 14px;
   }
 /* ========================================================== WALKTHROUGHS APP end ========================================================== */
+
+@media (max-width: 768px){
+
+  .gd-topbar, .gd-topbar-left, .gd-topbar-right{
+    flex-direction: column;
+  }
+  .gd-procons{
+    flex-direction: column;
+    align-items: center;
+    
+    flex-wrap: nowrap;
+    
+  }
+  .gd-pros, .gd-cons{
+    
+    padding: 5px 10px;
+    font-weight: 14px;
+  }
+  .gd-conclusion{
+    margin: 0 auto;
+  }
+  .gd-review-scroll{
+    overflow-y: auto;
+    overflow-x: hidden;              
+    padding-right: 16px;             
+    scrollbar-gutter: stable;        
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
+
+ 
+  .gd-review-scroll .gd-text{
+    min-width: 0;                    
+    overflow-wrap: anywhere;         
+    word-break: break-word;
+  }
+
+ 
+  .gd-review-scroll .gd-text img,
+  .gd-review-scroll .gd-text video,
+  .gd-review-scroll .gd-text iframe{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+  }
+
+  .gd-review-scroll .gd-text table{
+    max-width: 100%;
+    width: 100%;
+    table-layout: fixed;            
+  }
+
+  .gd-review-scroll .gd-text pre,
+  .gd-review-scroll .gd-text code{
+    white-space: pre-wrap;          
+    word-break: break-word;
+  }
+  .game-cover .mini{
+    width: 200px !important;
+    
+  }
+
+  .gd-review-scroll .gd-text{
+    padding-right: 28px; 
+  }
+  .gd-back, .gd-share{
+    width: 170px;
+  }
+
+}
+
+@media (max-width: 480px){
+  .gd{ padding: 10px; }
+  .gd-block{ padding-left: 8px; padding-right: 8px; }
+
+  .gd-procons{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .gd-pros, .gd-cons{
+    padding: 6px 10px;
+  }
+
+  .gd-review-scroll{
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  .gd-review-scroll .gd-text{
+    padding-right: 30px; 
+  }
+
+  .game-cover .mini{
+    width: 170px !important;
+  }
+
+    .gd-back, .gd-share{
+    flex-wrap: nowrap;
+    padding: 0 18px;
+  }
+}
+
+/* ===================== <=360px (small phones) ===================== */
+@media (max-width: 360px){
+  .gd{ padding: 8px; }
+  .gd-block{ padding-left: 6px; padding-right: 6px; }
+
+  .gd-pros, .gd-cons{
+    padding: 6px 8px;
+  }
+
+  .gd-review-scroll .gd-text{
+    padding-right: 34px; 
+  }
+
+  .game-cover .mini{
+    width: 150px !important;
+  }
+  .gd-back, .gd-share{
+    flex-wrap: nowrap;
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 1024px){
+  .gd-topbar, .gd-topbar-left, .gd-topbar-right{
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .gd-review-scroll{
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
+
+  .gd-review-scroll .gd-text{
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    padding-right: 18px; 
+    box-sizing: border-box;
+  }
+
+  .gd-review-scroll .gd-text img,
+  .gd-review-scroll .gd-text video,
+  .gd-review-scroll .gd-text iframe{
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+  }
+
+  .gd-review-scroll .gd-text table{
+    max-width: 100%;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .gd-review-scroll .gd-text pre,
+  .gd-review-scroll .gd-text code{
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .game-cover .mini{
+    width: 240px !important;
+  }
+  .gd-procons{
+    flex-direction: column;
+    align-items: center;
+    
+    flex-wrap: nowrap;
+    
+  }
+    .gd-pros, .gd-cons{
+    padding: 6px 10px;
+  }
+}

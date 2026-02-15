@@ -50,7 +50,7 @@ function render() {
 }
 }
 
-  // 🧠 ВАЖНО: при клике открываем нужный индекс
+  //  ВАЖНО: при клике открываем нужный индекс
   thumbs.forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled = (len === 0 || len > 500);
   });
 
-  // ✅ Enter без Shift отправляет
+  //  Enter без Shift отправляет
   textarea.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ❗️КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
+  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
   const contentType = resp.headers.get('content-type') || '';
   const data = contentType.includes('application/json')
     ? await resp.json()

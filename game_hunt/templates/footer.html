@@ -4,7 +4,10 @@
     <p class="footer-copy">
       © 2025 GameHunt. Все права защищены.
     </p>
-
+  <input type="checkbox" id="footer-toggle" class="footer-toggle" aria-hidden="true">
+  <label for="footer-toggle" class="footer-burger" aria-label="Открыть ссылки" title="Информационная панель">
+  <span></span><span></span><span></span>
+  </label>
     <p class="footer-links">
       <a href="{% url 'about' %}">О проекте</a> |
       <a href="{% url 'rules' %}">Правила</a> |

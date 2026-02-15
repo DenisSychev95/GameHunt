@@ -346,3 +346,205 @@ box-shadow: 0 0 0 2px rgba(0, 198, 248, 0.18);
   color: #db0e4bce;
   box-shadow: 0 1px 15px -6px #ffffff;
 }
+
+/* ===================== INBOX RESPONSIVE ===================== */
+
+/* <= 1024px */
+@media (max-width: 1024px){
+  .inbox{
+    max-width: 100%;
+    padding: 22px 12px;
+  }
+
+  .inbox__header{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inbox__filters{
+    gap: 10px;
+  }
+
+  .inbox-radio{
+    padding: 8px 10px;
+  }
+
+  .modal__panel{
+    width: min(720px, calc(100% - 20px));
+    padding: 16px 16px 14px;
+  }
+
+  .modal__img,
+  .js-modal-image{
+    width: min(420px, 100%);
+  }
+  .inbox__filter-row{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* <= 768px */
+@media (max-width: 768px){
+  .inbox{
+    padding: 18px 10px;
+  }
+
+  /* шапка в колонку, чтобы фильтры не прижимались */
+  .inbox__header{
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .inbox__title{
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* фильтры в две строки/несколько строк по центру */
+  .inbox__filters{
+    width: 100%;
+    justify-content: center;
+  }
+
+  .inbox__filter-row{
+    
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* список: скролл не должен липнуть к краю */
+  .inbox__list{
+    padding-right: 8px;
+    scrollbar-gutter: stable;
+  }
+
+  /* карточка сообщения компактнее */
+  .msg{
+    padding: 12px 12px 10px;
+  }
+
+  .msg__line, .modal__line, .modal__link{
+    font-size: 15px;
+  }
+
+  .msg__text{
+    font-size: 15px;
+  }
+
+  /* модалка */
+  .modal__panel{
+    width: min(680px, calc(100% - 18px));
+    max-height: calc(100% - 18px);
+  }
+}
+
+/* <= 480px */
+@media (max-width: 480px){
+  .inbox{
+    padding: 14px 8px;
+  }
+
+  .inbox-radio{
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* каждая группа радио — строго столбиком */
+  .inbox__filter-row{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .inbox__list{
+    max-height: 70vh;     /* чтобы на телефоне не занимало весь экран */
+    padding-right: 6px;
+  }
+
+  .inbox__list::-webkit-scrollbar{
+    width: 12px;          /* чуть тоньше */
+  }
+
+  .msg__hide{
+    top: 8px;
+    right: 8px;
+  }
+
+  .msg__line, .modal__line, .modal__link{
+    font-size: 14px;
+  }
+
+  .msg__text{
+    font-size: 14px;
+  }
+
+  /* модалка: читаемо на телефоне */
+  .modal__panel{
+    width: calc(100% - 16px);
+    padding: 14px 14px 12px;
+    border-radius: 14px;
+  }
+
+  .modal__close{
+    top: 8px;
+    right: 8px;
+  }
+
+  .modal__text{
+    font-size: 14px;
+  }
+
+  .modal__img,
+  .js-modal-image{
+    width: 100%;
+  }
+}
+
+/* <= 360px */
+@media (max-width: 360px){
+  .inbox{
+    padding: 12px 6px;
+  }
+
+  .inbox__title{
+    font-size: 22px;
+  }
+
+  .inbox-radio{
+    padding: 7px 8px;
+    border-radius: 10px;
+  }
+
+  .msg{
+    padding: 10px 10px 9px;
+    border-radius: 12px;
+  }
+
+  .msg__meta{
+    font-size: 12px;
+  }
+
+  .msg__line, .modal__line, .modal__link{
+    font-size: 13px;
+  }
+
+  .msg__text{
+    font-size: 13px;
+  }
+
+  .inbox-attach__img{
+    width: 90px;
+  }
+
+  .modal__panel{
+    padding: 12px 12px 10px;
+    border-radius: 12px;
+  }
+}
+/* ===================== /INBOX RESPONSIVE ===================== */

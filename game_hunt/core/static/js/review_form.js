@@ -1,7 +1,3 @@
-// Этот файл безопасен: он не ломает django-ckeditor, но помогает,
-// если CKEditor подключается вручную (ckeditor4) и нужен replace по id.
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
   

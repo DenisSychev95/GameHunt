@@ -69,7 +69,7 @@ def review_list(request):
     else:
         qs = qs.order_by("-created_at")
 
-    reviews, custom_range = paginate_games(request, qs, 6)  # пагинацию не трогаю логически
+    reviews, custom_range = paginate_games(request, qs, 3)  # пагинацию не трогаю логически
     params = request.GET.copy()
     params.pop("page", None)
     extra_query = params.urlencode()

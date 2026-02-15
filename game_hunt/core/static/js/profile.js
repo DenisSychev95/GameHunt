@@ -1,9 +1,9 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Если библиотека не подгрузилась (например, на другой странице) — просто выходим без ошибок
+  // Если библиотека не подгрузилась (например, на другой странице) —  выход без ошибок
   if (typeof GLightbox === 'undefined') return;
 
-  // Если на странице нет триггеров — тоже выходим
+  // Если на странице нет триггеров — тоже выход
   if (!document.querySelector('.js-profile-lightbox')) return;
 
   GLightbox({

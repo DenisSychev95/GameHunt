@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     preview.src = blobUrl;
     preview.style.display = "block";
 
-    // ссылка на lightbox (кликаем по превью)
+    // ссылка на lightbox (клик по превью)
     previewLink.href = blobUrl;
     previewLink.setAttribute("data-glightbox", "type: image");
     previewLink.style.display = "inline-block";

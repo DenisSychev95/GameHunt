@@ -7,6 +7,10 @@
         <img class="header-logo__img" src="{% static 'images/logo.jpg' %}" alt="GameHunt Logo">
       </a>
     </div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
+      <label for="nav-toggle" class="nav-burger" aria-label="Открыть меню" title="Панель навигации">
+          <span></span><span></span><span></span>
+      </label>
 
     <nav class="header-nav">
       <a href="{% url 'homepage' %}">Главная</a>

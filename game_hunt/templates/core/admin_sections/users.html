@@ -29,13 +29,16 @@
             {% else %}<span class="st-warn" data-ban-label>забанен</span>{% endif %}
           </td>
           <td class="admin-actions">
-            <button class="gd-back small gd-view_content js-toggle-ban"
-                    type="button"
-                    data-user-id="{{ u.id }}">
-              {% if u.is_active %}Забанить{% else %}Разбанить{% endif %}
-            </button>
-
-          </td>
+  {% if u.id == request.user.id or u.is_staff or u.is_superuser %}
+    <span class="admin-dash">Недоступны</span>
+  {% else %}
+    <button class="gd-back small gd-view_content js-toggle-ban"
+            type="button"
+            data-user-id="{{ u.id }}">
+      {% if u.is_active %}Забанить{% else %}Разбанить{% endif %}
+    </button>
+  {% endif %}
+</td>
         </tr>
       {% endfor %}
       </tbody>
